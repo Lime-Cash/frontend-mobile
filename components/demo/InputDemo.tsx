@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
-import InputField from "../InputField";
-import Button from "../Button";
+import InputField from "@/components/ui/InputField";
+import Button from "@/components/ui/Button";
 
 export default function InputDemo() {
   const [email, setEmail] = useState("");

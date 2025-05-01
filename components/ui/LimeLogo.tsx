@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
-
+import { ThemedText } from "@/components/ThemedText";
 interface LimeLogoProps {
   size?: number;
   showText?: boolean;
@@ -17,7 +17,7 @@ export default function LimeLogo({
         style={[styles.logoImage, { width: size, height: size }]}
         resizeMode="contain"
       />
-      {showText && <Text style={styles.logoText}>Lime Cash</Text>}
+      {showText && <ThemedText type="subtitle">Lime Cash</ThemedText>}
     </View>
   );
 }
@@ -29,10 +29,5 @@ const styles = StyleSheet.create({
   },
   logoImage: {
     marginRight: 8,
-  },
-  logoText: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#FFFFFF",
   },
 });

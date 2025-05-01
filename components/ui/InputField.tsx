@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   StyleSheet,
   Text,
@@ -6,13 +6,11 @@ import {
   View,
   TouchableOpacity,
   TextInputProps,
-  KeyboardTypeOptions,
 } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Ionicons } from "@expo/vector-icons";
-
-export type InputType = "text" | "email" | "password";
+import { usePasswordField, InputType } from "@/hooks/usePasswordField";
 
 interface InputFieldProps extends Omit<TextInputProps, "secureTextEntry"> {
   label: string;
@@ -30,22 +28,12 @@ export default function InputField({
   containerStyle,
   ...textInputProps
 }: InputFieldProps) {
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const colorScheme = useColorScheme();
   const themeColor = Colors[colorScheme ?? "light"];
+  const { isPasswordVisible, togglePasswordVisibility, getInputProps } =
+    usePasswordField(type);
 
-  const togglePasswordVisibility = () => {
-    setIsPasswordVisible(!isPasswordVisible);
-  };
-
-  const getKeyboardType = (): KeyboardTypeOptions => {
-    switch (type) {
-      case "email":
-        return "email-address";
-      default:
-        return "default";
-    }
-  };
+  const inputProps = getInputProps();
 
   return (
     <View style={[styles.container, width && { width }, containerStyle]}>
@@ -63,10 +51,7 @@ export default function InputField({
             type === "password" && styles.passwordInput,
           ]}
           placeholderTextColor={themeColor.icon}
-          secureTextEntry={type === "password" && !isPasswordVisible}
-          keyboardType={getKeyboardType()}
-          autoCapitalize={type === "email" ? "none" : "sentences"}
-          autoCorrect={type !== "email" && type !== "password"}
+          {...inputProps}
           {...textInputProps}
         />
         {type === "password" && (

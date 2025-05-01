@@ -39,7 +39,9 @@ export default function RootLayout() {
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="index" />
           <Stack.Screen name="login" />
-          <Stack.Screen name="explore" />
+          <Stack.Screen name="send" />
+          <Stack.Screen name="load" />
+          <Stack.Screen name="withdraw" />
           <Stack.Screen name="+not-found" />
         </Stack>
       </AuthGuard>
