@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
-import Button from "../Button";
+import Button from "@/components/ui/Button";
 
 export default function ButtonDemo() {
   const [loading, setLoading] = useState(false);

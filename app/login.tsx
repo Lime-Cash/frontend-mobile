@@ -1,40 +1,30 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
-import { router } from "expo-router";
 
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { useAuth } from "@/hooks/useAuth";
 import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
-import AuthLayout from "@/components/auth/AuthLayout";
 import LimeLogo from "@/components/ui/LimeLogo";
+
+// Define interfaces to access global methods
+declare global {
+  var setAuthenticated: (status: boolean) => Promise<void>;
+  var isAuthenticated: () => boolean;
+}
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
+  const { login, isLoading, error } = useAuth();
   const colorScheme = useColorScheme();
   const themeColor = Colors[colorScheme ?? "light"];
 
   const handleLogin = async () => {
-    setIsLoading(true);
-
-    try {
-      // Here you would implement your authentication logic
-      // For example, with a call to an API
-      await new Promise((resolve) => setTimeout(resolve, 1500)); // Simulate API call
-
-      // Navigate to main app on successful login
-      router.replace("/");
-    } catch (error) {
-      console.error("Login error:", error);
-      // Handle login error
-    } finally {
-      setIsLoading(false);
-    }
+    // Aquí se podría agregar validación de email y password
+    await login();
   };
 
   const navigateToSignup = () => {
@@ -58,7 +48,6 @@ export default function LoginScreen() {
             type="email"
             value={email}
             onChangeText={setEmail}
-            error={emailError}
             placeholder="Email"
             autoCapitalize="none"
             autoCorrect={false}
@@ -70,7 +59,6 @@ export default function LoginScreen() {
             type="password"
             value={password}
             onChangeText={setPassword}
-            error={passwordError}
             placeholder="Password"
             containerStyle={styles.inputContainer}
           />
