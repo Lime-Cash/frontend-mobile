@@ -1,8 +1,9 @@
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
 
-import Button from "@/components/ui/Button";
 import { ThemedText } from "@/components/ThemedText";
+import InputDemo from "@/components/ui/demo/InputDemo";
+import ButtonDemo from "@/components/ui/demo/ButtonDemo";
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -12,49 +13,22 @@ export default function HomeScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <ThemedText style={styles.title}>Home</ThemedText>
 
       <View style={styles.buttonContainer}>
-        <Button
-          title="Filled Button"
-          onPress={navigateToExplore}
-          icon="paperplane.fill"
-          variant="filled"
-        />
-
-        <Button title="Text Button" onPress={() => {}} variant="text" />
-        <Button
-          title="Text Button Icon"
-          onPress={() => {}}
-          variant="text"
-          icon="paperplane.fill"
-        />
-        <Button
-          title="Disabled Button"
-          onPress={navigateToExplore}
-          icon="paperplane.fill"
-          variant="filled"
-          disabled={true}
-        />
-        <Button
-          title="Disabled Button"
-          onPress={navigateToExplore}
-          icon="paperplane.fill"
-          variant="filled"
-          width={200}
-        />
+        <InputDemo />
+        <ButtonDemo />
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
+    paddingVertical: 50,
+    paddingHorizontal: 20,
   },
   title: {
     fontSize: 24,
