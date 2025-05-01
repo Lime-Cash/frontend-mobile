@@ -20,6 +20,7 @@ interface ButtonProps {
   icon?: IconSymbolName;
   disabled?: boolean;
   loading?: boolean;
+  width?: number | string;
   style?: any;
 }
 
@@ -30,6 +31,7 @@ export default function Button({
   icon,
   disabled = false,
   loading = false,
+  width,
   style,
 }: ButtonProps) {
   const colorScheme = useColorScheme();
@@ -42,6 +44,7 @@ export default function Button({
           styles.container,
           styles.filledContainer,
           disabled && styles.disabledContainer,
+          width && { width },
           {
             backgroundColor: themeColor.primary,
           },
@@ -56,6 +59,7 @@ export default function Button({
           styles.container,
           styles.textContainer,
           disabled && styles.disabledContainer,
+          width && { width },
           style,
         ],
         text: [styles.text, styles.textText, { color: themeColor.primary }],

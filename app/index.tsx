@@ -37,6 +37,13 @@ export default function HomeScreen() {
           variant="filled"
           disabled={true}
         />
+        <Button
+          title="Disabled Button"
+          onPress={navigateToExplore}
+          icon="paperplane.fill"
+          variant="filled"
+          width={200}
+        />
       </View>
     </View>
   );
