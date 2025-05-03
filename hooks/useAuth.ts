@@ -3,13 +3,11 @@ import { router } from "expo-router";
 import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// Define interfaces to access global methods
 declare global {
   var setAuthenticated: (status: boolean) => Promise<void>;
   var isAuthenticated: () => boolean;
 }
 
-// Key for storing auth state in AsyncStorage
 const AUTH_STORAGE_KEY = "@auth_status";
 
 export function useAuth() {
@@ -17,7 +15,6 @@ export function useAuth() {
   const [error, setError] = useState<string | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // Initialize auth state from AsyncStorage
   useEffect(() => {
     const initializeAuth = async () => {
       try {
@@ -40,16 +37,12 @@ export function useAuth() {
     setError(null);
 
     try {
-      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Set user as authenticated
       await global.setAuthenticated(true);
 
-      // Save auth state to AsyncStorage
       await AsyncStorage.setItem(AUTH_STORAGE_KEY, "true");
 
-      // Navigate to main app on successful login
       router.replace("/");
       return true;
     } catch (err) {
@@ -76,13 +69,10 @@ export function useAuth() {
             setIsLoading(true);
 
             try {
-              // Remove auth state from AsyncStorage
               await AsyncStorage.removeItem(AUTH_STORAGE_KEY);
 
-              // Set authenticated to false
               await global.setAuthenticated(false);
 
-              // Redirect to login
               router.replace("/login");
               resolve(true);
             } catch (err) {
