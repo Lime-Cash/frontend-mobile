@@ -81,14 +81,14 @@ const styles = StyleSheet.create({
     height: 48,
   },
   currencySymbol: {
-    fontSize: 24,
+    fontSize: 42,
     fontWeight: "500",
     marginRight: 8,
   },
   input: {
     flex: 1,
     height: 48,
-    fontSize: 32,
+    fontSize: 50,
     fontWeight: "500",
     padding: 0,
   },

@@ -1,20 +1,19 @@
 import { useState } from "react";
-import { Alert } from "react-native";
-import { SendMoneyParams } from "@/types/money";
+import { LoadMoneyParams } from "@/types/money";
 import { moneyService } from "@/services/moneyService";
 
-export const useSendMoney = () => {
+export const useLoadMoney = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [transactionId, setTransactionId] = useState<string | null>(null);
 
-  const sendMoney = async (params: SendMoneyParams) => {
+  const loadMoney = async (params: LoadMoneyParams) => {
     setIsLoading(true);
     setError(null);
     setTransactionId(null);
 
     try {
-      const result = await moneyService.sendMoney(params);
+      const result = await moneyService.loadMoney(params);
       setTransactionId(result.transactionId || null);
       return result;
     } catch (err) {
@@ -28,7 +27,7 @@ export const useSendMoney = () => {
   };
 
   return {
-    sendMoney,
+    loadMoney,
     isLoading,
     error,
     transactionId,
