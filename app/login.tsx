@@ -23,16 +23,16 @@ export default function LoginScreen() {
   const themeColor = Colors[colorScheme ?? "light"];
 
   const handleLogin = async () => {
-    if (!email || !email.includes('@')) {
-      Alert.alert('Invalid Email', 'Please enter a valid email address');
+    if (!email || !email.includes("@")) {
+      Alert.alert("Invalid Email", "Please enter a valid email address");
       return;
     }
-    
+
     if (!password || password.length < 6) {
-      Alert.alert('Invalid Password', 'Password must be at least 6 characters');
+      Alert.alert("Invalid Password", "Password must be at least 6 characters");
       return;
     }
-    
+
     await login(email, password);
   };
 
@@ -72,10 +72,8 @@ export default function LoginScreen() {
             containerStyle={styles.inputContainer}
           />
 
-          {error && (
-            <Text style={styles.errorText}>{error}</Text>
-          )}
-          
+          {error && <Text style={styles.errorText}>{error}</Text>}
+
           <Button
             title="Sign In"
             onPress={handleLogin}

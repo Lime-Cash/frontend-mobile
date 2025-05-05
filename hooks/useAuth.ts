@@ -45,7 +45,9 @@ export function useAuth() {
       router.replace("/");
       return true;
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed. Please try again.");
+      setError(
+        err instanceof Error ? err.message : "Login failed. Please try again.",
+      );
       return false;
     } finally {
       setIsLoading(false);

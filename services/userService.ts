@@ -1,8 +1,8 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
-const API_URL = 'http://localhost:3000';
-const TOKEN_KEY = '@auth_token';
-
+const API_URL = "http://localhost:3000";
+const TOKEN_KEY = "@auth_token";
 
 interface LoginCredentials {
   email: string;
@@ -14,29 +14,28 @@ interface LoginResponse {
 }
 
 class UserService {
-
   async login(credentials: LoginCredentials): Promise<string> {
-      try {
-          const response = await fetch(`${API_URL}/login`, {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-                  'Accept': 'application/json',
-              },
-              body: JSON.stringify(credentials),
-          });
+    try {
+      const response = await axios.post<LoginResponse>(
+        `${API_URL}/login`,
+        credentials,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        },
+      );
 
-          if (!response.ok) {
-              const errorData = await response.json();
-              throw new Error(errorData.error || 'Authentication failed');
-          }
-
-          const data: LoginResponse = await response.json();
-          await this.saveToken(data.token);
-          return data.token;
-      } catch (error) {
-          throw error;
+      const token = response.data.token;
+      await this.saveToken(token);
+      return token;
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        throw new Error(error.response.data.error || "Authentication failed");
       }
+      throw error;
+    }
   }
 
   async saveToken(token: string): Promise<void> {
