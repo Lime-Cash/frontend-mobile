@@ -8,6 +8,9 @@ import { ThemedText } from "@/components/ThemedText";
 import LimeLogo from "@/components/ui/LimeLogo";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
+import TransactionItem from "@/components/home/TransactionItem";
+import { useTransactions } from "@/hooks/useTransactions";
+import BalanceDisplay from "@/components/home/BalanceDisplay";
 
 // Define interfaces for global methods
 declare global {
@@ -20,6 +23,11 @@ export default function Index() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const colorScheme = useColorScheme();
   const themeColor = Colors[colorScheme ?? "light"];
+  const {
+    transactions,
+    isLoading: isLoadingTransactions,
+    error: transactionsError,
+  } = useTransactions();
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -42,9 +50,9 @@ export default function Index() {
   }
 
   // If not authenticated, redirect to login
-  if (!isAuthenticated) {
+  /*if (!isAuthenticated) {
     return <Redirect href="/login" />;
-  }
+  }*/
 
   // If authenticated, show home screen
   return (
@@ -58,6 +66,9 @@ export default function Index() {
           icon="rectangle.portrait.and.arrow.forward"
           onPress={logout}
         />
+      </View>
+      <View style={styles.balanceContainer}>
+        <BalanceDisplay amount={600} />
       </View>
 
       <View style={styles.buttonsContainer}>
@@ -84,7 +95,31 @@ export default function Index() {
       </View>
 
       <View style={styles.transactionsContainer}>
-        <ThemedText type="subtitle">Transactions</ThemedText>
+        <ThemedText type="subtitle" style={styles.transactionsTitle}>
+          Transactions
+        </ThemedText>
+
+        {isLoadingTransactions ? (
+          <ActivityIndicator
+            color={themeColor.tint}
+            style={styles.transactionsLoader}
+          />
+        ) : transactionsError ? (
+          <ThemedText style={styles.errorText}>{transactionsError}</ThemedText>
+        ) : transactions.length === 0 ? (
+          <ThemedText style={styles.emptyText}>
+            No transactions found
+          </ThemedText>
+        ) : (
+          transactions.map((transaction) => (
+            <TransactionItem
+              key={transaction.id}
+              message={transaction.message}
+              date={transaction.date}
+              price={transaction.price}
+            />
+          ))
+        )}
       </View>
     </ScrollContainer>
   );
@@ -111,10 +146,28 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginTop: 20,
   },
+  transactionsTitle: {
+    marginBottom: 16,
+  },
+  transactionsLoader: {
+    marginVertical: 20,
+  },
+  errorText: {
+    color: "#F44336",
+    marginVertical: 10,
+  },
+  emptyText: {
+    textAlign: "center",
+    marginVertical: 20,
+    opacity: 0.7,
+  },
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#0D111C",
+  },
+  balanceContainer: {
+    marginBottom: 30,
   },
 });

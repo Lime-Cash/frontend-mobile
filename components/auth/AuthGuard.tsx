@@ -12,7 +12,7 @@ declare global {
   var isAuthenticated: () => boolean;
 }
 
-const publicRoutes = ["/login", "/signup", "/forgot-password"];
+const publicRoutes = ["/login", "/signup", "/forgot-password", "/"];
 
 export default function AuthGuard({ children }: AuthGuardProps) {
   const pathname = usePathname();
@@ -71,7 +71,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
   }
 
   if (!isPublicRoute && !isAuth) {
-    return <Redirect href="/login" />;
+    return <Redirect href="/" />;
   }
 
   return <>{children}</>;
