@@ -16,7 +16,7 @@ const ThemedContainer = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default themedContainer;
+export default ThemedContainer;
 
 const styles = StyleSheet.create({
   container: {
