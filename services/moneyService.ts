@@ -2,7 +2,7 @@ import { LoadMoneyParams, SendMoneyParams } from "@/types/money";
 
 export const moneyService = {
   loadMoney: async (
-    params: LoadMoneyParams
+    params: LoadMoneyParams,
   ): Promise<{ success: boolean; transactionId?: string }> => {
     console.log("MoneyService: Loading money with params:", params);
 
@@ -19,7 +19,7 @@ export const moneyService = {
   },
 
   sendMoney: async (
-    params: SendMoneyParams
+    params: SendMoneyParams,
   ): Promise<{ success: boolean; transactionId?: string }> => {
     console.log("MoneyService: Sending money with params:", params);
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, Alert } from "react-native";
 
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
@@ -23,8 +23,17 @@ export default function LoginScreen() {
   const themeColor = Colors[colorScheme ?? "light"];
 
   const handleLogin = async () => {
-    // Aquí se podría agregar validación de email y password
-    await login();
+    if (!email || !email.includes("@")) {
+      Alert.alert("Invalid Email", "Please enter a valid email address");
+      return;
+    }
+
+    if (!password || password.length < 6) {
+      Alert.alert("Invalid Password", "Password must be at least 6 characters");
+      return;
+    }
+
+    await login(email, password);
   };
 
   const navigateToSignup = () => {
@@ -62,6 +71,8 @@ export default function LoginScreen() {
             placeholder="Password"
             containerStyle={styles.inputContainer}
           />
+
+          {error && <Text style={styles.errorText}>{error}</Text>}
 
           <Button
             title="Sign In"
@@ -142,5 +153,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "600",
     color: "#FBC02D",
+  },
+  errorText: {
+    color: "#FF6B6B",
+    marginBottom: 16,
+    textAlign: "center",
+    width: "100%",
   },
 });

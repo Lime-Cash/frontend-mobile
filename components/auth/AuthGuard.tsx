@@ -1,67 +1,78 @@
 import React, { ReactNode, useEffect, useState } from "react";
-import { Redirect, usePathname, useRouter } from "expo-router";
+import { Redirect, usePathname } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import userService from "@/services/userService";
 
 interface AuthGuardProps {
   children: ReactNode;
 }
 
-// Define global interfaces
 declare global {
   var setAuthenticated: (status: boolean) => Promise<void>;
   var isAuthenticated: () => boolean;
 }
 
-// Rutas que no requieren autenticación
 const publicRoutes = ["/login", "/signup", "/forgot-password"];
 
 export default function AuthGuard({ children }: AuthGuardProps) {
   const pathname = usePathname();
   const [isAuth, setIsAuth] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Verificar autenticación al cargar el componente
+  // Check authentication on mount
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const value = await AsyncStorage.getItem("@auth_status");
-        if (value === "true") {
+        // Primary check based on token
+        const hasToken = await userService.isAuthenticated();
+
+        if (hasToken) {
           setIsAuth(true);
+          await AsyncStorage.setItem("@auth_status", "true");
+        } else {
+          setIsAuth(false);
+          await AsyncStorage.setItem("@auth_status", "false");
         }
       } catch (e) {
-        console.error("Error reading auth status:", e);
+        console.error("Error checking auth status:", e);
+        setIsAuth(false);
+      } finally {
+        setIsLoading(true);
       }
     };
 
     checkAuth();
   }, []);
 
-  // Función para comprobar autenticación - expuesta globalmente
+  // Define global auth functions
   global.isAuthenticated = () => isAuth;
 
-  // Función para establecer autenticación - expuesta globalmente
   global.setAuthenticated = async (status: boolean) => {
     try {
       await AsyncStorage.setItem("@auth_status", status ? "true" : "false");
+      if (!status) {
+        // Ensure token is removed when logging out
+        await userService.removeToken();
+      }
       setIsAuth(status);
     } catch (e) {
       console.error("Error setting auth status:", e);
     }
   };
 
-  // Verifica si la ruta actual es pública (no requiere autenticación)
+  if (isLoading && pathname === "/") {
+    return <>{children}</>;
+  }
+
   const isPublicRoute = publicRoutes.includes(pathname);
 
-  // Si estamos en index, permitimos que su propio Redirect funcione
   if (pathname === "/") {
     return <>{children}</>;
   }
 
-  // Si la ruta actual no es pública y el usuario no está autenticado,
-  // redirecciona a la página de login
   if (!isPublicRoute && !isAuth) {
     return <Redirect href="/login" />;
   }
 
-  // Si la ruta es pública o el usuario está autenticado, muestra el contenido
   return <>{children}</>;
 }

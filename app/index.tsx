@@ -1,10 +1,10 @@
 import { Redirect, router } from "expo-router";
-import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
+import { useEffect, useState } from "react";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
 import Button from "@/components/ui/Button";
 import { useAuth } from "@/hooks/useAuth";
-import ViewContainer from "@/components/ui/ViewContainer";
-import { ThemedText } from "@/components/ThemedText";
 import ScrollContainer from "@/components/ui/ScrollContainer";
+import { ThemedText } from "@/components/ThemedText";
 import LimeLogo from "@/components/ui/LimeLogo";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
@@ -17,14 +17,23 @@ declare global {
 
 export default function Index() {
   const { checkAuth, logout, isInitialized } = useAuth();
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const colorScheme = useColorScheme();
   const themeColor = Colors[colorScheme ?? "light"];
 
-  // Check authentication status
-  const isAuth = checkAuth();
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const authStatus = await checkAuth();
+      setIsAuthenticated(authStatus);
+    };
+
+    if (isInitialized) {
+      verifyAuth();
+    }
+  }, [isInitialized, checkAuth]);
 
   // Show loading indicator while auth state is initializing
-  if (!isInitialized) {
+  if (!isInitialized || isAuthenticated === null) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color={themeColor.tint} />
@@ -33,7 +42,7 @@ export default function Index() {
   }
 
   // If not authenticated, redirect to login
-  if (!isAuth) {
+  if (!isAuthenticated) {
     return <Redirect href="/login" />;
   }
 

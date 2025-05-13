@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { router } from "expo-router";
 import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import userService from "@/services/userService";
 
 declare global {
   var setAuthenticated: (status: boolean) => Promise<void>;
@@ -18,8 +19,8 @@ export function useAuth() {
   useEffect(() => {
     const initializeAuth = async () => {
       try {
-        const storedAuth = await AsyncStorage.getItem(AUTH_STORAGE_KEY);
-        if (storedAuth === "true") {
+        const isUserAuthenticated = await userService.isAuthenticated();
+        if (isUserAuthenticated) {
           await global.setAuthenticated(true);
         }
       } catch (err) {
@@ -32,22 +33,21 @@ export function useAuth() {
     initializeAuth();
   }, []);
 
-  const login = async () => {
+  const login = async (email: string, password: string) => {
     setIsLoading(true);
     setError(null);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
+      await userService.login({ email, password });
       await global.setAuthenticated(true);
-
       await AsyncStorage.setItem(AUTH_STORAGE_KEY, "true");
 
       router.replace("/");
       return true;
     } catch (err) {
-      console.error("Login error:", err);
-      setError("Login failed. Please try again.");
+      setError(
+        err instanceof Error ? err.message : "Login failed. Please try again.",
+      );
       return false;
     } finally {
       setIsLoading(false);
@@ -69,8 +69,8 @@ export function useAuth() {
             setIsLoading(true);
 
             try {
+              await userService.removeToken();
               await AsyncStorage.removeItem(AUTH_STORAGE_KEY);
-
               await global.setAuthenticated(false);
 
               router.replace("/login");
@@ -88,8 +88,9 @@ export function useAuth() {
     });
   };
 
-  const checkAuth = () => {
-    return global.isAuthenticated?.() || false;
+  const checkAuth = async () => {
+    const isUserAuthenticated = await userService.isAuthenticated();
+    return isUserAuthenticated || global.isAuthenticated?.() || false;
   };
 
   return {

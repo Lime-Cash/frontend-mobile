@@ -50,13 +50,13 @@ const Load = () => {
       const result = await loadMoney({ amount, recipient, bank: selectedBank });
       Alert.alert(
         "Success",
-        `Money loaded successfully! Transaction ID: ${result.transactionId}`
+        `Money loaded successfully! Transaction ID: ${result.transactionId}`,
       );
     } catch (error) {
       console.error(error);
       Alert.alert(
         "Error",
-        error instanceof Error ? error.message : "Failed to load money"
+        error instanceof Error ? error.message : "Failed to load money",
       );
     }
   };
