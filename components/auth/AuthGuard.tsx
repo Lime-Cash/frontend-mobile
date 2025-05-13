@@ -21,28 +21,30 @@ export default function AuthGuard({ children }: AuthGuardProps) {
 
   // Check authentication on mount
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        // Primary check based on token
-        const hasToken = await userService.isAuthenticated();
-
-        if (hasToken) {
-          setIsAuth(true);
-          await AsyncStorage.setItem("@auth_status", "true");
-        } else {
-          setIsAuth(false);
-          await AsyncStorage.setItem("@auth_status", "false");
-        }
-      } catch (e) {
-        console.error("Error checking auth status:", e);
-        setIsAuth(false);
-      } finally {
-        setIsLoading(true);
-      }
-    };
-
     checkAuth();
   }, []);
+
+  const checkAuth = async () => {
+    setIsLoading(true);
+    try {
+      // Primary check based on token
+      const hasToken = await userService.isAuthenticated();
+
+      if (hasToken) {
+        setIsAuth(true);
+        await AsyncStorage.setItem("@auth_status", "true");
+      } else {
+        setIsAuth(false);
+        await AsyncStorage.setItem("@auth_status", "false");
+      }
+    } catch (e) {
+      console.error("Error checking auth status:", e);
+      setIsAuth(false);
+    } finally {
+      setIsLoading(false);
+      setIsAuth(true); //TODO: Remove this when we have a real auth check
+    }
+  };
 
   // Define global auth functions
   global.isAuthenticated = () => isAuth;
@@ -71,7 +73,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
   }
 
   if (!isPublicRoute && !isAuth) {
-    return <Redirect href="/" />;
+    return <Redirect href="/" />; //TODO: Change this to /login when we have a real auth check
   }
 
   return <>{children}</>;
