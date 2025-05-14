@@ -1,8 +1,13 @@
 import { LoadMoneyParams, SendMoneyParams } from "@/types/money";
+import { get } from "@/api/axios";
+
+interface BalanceResponse {
+  balance: string;
+}
 
 export const moneyService = {
   loadMoney: async (
-    params: LoadMoneyParams,
+    params: LoadMoneyParams
   ): Promise<{ success: boolean; transactionId?: string }> => {
     console.log("MoneyService: Loading money with params:", params);
 
@@ -19,7 +24,7 @@ export const moneyService = {
   },
 
   sendMoney: async (
-    params: SendMoneyParams,
+    params: SendMoneyParams
   ): Promise<{ success: boolean; transactionId?: string }> => {
     console.log("MoneyService: Sending money with params:", params);
 
@@ -33,5 +38,16 @@ export const moneyService = {
     }
 
     throw new Error("Error processing transaction");
+  },
+
+  getBalance: async (): Promise<number> => {
+    try {
+      const response = await get<BalanceResponse>("/my_balance");
+      console.log("Balance response:", response);
+      return parseFloat(response.data.balance);
+    } catch (error) {
+      console.error("Error fetching balance:", error);
+      throw new Error("Failed to fetch account balance");
+    }
   },
 };

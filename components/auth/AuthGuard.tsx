@@ -1,7 +1,10 @@
 import React, { ReactNode, useEffect, useState } from "react";
-import { Redirect, usePathname } from "expo-router";
+import { usePathname, useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import userService from "@/services/userService";
+import { ActivityIndicator, StyleSheet } from "react-native";
+import { View } from "react-native";
+import { Colors } from "@/constants/Colors";
 
 interface AuthGuardProps {
   children: ReactNode;
@@ -12,17 +15,37 @@ declare global {
   var isAuthenticated: () => boolean;
 }
 
-const publicRoutes = ["/login", "/signup", "/forgot-password", "/"];
+const publicRoutes = ["/login", "/register"];
 
 export default function AuthGuard({ children }: AuthGuardProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const [isAuth, setIsAuth] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Mark component as mounted
+  useEffect(() => {
+    setIsMounted(true);
+    return () => setIsMounted(false);
+  }, []);
 
   // Check authentication on mount
   useEffect(() => {
     checkAuth();
   }, []);
+
+  // Handle navigation after authentication check is complete
+  useEffect(() => {
+    if (!isLoading && isMounted) {
+      const isPublicRoute = publicRoutes.includes(pathname || "");
+
+      if (!isPublicRoute && !isAuth) {
+        // Use router instead of Redirect component to avoid layout issues
+        router.replace("/login");
+      }
+    }
+  }, [isLoading, isAuth, pathname, isMounted, router]);
 
   const checkAuth = async () => {
     setIsLoading(true);
@@ -42,7 +65,6 @@ export default function AuthGuard({ children }: AuthGuardProps) {
       setIsAuth(false);
     } finally {
       setIsLoading(false);
-      setIsAuth(true); //TODO: Remove this when we have a real auth check
     }
   };
 
@@ -62,19 +84,23 @@ export default function AuthGuard({ children }: AuthGuardProps) {
     }
   };
 
-  if (isLoading && pathname === "/") {
-    return <>{children}</>;
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#fff" />
+      </View>
+    );
   }
 
-  const isPublicRoute = publicRoutes.includes(pathname);
-
-  if (pathname === "/") {
-    return <>{children}</>;
-  }
-
-  if (!isPublicRoute && !isAuth) {
-    return <Redirect href="/" />; //TODO: Change this to /login when we have a real auth check
-  }
-
+  // Always render children
   return <>{children}</>;
 }
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: Colors.dark.background,
+  },
+});

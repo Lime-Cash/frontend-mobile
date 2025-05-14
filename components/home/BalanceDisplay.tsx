@@ -2,7 +2,7 @@ import { View, StyleSheet } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 
 interface BalanceDisplayProps {
-  amount: number;
+  amount: number | null | undefined;
   title?: string;
 }
 
@@ -11,7 +11,9 @@ const BalanceDisplay = ({
   title = "Available Balance",
 }: BalanceDisplayProps) => {
   // Format amount to currency with 2 decimal places
-  const formattedAmount = `$${amount.toFixed(2)}`;
+  // Ensure amount is a number before using toFixed
+  const formattedAmount =
+    typeof amount === "number" ? `$${amount.toFixed(2)}` : "$0.00";
 
   return (
     <View style={[styles.container]}>
