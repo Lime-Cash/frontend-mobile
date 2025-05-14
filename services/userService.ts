@@ -1,10 +1,15 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
-
-const API_URL = "http://localhost:3000";
-const TOKEN_KEY = "@auth_token";
+import { post } from "../api/axios";
+import { TOKEN_KEY } from "../constants/auth";
+import axios, { AxiosError } from "axios";
 
 interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+interface RegisterCredentials {
+  name: string;
   email: string;
   password: string;
 }
@@ -13,28 +18,56 @@ interface LoginResponse {
   token: string;
 }
 
+interface ErrorResponse {
+  error: string;
+}
+
 class UserService {
   async login(credentials: LoginCredentials): Promise<string> {
     try {
-      const response = await axios.post<LoginResponse>(
-        `${API_URL}/login`,
-        credentials,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-        },
+      const response = await post<LoginResponse, LoginCredentials>(
+        "/login",
+        credentials
       );
 
       const token = response.data.token;
       await this.saveToken(token);
       return token;
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        throw new Error(error.response.data.error || "Authentication failed");
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<ErrorResponse>;
+        if (axiosError.response?.data?.error) {
+          throw new Error(axiosError.response.data.error);
+        }
       }
-      throw error;
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error("Authentication failed");
+    }
+  }
+
+  async register(credentials: RegisterCredentials): Promise<string> {
+    try {
+      const response = await post<LoginResponse, RegisterCredentials>(
+        "/register",
+        credentials
+      );
+
+      const token = response.data.token;
+      await this.saveToken(token);
+      return token;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<ErrorResponse>;
+        if (axiosError.response?.data?.error) {
+          throw new Error(axiosError.response.data.error);
+        }
+      }
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error("Registration failed");
     }
   }
 

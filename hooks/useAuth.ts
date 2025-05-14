@@ -46,7 +46,30 @@ export function useAuth() {
       return true;
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Login failed. Please try again.",
+        err instanceof Error ? err.message : "Login failed. Please try again."
+      );
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const register = async (name: string, email: string, password: string) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      await userService.register({ name, email, password });
+      await global.setAuthenticated(true);
+      await AsyncStorage.setItem(AUTH_STORAGE_KEY, "true");
+
+      router.replace("/");
+      return true;
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Registration failed. Please try again."
       );
       return false;
     } finally {
@@ -95,6 +118,7 @@ export function useAuth() {
 
   return {
     login,
+    register,
     logout,
     checkAuth,
     isLoading,

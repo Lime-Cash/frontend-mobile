@@ -1,4 +1,4 @@
-import { Redirect, router } from "expo-router";
+import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { View, StyleSheet, ActivityIndicator } from "react-native";
 import Button from "@/components/ui/Button";
@@ -11,6 +11,7 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import TransactionItem from "@/components/home/TransactionItem";
 import { useTransactions } from "@/hooks/useTransactions";
 import BalanceDisplay from "@/components/home/BalanceDisplay";
+import { useBalance } from "@/hooks/useBalance";
 
 // Define interfaces for global methods
 declare global {
@@ -28,6 +29,11 @@ export default function Index() {
     isLoading: isLoadingTransactions,
     error: transactionsError,
   } = useTransactions();
+  const {
+    balance,
+    isLoading: isLoadingBalance,
+    error: balanceError,
+  } = useBalance();
 
   useEffect(() => {
     const verifyAuth = async () => {
@@ -49,11 +55,6 @@ export default function Index() {
     );
   }
 
-  // If not authenticated, redirect to login
-  /*if (!isAuthenticated) {
-    return <Redirect href="/login" />;
-  }*/
-
   // If authenticated, show home screen
   return (
     <ScrollContainer>
@@ -68,7 +69,13 @@ export default function Index() {
         />
       </View>
       <View style={styles.balanceContainer}>
-        <BalanceDisplay amount={600} />
+        {isLoadingBalance ? (
+          <ActivityIndicator color={themeColor.tint} />
+        ) : balanceError ? (
+          <ThemedText style={styles.errorText}>{balanceError}</ThemedText>
+        ) : (
+          <BalanceDisplay amount={balance || 0} />
+        )}
       </View>
 
       <View style={styles.buttonsContainer}>
