@@ -1,40 +1,52 @@
-import { Redirect, router } from "expo-router";
-import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
+import { router } from "expo-router";
+import { useEffect, useState } from "react";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
 import Button from "@/components/ui/Button";
 import { useAuth } from "@/hooks/useAuth";
-import ViewContainer from "@/components/ui/ViewContainer";
-import { ThemedText } from "@/components/ThemedText";
 import ScrollContainer from "@/components/ui/ScrollContainer";
+import { ThemedText } from "@/components/ThemedText";
 import LimeLogo from "@/components/ui/LimeLogo";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-
-// Define interfaces for global methods
-declare global {
-  var isAuthenticated: () => boolean;
-  var setAuthenticated: (status: boolean) => Promise<void>;
-}
+import TransactionItem from "@/components/home/TransactionItem";
+import { useTransactions } from "@/hooks/useTransactions";
+import BalanceDisplay from "@/components/home/BalanceDisplay";
+import { useBalance } from "@/hooks/useBalance";
 
 export default function Index() {
   const { checkAuth, logout, isInitialized } = useAuth();
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const colorScheme = useColorScheme();
   const themeColor = Colors[colorScheme ?? "light"];
+  const {
+    transactions,
+    isLoading: isLoadingTransactions,
+    error: transactionsError,
+  } = useTransactions();
+  const {
+    balance,
+    isLoading: isLoadingBalance,
+    error: balanceError,
+  } = useBalance();
 
-  // Check authentication status
-  const isAuth = checkAuth();
+  useEffect(() => {
+    const verifyAuth = async () => {
+      const authStatus = await checkAuth();
+      setIsAuthenticated(authStatus);
+    };
+
+    if (isInitialized) {
+      verifyAuth();
+    }
+  }, [isInitialized, checkAuth]);
 
   // Show loading indicator while auth state is initializing
-  if (!isInitialized) {
+  if (!isInitialized || isAuthenticated === null) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color={themeColor.tint} />
       </View>
     );
-  }
-
-  // If not authenticated, redirect to login
-  if (!isAuth) {
-    return <Redirect href="/login" />;
   }
 
   // If authenticated, show home screen
@@ -49,6 +61,15 @@ export default function Index() {
           icon="rectangle.portrait.and.arrow.forward"
           onPress={logout}
         />
+      </View>
+      <View style={styles.balanceContainer}>
+        {isLoadingBalance ? (
+          <ActivityIndicator color={themeColor.tint} />
+        ) : balanceError ? (
+          <ThemedText style={styles.errorText}>{balanceError}</ThemedText>
+        ) : (
+          <BalanceDisplay amount={balance || 0} />
+        )}
       </View>
 
       <View style={styles.buttonsContainer}>
@@ -75,7 +96,31 @@ export default function Index() {
       </View>
 
       <View style={styles.transactionsContainer}>
-        <ThemedText type="subtitle">Transactions</ThemedText>
+        <ThemedText type="subtitle" style={styles.transactionsTitle}>
+          Transactions
+        </ThemedText>
+
+        {isLoadingTransactions ? (
+          <ActivityIndicator
+            color={themeColor.tint}
+            style={styles.transactionsLoader}
+          />
+        ) : transactionsError ? (
+          <ThemedText style={styles.errorText}>{transactionsError}</ThemedText>
+        ) : transactions.length === 0 ? (
+          <ThemedText style={styles.emptyText}>
+            No transactions found
+          </ThemedText>
+        ) : (
+          transactions.map((transaction) => (
+            <TransactionItem
+              key={transaction.id}
+              message={transaction.message}
+              date={transaction.date}
+              price={transaction.price}
+            />
+          ))
+        )}
       </View>
     </ScrollContainer>
   );
@@ -102,10 +147,28 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginTop: 20,
   },
+  transactionsTitle: {
+    marginBottom: 16,
+  },
+  transactionsLoader: {
+    marginVertical: 20,
+  },
+  errorText: {
+    color: "#F44336",
+    marginVertical: 10,
+  },
+  emptyText: {
+    textAlign: "center",
+    marginVertical: 20,
+    opacity: 0.7,
+  },
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#0D111C",
+  },
+  balanceContainer: {
+    marginBottom: 30,
   },
 });

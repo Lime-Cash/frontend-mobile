@@ -2,14 +2,13 @@ import { useState, useEffect } from "react";
 import { router } from "expo-router";
 import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import userService from "@/services/userService";
 
-// Define interfaces to access global methods
 declare global {
   var setAuthenticated: (status: boolean) => Promise<void>;
   var isAuthenticated: () => boolean;
 }
 
-// Key for storing auth state in AsyncStorage
 const AUTH_STORAGE_KEY = "@auth_status";
 
 export function useAuth() {
@@ -17,12 +16,11 @@ export function useAuth() {
   const [error, setError] = useState<string | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // Initialize auth state from AsyncStorage
   useEffect(() => {
     const initializeAuth = async () => {
       try {
-        const storedAuth = await AsyncStorage.getItem(AUTH_STORAGE_KEY);
-        if (storedAuth === "true") {
+        const isUserAuthenticated = await userService.isAuthenticated();
+        if (isUserAuthenticated) {
           await global.setAuthenticated(true);
         }
       } catch (err) {
@@ -35,26 +33,44 @@ export function useAuth() {
     initializeAuth();
   }, []);
 
-  const login = async () => {
+  const login = async (email: string, password: string) => {
     setIsLoading(true);
     setError(null);
 
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Set user as authenticated
+      await userService.login({ email, password });
       await global.setAuthenticated(true);
-
-      // Save auth state to AsyncStorage
       await AsyncStorage.setItem(AUTH_STORAGE_KEY, "true");
 
-      // Navigate to main app on successful login
       router.replace("/");
       return true;
     } catch (err) {
-      console.error("Login error:", err);
-      setError("Login failed. Please try again.");
+      setError(
+        err instanceof Error ? err.message : "Login failed. Please try again."
+      );
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const register = async (name: string, email: string, password: string) => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      await userService.register({ name, email, password });
+      await global.setAuthenticated(true);
+      await AsyncStorage.setItem(AUTH_STORAGE_KEY, "true");
+
+      router.replace("/");
+      return true;
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Registration failed. Please try again."
+      );
       return false;
     } finally {
       setIsLoading(false);
@@ -76,13 +92,10 @@ export function useAuth() {
             setIsLoading(true);
 
             try {
-              // Remove auth state from AsyncStorage
+              await userService.removeToken();
               await AsyncStorage.removeItem(AUTH_STORAGE_KEY);
-
-              // Set authenticated to false
               await global.setAuthenticated(false);
 
-              // Redirect to login
               router.replace("/login");
               resolve(true);
             } catch (err) {
@@ -98,12 +111,14 @@ export function useAuth() {
     });
   };
 
-  const checkAuth = () => {
-    return global.isAuthenticated?.() || false;
+  const checkAuth = async () => {
+    const isUserAuthenticated = await userService.isAuthenticated();
+    return isUserAuthenticated || global.isAuthenticated?.() || false;
   };
 
   return {
     login,
+    register,
     logout,
     checkAuth,
     isLoading,

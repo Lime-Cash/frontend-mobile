@@ -15,15 +15,23 @@ declare global {
   var isAuthenticated: () => boolean;
 }
 
-export default function LoginScreen() {
+export default function RegisterScreen() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const { login, isLoading, error } = useAuth();
+  const { register, isLoading, error } = useAuth();
   const colorScheme = useColorScheme();
   const themeColor = Colors[colorScheme ?? "light"];
 
-  const handleLogin = async () => {
+  const handleRegister = async () => {
+    // Validaciones
+    if (!name || name.trim().length < 2) {
+      Alert.alert("Invalid Name", "Please enter your name (min. 2 characters)");
+      return;
+    }
+
     if (!email || !email.includes("@")) {
       Alert.alert("Invalid Email", "Please enter a valid email address");
       return;
@@ -34,12 +42,16 @@ export default function LoginScreen() {
       return;
     }
 
-    await login(email, password);
+    if (password !== confirmPassword) {
+      Alert.alert("Password Mismatch", "Passwords do not match");
+      return;
+    }
+
+    await register(name, email, password);
   };
 
-  const navigateToSignup = () => {
-    // Navigate to signup screen
-    router.replace("/register");
+  const navigateToLogin = () => {
+    router.replace("/login");
   };
 
   return (
@@ -48,16 +60,25 @@ export default function LoginScreen() {
         <LimeLogo size={40} />
       </View>
       <View style={styles.contentContainer}>
-        <Text style={styles.title}>Welcome back</Text>
-        <Text style={styles.subtitle}>Enter your credentials to continue</Text>
+        <Text style={styles.title}>Create Account</Text>
+        <Text style={styles.subtitle}>Enter your details to get started</Text>
 
         <View style={styles.formContainer}>
+          <InputField
+            label="Full Name"
+            type="text"
+            value={name}
+            onChangeText={setName}
+            placeholder="John Doe"
+            containerStyle={styles.inputContainer}
+          />
+
           <InputField
             label="Email"
             type="email"
             value={email}
             onChangeText={setEmail}
-            placeholder="Email"
+            placeholder="your@email.com"
             autoCapitalize="none"
             autoCorrect={false}
             containerStyle={styles.inputContainer}
@@ -68,26 +89,35 @@ export default function LoginScreen() {
             type="password"
             value={password}
             onChangeText={setPassword}
-            placeholder="Password"
+            placeholder="Create Password"
+            containerStyle={styles.inputContainer}
+          />
+
+          <InputField
+            label="Confirm Password"
+            type="password"
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            placeholder="Confirm Password"
             containerStyle={styles.inputContainer}
           />
 
           {error && <Text style={styles.errorText}>{error}</Text>}
 
           <Button
-            title="Sign In"
-            onPress={handleLogin}
+            title="Sign Up"
+            onPress={handleRegister}
             loading={isLoading}
-            style={styles.loginButton}
+            style={styles.registerButton}
             variant="filled"
           />
         </View>
       </View>
 
-      <View style={styles.signupContainer}>
-        <Text style={styles.signupText}>Don't have an account?</Text>
-        <TouchableOpacity onPress={navigateToSignup}>
-          <Text style={styles.signupLink}>Sign up</Text>
+      <View style={styles.loginContainer}>
+        <Text style={styles.loginText}>Already have an account?</Text>
+        <TouchableOpacity onPress={navigateToLogin}>
+          <Text style={styles.loginLink}>Sign in</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -134,22 +164,22 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     width: "100%",
   },
-  loginButton: {
+  registerButton: {
     marginTop: 16,
     backgroundColor: "#FBC02D",
     width: "100%",
   },
-  signupContainer: {
+  loginContainer: {
     flexDirection: "row",
     position: "absolute",
     bottom: 50,
   },
-  signupText: {
+  loginText: {
     fontSize: 14,
     marginRight: 4,
     color: "#FFFFFF",
   },
-  signupLink: {
+  loginLink: {
     fontSize: 14,
     fontWeight: "600",
     color: "#FBC02D",

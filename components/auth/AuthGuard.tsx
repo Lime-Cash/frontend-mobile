@@ -1,67 +1,106 @@
 import React, { ReactNode, useEffect, useState } from "react";
-import { Redirect, usePathname, useRouter } from "expo-router";
+import { usePathname, useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import userService from "@/services/userService";
+import { ActivityIndicator, StyleSheet } from "react-native";
+import { View } from "react-native";
+import { Colors } from "@/constants/Colors";
 
 interface AuthGuardProps {
   children: ReactNode;
 }
 
-// Define global interfaces
 declare global {
   var setAuthenticated: (status: boolean) => Promise<void>;
   var isAuthenticated: () => boolean;
 }
 
-// Rutas que no requieren autenticación
-const publicRoutes = ["/login", "/signup", "/forgot-password"];
+const publicRoutes = ["/login", "/register"];
 
 export default function AuthGuard({ children }: AuthGuardProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const [isAuth, setIsAuth] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
 
-  // Verificar autenticación al cargar el componente
+  // Mark component as mounted
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const value = await AsyncStorage.getItem("@auth_status");
-        if (value === "true") {
-          setIsAuth(true);
-        }
-      } catch (e) {
-        console.error("Error reading auth status:", e);
-      }
-    };
+    setIsMounted(true);
+    return () => setIsMounted(false);
+  }, []);
 
+  // Check authentication on mount
+  useEffect(() => {
     checkAuth();
   }, []);
 
-  // Función para comprobar autenticación - expuesta globalmente
+  // Handle navigation after authentication check is complete
+  useEffect(() => {
+    if (!isLoading && isMounted) {
+      const isPublicRoute = publicRoutes.includes(pathname || "");
+
+      if (!isPublicRoute && !isAuth) {
+        // Use router instead of Redirect component to avoid layout issues
+        router.replace("/login");
+      }
+    }
+  }, [isLoading, isAuth, pathname, isMounted, router]);
+
+  const checkAuth = async () => {
+    setIsLoading(true);
+    try {
+      // Primary check based on token
+      const hasToken = await userService.isAuthenticated();
+
+      if (hasToken) {
+        setIsAuth(true);
+        await AsyncStorage.setItem("@auth_status", "true");
+      } else {
+        setIsAuth(false);
+        await AsyncStorage.setItem("@auth_status", "false");
+      }
+    } catch (e) {
+      console.error("Error checking auth status:", e);
+      setIsAuth(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Define global auth functions
   global.isAuthenticated = () => isAuth;
 
-  // Función para establecer autenticación - expuesta globalmente
   global.setAuthenticated = async (status: boolean) => {
     try {
       await AsyncStorage.setItem("@auth_status", status ? "true" : "false");
+      if (!status) {
+        // Ensure token is removed when logging out
+        await userService.removeToken();
+      }
       setIsAuth(status);
     } catch (e) {
       console.error("Error setting auth status:", e);
     }
   };
 
-  // Verifica si la ruta actual es pública (no requiere autenticación)
-  const isPublicRoute = publicRoutes.includes(pathname);
-
-  // Si estamos en index, permitimos que su propio Redirect funcione
-  if (pathname === "/") {
-    return <>{children}</>;
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#fff" />
+      </View>
+    );
   }
 
-  // Si la ruta actual no es pública y el usuario no está autenticado,
-  // redirecciona a la página de login
-  if (!isPublicRoute && !isAuth) {
-    return <Redirect href="/login" />;
-  }
-
-  // Si la ruta es pública o el usuario está autenticado, muestra el contenido
+  // Always render children
   return <>{children}</>;
 }
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: Colors.dark.background,
+  },
+});

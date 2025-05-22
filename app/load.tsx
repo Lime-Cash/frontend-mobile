@@ -7,31 +7,57 @@ import ViewContainer from "@/components/ui/ViewContainer";
 import MoneyInput from "@/components/ui/MoneyInput";
 import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
+import Select from "@/components/ui/Select";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { useSendMoney } from "@/hooks/useSendMoney";
+import { useLoadMoney } from "@/hooks/useLoadMoney";
+
+// Lista de bancos disponibles
+const bankOptions = [
+  { label: "Banco Santander", value: "santander" },
+  { label: "Tarjeta Crédito", value: "tarjeta_credito" },
+];
 
 const Load = () => {
   const [amount, setAmount] = useState("");
   const [recipient, setRecipient] = useState("");
-  const [errors, setErrors] = useState({
+  const [selectedBank, setSelectedBank] = useState("");
+  const [formErrors, setFormErrors] = useState({
     amount: "",
     recipient: "",
+    bank: "",
   });
-  const [isLoading, setIsLoading] = useState(false);
+
   const colorScheme = useColorScheme();
   const themeColor = Colors[colorScheme ?? "light"];
-  const { sendMoney } = useSendMoney();
+  const { loadMoney, isLoading, error, transactionId } = useLoadMoney();
 
-  const handleSend = async () => {
+  const handleLoad = async () => {
+    const newErrors = {
+      amount: !amount ? "Please enter an amount" : "",
+      recipient: !recipient ? "Please enter a recipient" : "",
+      bank: !selectedBank ? "Please select a bank" : "",
+    };
+
+    setFormErrors(newErrors);
+
+    if (newErrors.amount || newErrors.recipient || newErrors.bank) {
+      return;
+    }
+
     try {
-      setIsLoading(true);
-      await sendMoney({ amount, recipient });
+      const result = await loadMoney({ amount, recipient, bank: selectedBank });
+      Alert.alert(
+        "Success",
+        `Money loaded successfully! Transaction ID: ${result.transactionId}`,
+      );
     } catch (error) {
       console.error(error);
-    } finally {
-      setIsLoading(false);
+      Alert.alert(
+        "Error",
+        error instanceof Error ? error.message : "Failed to load money",
+      );
     }
   };
 
@@ -52,33 +78,34 @@ const Load = () => {
           value={amount}
           onChangeText={(value) => {
             setAmount(value);
-            if (value) setErrors({ ...errors, amount: "" });
+            if (value) setFormErrors({ ...formErrors, amount: "" });
           }}
           containerStyle={styles.moneyInput}
           autoFocus
         />
-        {errors.amount ? (
-          <ThemedText style={styles.errorText}>{errors.amount}</ThemedText>
-        ) : null}
+        {formErrors.amount && (
+          <ThemedText style={styles.errorText}>{formErrors.amount}</ThemedText>
+        )}
 
-        <InputField
-          label=""
-          placeholder="Recipient email"
-          value={recipient}
-          onChangeText={(value) => {
-            setRecipient(value);
-            if (value) setErrors({ ...errors, recipient: "" });
+        <Select
+          label="From"
+          options={bankOptions}
+          value={selectedBank}
+          onChange={(value) => {
+            setSelectedBank(value);
+            if (value) setFormErrors({ ...formErrors, bank: "" });
           }}
-          containerStyle={styles.recipientInput}
-          error={errors.recipient}
+          placeholder="Select a bank to load money"
+          error={formErrors.bank}
+          containerStyle={styles.bankSelect}
         />
 
         <Button
-          title="Send Money"
-          icon="paperplane.fill"
-          onPress={handleSend}
+          title="Load Money"
+          icon="arrow.up.to.line"
+          onPress={handleLoad}
           style={styles.sendButton}
-          disabled={!amount || !recipient || isLoading}
+          disabled={!amount || !recipient || !selectedBank || isLoading}
           loading={isLoading}
         />
       </View>
@@ -107,6 +134,10 @@ const styles = StyleSheet.create({
     marginTop: 30,
     marginBottom: 10,
     width: "100%",
+  },
+  bankSelect: {
+    width: "100%",
+    marginTop: 50,
   },
   recipientInput: {
     width: "100%",

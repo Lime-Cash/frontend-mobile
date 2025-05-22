@@ -8,6 +8,8 @@ import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
 import "react-native-reanimated";
 import { StatusBar } from "expo-status-bar";
+import Toast from "react-native-toast-message";
+import { toastConfig } from "@/components/toasts/CustomToast";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
 import AuthGuard from "@/components/auth/AuthGuard";
@@ -45,6 +47,7 @@ export default function RootLayout() {
           <Stack.Screen name="+not-found" />
         </Stack>
       </AuthGuard>
+      <Toast config={toastConfig} />
     </ThemeProvider>
   );
 }

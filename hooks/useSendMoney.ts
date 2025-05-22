@@ -1,25 +1,28 @@
-import { Alert } from "react-native";
-
-interface SendMoneyParams {
-  amount: string;
-  recipient: string;
-}
+import { useState } from "react";
+import { SendMoneyParams } from "@/types/money";
+import { moneyService } from "@/services/moneyService";
 
 export const useSendMoney = () => {
-  const sendMoney = ({ amount, recipient }: SendMoneyParams) => {
-    console.log("Sending money", { amount, recipient });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-    // Simulate backend error
-    return new Promise<void>((resolve, reject) => {
-      setTimeout(() => {
-        Alert.alert(
-          "Error",
-          "There was a problem processing your transaction. Please try again later.",
-          [{ text: "OK" }]
-        );
-      }, 1000);
-    });
+  const sendMoney = async (params: SendMoneyParams): Promise<boolean> => {
+    setIsLoading(true);
+    setError(null);
+
+    const result = await moneyService.sendMoney(params);
+    setIsLoading(false);
+    if (result.success) {
+      return true;
+    } else {
+      setError(result.message);
+      return false;
+    }
   };
 
-  return { sendMoney };
+  return {
+    sendMoney,
+    isLoading,
+    error,
+  };
 };
