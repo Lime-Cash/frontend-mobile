@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { StyleSheet, View, TouchableOpacity, Alert } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -11,6 +11,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { useSendMoney } from "@/hooks/useSendMoney";
+import { showSuccessToast, showErrorToast } from "@/services/toastService";
 
 const SendMoney = () => {
   const [amount, setAmount] = useState("");
@@ -19,19 +20,27 @@ const SendMoney = () => {
     amount: "",
     recipient: "",
   });
-  const [isLoading, setIsLoading] = useState(false);
   const colorScheme = useColorScheme();
   const themeColor = Colors[colorScheme ?? "light"];
-  const { sendMoney } = useSendMoney();
+  const { sendMoney, isLoading, error } = useSendMoney();
+
+  useEffect(() => {
+    if (error) {
+      showErrorToast({
+        message: "Error",
+        description: error || "Something went wrong sending money",
+      });
+    }
+  }, [error]);
 
   const handleSend = async () => {
-    try {
-      setIsLoading(true);
-      await sendMoney({ amount, recipient });
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
+    const response = await sendMoney({ amount, email: recipient });
+    if (response) {
+      showSuccessToast({
+        message: "Success",
+        description: `$${amount} was sent to ${recipient}`,
+      });
+      router.push("/");
     }
   };
 

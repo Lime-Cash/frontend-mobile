@@ -1,5 +1,6 @@
 import { LoadMoneyParams, SendMoneyParams } from "@/types/money";
-import { get } from "@/api/axios";
+import { get, post } from "@/api/axios";
+import { AxiosError } from "axios";
 
 interface BalanceResponse {
   balance: string;
@@ -25,19 +26,41 @@ export const moneyService = {
 
   sendMoney: async (
     params: SendMoneyParams
-  ): Promise<{ success: boolean; transactionId?: string }> => {
-    console.log("MoneyService: Sending money with params:", params);
+  ): Promise<{ success: boolean; message: string }> => {
+    try {
+      const response = await post<
+        { message: string; error?: string },
+        SendMoneyParams
+      >("/transfer", params);
 
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    if (Math.random() < 0.8) {
+      if (response.status === 200 || response.status === 201) {
+        return { success: true, message: response.data.message };
+      } else {
+        return {
+          success: false,
+          message: response.data.error || "Unknown error",
+        };
+      }
+    } catch (error) {
+      console.log("Error sending money:", error);
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 400) {
+          return {
+            success: false,
+            message: error.response?.data.message || "Unknown error",
+          };
+        } else if (error.response?.status === 404) {
+          return {
+            success: false,
+            message: "User not found",
+          };
+        }
+      }
       return {
-        success: true,
-        transactionId: "txn_" + Math.random().toString(36).substring(2, 15),
+        success: false,
+        message: "Unknown error",
       };
     }
-
-    throw new Error("Error processing transaction");
   },
 
   getBalance: async (): Promise<number> => {
