@@ -13,12 +13,6 @@ import { useTransactions } from "@/hooks/useTransactions";
 import BalanceDisplay from "@/components/home/BalanceDisplay";
 import { useBalance } from "@/hooks/useBalance";
 
-// Define interfaces for global methods
-declare global {
-  var isAuthenticated: () => boolean;
-  var setAuthenticated: (status: boolean) => Promise<void>;
-}
-
 export default function Index() {
   const { checkAuth, logout, isInitialized } = useAuth();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);

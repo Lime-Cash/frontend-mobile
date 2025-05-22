@@ -1,29 +1,22 @@
 import { useState } from "react";
-import { Alert } from "react-native";
 import { SendMoneyParams } from "@/types/money";
 import { moneyService } from "@/services/moneyService";
 
 export const useSendMoney = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [transactionId, setTransactionId] = useState<string | null>(null);
 
-  const sendMoney = async (params: SendMoneyParams) => {
+  const sendMoney = async (params: SendMoneyParams): Promise<boolean> => {
     setIsLoading(true);
     setError(null);
-    setTransactionId(null);
 
-    try {
-      const result = await moneyService.sendMoney(params);
-      setTransactionId(result.transactionId || null);
-      return result;
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Unknown error occurred";
-      setError(errorMessage);
-      throw err;
-    } finally {
-      setIsLoading(false);
+    const result = await moneyService.sendMoney(params);
+    setIsLoading(false);
+    if (result.success) {
+      return true;
+    } else {
+      setError(result.message);
+      return false;
     }
   };
 
@@ -31,6 +24,5 @@ export const useSendMoney = () => {
     sendMoney,
     isLoading,
     error,
-    transactionId,
   };
 };

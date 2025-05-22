@@ -8,6 +8,5 @@ export interface LoadMoneyParams {
 
 export interface SendMoneyParams {
   amount: string;
-  recipient: string;
-  bank?: string;
+  email: string;
 }
