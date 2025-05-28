@@ -10,10 +10,11 @@ interface AuthGuardProps {
   children: ReactNode;
 }
 
-declare global {
-  var setAuthenticated: (status: boolean) => Promise<void>;
-  var isAuthenticated: () => boolean;
-}
+// Declare the global functions with a type assertion approach
+type GlobalWithAuth = typeof globalThis & {
+  setAuthenticated: (status: boolean) => Promise<void>;
+  isAuthenticated: () => boolean;
+};
 
 const publicRoutes = ["/login", "/register"];
 
@@ -68,10 +69,10 @@ export default function AuthGuard({ children }: AuthGuardProps) {
     }
   };
 
-  // Define global auth functions
-  global.isAuthenticated = () => isAuth;
+  // Define global auth functions using type assertion
+  (global as GlobalWithAuth).isAuthenticated = () => isAuth;
 
-  global.setAuthenticated = async (status: boolean) => {
+  (global as GlobalWithAuth).setAuthenticated = async (status: boolean) => {
     try {
       await AsyncStorage.setItem("@auth_status", status ? "true" : "false");
       if (!status) {
@@ -92,8 +93,21 @@ export default function AuthGuard({ children }: AuthGuardProps) {
     );
   }
 
-  // Always render children
-  return <>{children}</>;
+  // Check if current route is public or user is authenticated
+  const isPublicRoute = publicRoutes.includes(pathname || "");
+
+  // Only render children if route is public or user is authenticated
+  if (isPublicRoute || isAuth) {
+    return <>{children}</>;
+  }
+
+  // Return empty view for protected routes when user is not authenticated
+  // This prevents the rendering of components that would make API calls
+  return (
+    <View style={styles.loadingContainer}>
+      <ActivityIndicator size="large" color="#fff" />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

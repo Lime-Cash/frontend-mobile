@@ -116,8 +116,8 @@ export default function Index() {
             <TransactionItem
               key={transaction.id}
               message={transaction.message}
-              date={transaction.date}
-              price={transaction.price}
+              date={transaction.created_at}
+              price={transaction.amount}
             />
           ))
         )}

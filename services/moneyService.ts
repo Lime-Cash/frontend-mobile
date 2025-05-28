@@ -65,7 +65,7 @@ export const moneyService = {
 
   getBalance: async (): Promise<number> => {
     try {
-      const response = await get<BalanceResponse>("/my_balance");
+      const response = await get<BalanceResponse>("/balance");
       console.log("Balance response:", response);
       return parseFloat(response.data.balance);
     } catch (error) {

@@ -8,12 +8,7 @@ import { useAuth } from "@/hooks/useAuth";
 import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
 import LimeLogo from "@/components/ui/LimeLogo";
-
-// Define interfaces to access global methods
-declare global {
-  var setAuthenticated: (status: boolean) => Promise<void>;
-  var isAuthenticated: () => boolean;
-}
+import { ThemedText } from "@/components/ThemedText";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -43,12 +38,14 @@ export default function LoginScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, { backgroundColor: themeColor.background }]}
+    >
       <View style={styles.logoContainer}>
         <LimeLogo size={40} />
       </View>
       <View style={styles.contentContainer}>
-        <Text style={styles.title}>Welcome back</Text>
+        <ThemedText style={styles.title}>Welcome back</ThemedText>
         <Text style={styles.subtitle}>Enter your credentials to continue</Text>
 
         <View style={styles.formContainer}>
@@ -85,9 +82,13 @@ export default function LoginScreen() {
       </View>
 
       <View style={styles.signupContainer}>
-        <Text style={styles.signupText}>Don't have an account?</Text>
+        <ThemedText style={styles.signupText}>
+          Don't have an account?
+        </ThemedText>
         <TouchableOpacity onPress={navigateToSignup}>
-          <Text style={styles.signupLink}>Sign up</Text>
+          <ThemedText style={styles.signupLink} type="link">
+            Sign up
+          </ThemedText>
         </TouchableOpacity>
       </View>
     </View>
@@ -97,7 +98,6 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#0D111C",
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 20,
@@ -114,7 +114,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 34,
     fontWeight: "bold",
-    color: "#FFFFFF",
     marginBottom: 6,
     textAlign: "center",
   },
@@ -136,7 +135,6 @@ const styles = StyleSheet.create({
   },
   loginButton: {
     marginTop: 16,
-    backgroundColor: "#FBC02D",
     width: "100%",
   },
   signupContainer: {
@@ -147,12 +145,10 @@ const styles = StyleSheet.create({
   signupText: {
     fontSize: 14,
     marginRight: 4,
-    color: "#FFFFFF",
   },
   signupLink: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#FBC02D",
   },
   errorText: {
     color: "#FF6B6B",

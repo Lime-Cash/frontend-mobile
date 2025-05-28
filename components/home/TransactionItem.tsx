@@ -18,7 +18,7 @@ export default function TransactionItem({
   // Format the price with currency symbol and color
   const colorScheme = useColorScheme();
   const themeColor = Colors[colorScheme ?? "light"];
-  const formattedPrice = `${price >= 0 ? "+" : ""}$${Math.abs(price).toFixed(2)}`;
+  const formattedPrice = `${price >= 0 ? "+" : "-"}$${Math.abs(price).toFixed(2)}`;
   const priceColor = price >= 0 ? "#4CAF50" : "#F44336"; // Green for positive, red for negative
 
   return (

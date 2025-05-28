@@ -4,11 +4,6 @@ import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import userService from "@/services/userService";
 
-declare global {
-  var setAuthenticated: (status: boolean) => Promise<void>;
-  var isAuthenticated: () => boolean;
-}
-
 const AUTH_STORAGE_KEY = "@auth_status";
 
 export function useAuth() {

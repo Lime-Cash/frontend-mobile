@@ -8,12 +8,7 @@ import { useAuth } from "@/hooks/useAuth";
 import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
 import LimeLogo from "@/components/ui/LimeLogo";
-
-// Define interfaces to access global methods
-declare global {
-  var setAuthenticated: (status: boolean) => Promise<void>;
-  var isAuthenticated: () => boolean;
-}
+import { ThemedText } from "@/components/ThemedText";
 
 export default function RegisterScreen() {
   const [name, setName] = useState("");
@@ -55,13 +50,17 @@ export default function RegisterScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, { backgroundColor: themeColor.background }]}
+    >
       <View style={styles.logoContainer}>
         <LimeLogo size={40} />
       </View>
       <View style={styles.contentContainer}>
-        <Text style={styles.title}>Create Account</Text>
-        <Text style={styles.subtitle}>Enter your details to get started</Text>
+        <ThemedText style={styles.title}>Create Account</ThemedText>
+        <ThemedText style={styles.subtitle}>
+          Enter your details to get started
+        </ThemedText>
 
         <View style={styles.formContainer}>
           <InputField
@@ -115,9 +114,13 @@ export default function RegisterScreen() {
       </View>
 
       <View style={styles.loginContainer}>
-        <Text style={styles.loginText}>Already have an account?</Text>
+        <ThemedText style={styles.loginText}>
+          Already have an account?
+        </ThemedText>
         <TouchableOpacity onPress={navigateToLogin}>
-          <Text style={styles.loginLink}>Sign in</Text>
+          <ThemedText style={styles.loginLink} type="link">
+            Sign in
+          </ThemedText>
         </TouchableOpacity>
       </View>
     </View>
@@ -127,7 +130,6 @@ export default function RegisterScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#0D111C",
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 20,
@@ -144,7 +146,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 34,
     fontWeight: "bold",
-    color: "#FFFFFF",
     marginBottom: 6,
     textAlign: "center",
   },
@@ -166,7 +167,6 @@ const styles = StyleSheet.create({
   },
   registerButton: {
     marginTop: 16,
-    backgroundColor: "#FBC02D",
     width: "100%",
   },
   loginContainer: {
@@ -177,12 +177,10 @@ const styles = StyleSheet.create({
   loginText: {
     fontSize: 14,
     marginRight: 4,
-    color: "#FFFFFF",
   },
   loginLink: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#FBC02D",
   },
   errorText: {
     color: "#FF6B6B",

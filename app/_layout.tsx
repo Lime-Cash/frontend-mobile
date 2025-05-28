@@ -39,8 +39,9 @@ export default function RootLayout() {
       <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
       <AuthGuard>
         <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="index" />
-          <Stack.Screen name="login" />
+          <Stack.Screen name="index" options={{ gestureEnabled: false }} />
+          <Stack.Screen name="login" options={{ gestureEnabled: false }} />
+          <Stack.Screen name="register" />
           <Stack.Screen name="send" />
           <Stack.Screen name="load" />
           <Stack.Screen name="withdraw" />
