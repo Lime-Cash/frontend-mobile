@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { router } from "expo-router";
-import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import userService from "@/services/userService";
 
@@ -10,13 +9,14 @@ export function useAuth() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   useEffect(() => {
     const initializeAuth = async () => {
       try {
         const isUserAuthenticated = await userService.isAuthenticated();
         if (isUserAuthenticated) {
-          await global.setAuthenticated(true);
+          await (global as any).setAuthenticated(true);
         }
       } catch (err) {
         console.error("Error initializing auth:", err);
@@ -34,14 +34,14 @@ export function useAuth() {
 
     try {
       await userService.login({ email, password });
-      await global.setAuthenticated(true);
+      await (global as any).setAuthenticated(true);
       await AsyncStorage.setItem(AUTH_STORAGE_KEY, "true");
 
       router.replace("/");
       return true;
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Login failed. Please try again."
+        err instanceof Error ? err.message : "Login failed. Please try again.",
       );
       return false;
     } finally {
@@ -55,7 +55,7 @@ export function useAuth() {
 
     try {
       await userService.register({ name, email, password });
-      await global.setAuthenticated(true);
+      await (global as any).setAuthenticated(true);
       await AsyncStorage.setItem(AUTH_STORAGE_KEY, "true");
 
       router.replace("/");
@@ -64,7 +64,7 @@ export function useAuth() {
       setError(
         err instanceof Error
           ? err.message
-          : "Registration failed. Please try again."
+          : "Registration failed. Please try again.",
       );
       return false;
     } finally {
@@ -73,51 +73,48 @@ export function useAuth() {
   };
 
   const logout = async () => {
-    return new Promise<boolean>((resolve) => {
-      Alert.alert("Logout", "Are you sure you want to logout?", [
-        {
-          text: "Cancel",
-          style: "cancel",
-          onPress: () => resolve(false),
-        },
-        {
-          text: "Logout",
-          style: "destructive",
-          onPress: async () => {
-            setIsLoading(true);
+    setShowLogoutModal(true);
+  };
 
-            try {
-              await userService.removeToken();
-              await AsyncStorage.removeItem(AUTH_STORAGE_KEY);
-              await global.setAuthenticated(false);
+  const confirmLogout = async () => {
+    setIsLoading(true);
+    setShowLogoutModal(false);
 
-              router.replace("/login");
-              resolve(true);
-            } catch (err) {
-              console.error("Logout error:", err);
-              setError("Logout failed. Please try again.");
-              resolve(false);
-            } finally {
-              setIsLoading(false);
-            }
-          },
-        },
-      ]);
-    });
+    try {
+      await userService.removeToken();
+      await AsyncStorage.removeItem(AUTH_STORAGE_KEY);
+      await (global as any).setAuthenticated(false);
+
+      router.replace("/login");
+      return true;
+    } catch (err) {
+      console.error("Logout error:", err);
+      setError("Logout failed. Please try again.");
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const cancelLogout = () => {
+    setShowLogoutModal(false);
   };
 
   const checkAuth = async () => {
     const isUserAuthenticated = await userService.isAuthenticated();
-    return isUserAuthenticated || global.isAuthenticated?.() || false;
+    return isUserAuthenticated || (global as any).isAuthenticated?.() || false;
   };
 
   return {
     login,
     register,
     logout,
+    confirmLogout,
+    cancelLogout,
     checkAuth,
     isLoading,
     isInitialized,
     error,
+    showLogoutModal,
   };
 }

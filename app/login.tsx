@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, TouchableOpacity, Alert } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { router } from "expo-router";
 
 import { Colors } from "@/constants/Colors";
@@ -9,6 +9,7 @@ import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
 import LimeLogo from "@/components/ui/LimeLogo";
 import { ThemedText } from "@/components/ThemedText";
+import { showErrorToast } from "@/services/toastService";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -20,12 +21,18 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     if (!email || !email.includes("@")) {
-      Alert.alert("Invalid Email", "Please enter a valid email address");
+      showErrorToast({
+        message: "Invalid Email",
+        description: "Please enter a valid email address",
+      });
       return;
     }
 
     if (!password || password.length < 6) {
-      Alert.alert("Invalid Password", "Password must be at least 6 characters");
+      showErrorToast({
+        message: "Invalid Password",
+        description: "Password must be at least 6 characters",
+      });
       return;
     }
 
