@@ -27,15 +27,15 @@ export const useTransactions = () => {
               message: getMessage(
                 transaction.type,
                 transaction.to_account,
-                transaction.from_account
+                transaction.from_account,
               ),
               created_at: getDate(transaction.created_at),
               amount:
                 transaction.type === "transfer_sent"
                   ? -transaction.amount
                   : transaction.amount,
-            }) as TransactionData
-        )
+            }) as TransactionData,
+        ),
       );
     } catch (err) {
       const errorMessage =
@@ -58,7 +58,7 @@ export const useTransactions = () => {
   const getMessage = (
     type: string,
     to_account?: string,
-    from_account?: string
+    from_account?: string,
   ) => {
     if (type === "transfer_sent" && to_account) {
       return `Transfer Sent to ${to_account}`;

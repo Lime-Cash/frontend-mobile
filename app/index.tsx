@@ -12,9 +12,17 @@ import TransactionItem from "@/components/home/TransactionItem";
 import { useTransactions } from "@/hooks/useTransactions";
 import BalanceDisplay from "@/components/home/BalanceDisplay";
 import { useBalance } from "@/hooks/useBalance";
+import ConfirmationModal from "@/components/ui/ConfirmationModal";
 
 export default function Index() {
-  const { checkAuth, logout, isInitialized } = useAuth();
+  const {
+    checkAuth,
+    logout,
+    confirmLogout,
+    cancelLogout,
+    showLogoutModal,
+    isInitialized,
+  } = useAuth();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const colorScheme = useColorScheme();
   const themeColor = Colors[colorScheme ?? "light"];
@@ -122,6 +130,18 @@ export default function Index() {
           ))
         )}
       </View>
+
+      <ConfirmationModal
+        visible={showLogoutModal}
+        title="Logout"
+        description="Are you sure you want to logout?"
+        button1Content="Cancel"
+        button2Content="Logout"
+        onButton1Press={cancelLogout}
+        onButton2Press={confirmLogout}
+        button1Style="cancel"
+        button2Style="destructive"
+      />
     </ScrollContainer>
   );
 }

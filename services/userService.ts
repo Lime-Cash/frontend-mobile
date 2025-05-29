@@ -27,7 +27,7 @@ class UserService {
     try {
       const response = await post<LoginResponse, LoginCredentials>(
         "/login",
-        credentials
+        credentials,
       );
 
       const token = response.data.token;
@@ -51,7 +51,7 @@ class UserService {
     try {
       const response = await post<LoginResponse, RegisterCredentials>(
         "/register",
-        credentials
+        credentials,
       );
 
       const token = response.data.token;

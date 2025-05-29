@@ -9,7 +9,7 @@ interface ToastParams {
 
 export const showToast = (
   type: ToastType,
-  { message, description = "" }: ToastParams
+  { message, description = "" }: ToastParams,
 ) => {
   Toast.show({
     type,
