@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";
 import { router } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
@@ -10,6 +11,7 @@ import Button from "@/components/ui/Button";
 import LimeLogo from "@/components/ui/LimeLogo";
 import { ThemedText } from "@/components/ThemedText";
 import { showErrorToast } from "@/services/toastService";
+import ScrollContainer from "@/components/ui/ScrollContainer";
 
 export default function RegisterScreen() {
   const [name, setName] = useState("");
@@ -21,8 +23,34 @@ export default function RegisterScreen() {
   const colorScheme = useColorScheme();
   const themeColor = Colors[colorScheme ?? "light"];
 
+  // Password requirements checker
+  const getPasswordRequirements = () => {
+    return [
+      {
+        text: "At least 8 characters",
+        met: password.length >= 8
+      },
+      {
+        text: "One lowercase letter (a-z)",
+        met: /[a-z]/.test(password)
+      },
+      {
+        text: "One uppercase letter (A-Z)",
+        met: /[A-Z]/.test(password)
+      },
+      {
+        text: "One number (0-9)",
+        met: /\d/.test(password)
+      },
+      {
+        text: "One special character (@$!%*?&)",
+        met: /[@$!%*?&]/.test(password)
+      }
+    ];
+  };
+
   const handleRegister = async () => {
-    // Validaciones
+    // Name validation
     if (!name || name.trim().length < 2) {
       showErrorToast({
         message: "Invalid Name",
@@ -31,7 +59,9 @@ export default function RegisterScreen() {
       return;
     }
 
-    if (!email || !email.includes("@")) {
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email)) {
       showErrorToast({
         message: "Invalid Email",
         description: "Please enter a valid email address",
@@ -39,14 +69,52 @@ export default function RegisterScreen() {
       return;
     }
 
-    if (!password || password.length < 6) {
+    // Password validation - minimum 8 characters
+    if (!password || password.length < 8) {
       showErrorToast({
         message: "Invalid Password",
-        description: "Password must be at least 6 characters",
+        description: "Password must be at least 8 characters long",
       });
       return;
     }
 
+    // Password validation - must include lowercase letter
+    if (!/[a-z]/.test(password)) {
+      showErrorToast({
+        message: "Invalid Password",
+        description: "Password must include at least one lowercase letter",
+      });
+      return;
+    }
+
+    // Password validation - must include uppercase letter
+    if (!/[A-Z]/.test(password)) {
+      showErrorToast({
+        message: "Invalid Password",
+        description: "Password must include at least one uppercase letter",
+      });
+      return;
+    }
+
+    // Password validation - must include number
+    if (!/\d/.test(password)) {
+      showErrorToast({
+        message: "Invalid Password",
+        description: "Password must include at least one number",
+      });
+      return;
+    }
+
+    // Password validation - must include special character
+    if (!/[@$!%*?&]/.test(password)) {
+      showErrorToast({
+        message: "Invalid Password",
+        description: "Password must include at least one special character (@$!%*?&)",
+      });
+      return;
+    }
+
+    // Password confirmation validation
     if (password !== confirmPassword) {
       showErrorToast({
         message: "Password Mismatch",
@@ -62,99 +130,129 @@ export default function RegisterScreen() {
     router.replace("/login");
   };
 
+  const requirements = getPasswordRequirements();
+
   return (
-    <View
-      style={[styles.container, { backgroundColor: themeColor.background }]}
+    <KeyboardAvoidingView 
+      style={{ flex: 1 }} 
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <View style={styles.logoContainer}>
-        <LimeLogo size={40} />
-      </View>
-      <View style={styles.contentContainer}>
-        <ThemedText style={styles.title}>Create Account</ThemedText>
-        <ThemedText style={styles.subtitle}>
-          Enter your details to get started
-        </ThemedText>
-
-        <View style={styles.formContainer}>
-          <InputField
-            label="Full Name"
-            type="text"
-            value={name}
-            onChangeText={setName}
-            placeholder="John Doe"
-            containerStyle={styles.inputContainer}
-          />
-
-          <InputField
-            label="Email"
-            type="email"
-            value={email}
-            onChangeText={setEmail}
-            placeholder="your@email.com"
-            autoCapitalize="none"
-            autoCorrect={false}
-            containerStyle={styles.inputContainer}
-          />
-
-          <InputField
-            label="Password"
-            type="password"
-            value={password}
-            onChangeText={setPassword}
-            placeholder="Create Password"
-            containerStyle={styles.inputContainer}
-          />
-
-          <InputField
-            label="Confirm Password"
-            type="password"
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            placeholder="Confirm Password"
-            containerStyle={styles.inputContainer}
-          />
-
-          {error && <Text style={styles.errorText}>{error}</Text>}
-
-          <Button
-            title="Sign Up"
-            onPress={handleRegister}
-            loading={isLoading}
-            style={styles.registerButton}
-            variant="filled"
-          />
+      <ScrollContainer>
+        <View style={styles.logoContainer}>
+          <LimeLogo size={40} />
         </View>
-      </View>
-
-      <View style={styles.loginContainer}>
-        <ThemedText style={styles.loginText}>
-          Already have an account?
-        </ThemedText>
-        <TouchableOpacity onPress={navigateToLogin}>
-          <ThemedText style={styles.loginLink} type="link">
-            Sign in
+        
+        <View style={styles.contentContainer}>
+          <ThemedText style={styles.title}>Create Account</ThemedText>
+          <ThemedText style={styles.subtitle}>
+            Enter your details to get started
           </ThemedText>
-        </TouchableOpacity>
-      </View>
-    </View>
+
+          <View style={styles.formContainer}>
+            <InputField
+              label="Full Name"
+              type="text"
+              value={name}
+              onChangeText={setName}
+              placeholder="John Doe"
+              containerStyle={styles.inputContainer}
+            />
+
+            <InputField
+              label="Email"
+              type="email"
+              value={email}
+              onChangeText={setEmail}
+              placeholder="your@email.com"
+              autoCapitalize="none"
+              autoCorrect={false}
+              containerStyle={styles.inputContainer}
+            />
+
+            <InputField
+              label="Password"
+              type="password"
+              value={password}
+              onChangeText={setPassword}
+              placeholder="Create Password"
+              containerStyle={styles.inputContainer}
+            />
+
+            {/* Password Requirements */}
+            {password.length > 0 && (
+              <View style={styles.requirementsContainer}>
+                <ThemedText style={styles.requirementsTitle}>
+                  Password Requirements:
+                </ThemedText>
+                {requirements.map((requirement, index) => (
+                  <View key={index} style={styles.requirementRow}>
+                    <Ionicons
+                      name={requirement.met ? "checkmark-circle" : "ellipse-outline"}
+                      size={16}
+                      color={requirement.met ? "#4CAF50" : themeColor.icon}
+                      style={styles.requirementIcon}
+                    />
+                    <Text
+                      style={[
+                        styles.requirementText,
+                        {
+                          color: requirement.met ? "#4CAF50" : themeColor.text,
+                          textDecorationLine: requirement.met ? "line-through" : "none",
+                        }
+                      ]}
+                    >
+                      {requirement.text}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+            )}
+
+            <InputField
+              label="Confirm Password"
+              type="password"
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              placeholder="Confirm Password"
+              containerStyle={styles.inputContainer}
+            />
+
+            {error && <Text style={styles.errorText}>{error}</Text>}
+
+            <Button
+              title="Sign Up"
+              onPress={handleRegister}
+              loading={isLoading}
+              style={styles.registerButton}
+              variant="filled"
+            />
+          </View>
+        </View>
+
+        <View style={styles.loginContainer}>
+          <ThemedText style={styles.loginText}>
+            Already have an account?
+          </ThemedText>
+          <TouchableOpacity onPress={navigateToLogin}>
+            <ThemedText style={styles.loginLink} type="link">
+              Sign in
+            </ThemedText>
+          </TouchableOpacity>
+        </View>
+      </ScrollContainer>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  logoContainer: {
     alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 20,
+    marginBottom: 40,
+    marginTop: 20,
   },
   contentContainer: {
-    width: "100%",
     alignItems: "center",
-    justifyContent: "center",
-  },
-  logoContainer: {
-    position: "absolute",
-    top: 80,
+    paddingBottom: 40,
   },
   title: {
     fontSize: 34,
@@ -172,11 +270,35 @@ const styles = StyleSheet.create({
     width: "100%",
     maxWidth: 320,
     alignItems: "center",
-    marginTop: 20,
   },
   inputContainer: {
     marginBottom: 16,
     width: "100%",
+  },
+  requirementsContainer: {
+    width: "100%",
+    backgroundColor: "rgba(155, 161, 166, 0.1)",
+    borderRadius: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    marginBottom: 16,
+  },
+  requirementsTitle: {
+    fontSize: 14,
+    fontWeight: "600",
+    marginBottom: 8,
+  },
+  requirementRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 4,
+  },
+  requirementIcon: {
+    marginRight: 8,
+  },
+  requirementText: {
+    fontSize: 12,
+    flex: 1,
   },
   registerButton: {
     marginTop: 16,
@@ -184,8 +306,9 @@ const styles = StyleSheet.create({
   },
   loginContainer: {
     flexDirection: "row",
-    position: "absolute",
-    bottom: 50,
+    justifyContent: "center",
+    marginTop: 20,
+    paddingBottom: 20,
   },
   loginText: {
     fontSize: 14,
