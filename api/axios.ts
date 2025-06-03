@@ -20,12 +20,12 @@ axiosInstance.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 export async function get<T>(
   url: string,
-  config?: AxiosRequestConfig
+  config?: AxiosRequestConfig,
 ): Promise<AxiosResponse<T>> {
   const response: AxiosResponse<T> = await axiosInstance.get(url, config);
   return response;
@@ -34,12 +34,12 @@ export async function get<T>(
 export async function post<T, U>(
   url: string,
   body: U,
-  config?: AxiosRequestConfig
+  config?: AxiosRequestConfig,
 ): Promise<AxiosResponse<T>> {
   const response: AxiosResponse<T> = await axiosInstance.post(
     url,
     body,
-    config
+    config,
   );
   return response;
 }
@@ -47,7 +47,7 @@ export async function post<T, U>(
 export async function put<T, U>(
   url: string,
   body: U,
-  config?: AxiosRequestConfig
+  config?: AxiosRequestConfig,
 ): Promise<AxiosResponse<T>> {
   const response: AxiosResponse<T> = await axiosInstance.put(url, body, config);
   return response;
@@ -55,7 +55,7 @@ export async function put<T, U>(
 
 export async function del<T>(
   url: string,
-  config?: AxiosRequestConfig
+  config?: AxiosRequestConfig,
 ): Promise<AxiosResponse<T>> {
   const response: AxiosResponse<T> = await axiosInstance.delete(url, config);
   return response;

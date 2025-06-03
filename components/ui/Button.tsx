@@ -22,6 +22,7 @@ interface ButtonProps {
   loading?: boolean;
   width?: number | string;
   style?: any;
+  textStyle?: any;
 }
 
 export default function Button({
@@ -33,6 +34,7 @@ export default function Button({
   loading = false,
   width,
   style,
+  textStyle,
 }: ButtonProps) {
   const colorScheme = useColorScheme();
   const themeColor = Colors[colorScheme ?? "light"];
@@ -94,7 +96,7 @@ export default function Button({
                 style={styles.icon}
               />
             )}
-            <Text style={buttonStyles.text}>{title}</Text>
+            <Text style={[buttonStyles.text, textStyle]}>{title}</Text>
           </>
         )}
       </View>
