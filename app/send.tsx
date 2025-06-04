@@ -89,6 +89,7 @@ const SendMoney = () => {
           style={styles.sendButton}
           disabled={!amount || !recipient || isLoading}
           loading={isLoading}
+          testID="send-money-btn"
         />
       </View>
     </ViewContainer>
