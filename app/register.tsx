@@ -138,45 +138,45 @@ export default function RegisterScreen() {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <ScrollContainer>
-        <View style={styles.logoContainer}>
-          <LimeLogo size={40} />
-        </View>
+      <View style={styles.logoContainer}>
+        <LimeLogo size={40} />
+      </View>
         
-        <View style={styles.contentContainer}>
-          <ThemedText style={styles.title}>Create Account</ThemedText>
-          <ThemedText style={styles.subtitle}>
-            Enter your details to get started
-          </ThemedText>
+      <View style={styles.contentContainer}>
+        <ThemedText style={styles.title}>Create Account</ThemedText>
+        <ThemedText style={styles.subtitle}>
+          Enter your details to get started
+        </ThemedText>
 
-          <View style={styles.formContainer}>
-            <InputField
-              label="Full Name"
-              type="text"
-              value={name}
-              onChangeText={setName}
-              placeholder="John Doe"
-              containerStyle={styles.inputContainer}
-            />
+        <View style={styles.formContainer}>
+          <InputField
+            label="Full Name"
+            type="text"
+            value={name}
+            onChangeText={setName}
+            placeholder="John Doe"
+            containerStyle={styles.inputContainer}
+          />
 
-            <InputField
-              label="Email"
-              type="email"
-              value={email}
-              onChangeText={setEmail}
-              placeholder="your@email.com"
-              autoCapitalize="none"
-              autoCorrect={false}
-              containerStyle={styles.inputContainer}
-            />
+          <InputField
+            label="Email"
+            type="email"
+            value={email}
+            onChangeText={setEmail}
+            placeholder="your@email.com"
+            autoCapitalize="none"
+            autoCorrect={false}
+            containerStyle={styles.inputContainer}
+          />
 
-            <InputField
-              label="Password"
-              type="password"
-              value={password}
-              onChangeText={setPassword}
-              placeholder="Create Password"
-              containerStyle={styles.inputContainer}
-            />
+          <InputField
+            label="Password"
+            type="password"
+            value={password}
+            onChangeText={setPassword}
+            placeholder="Create Password"
+            containerStyle={styles.inputContainer}
+          />
 
             {/* Password Requirements */}
             {password.length > 0 && (
@@ -208,37 +208,37 @@ export default function RegisterScreen() {
               </View>
             )}
 
-            <InputField
-              label="Confirm Password"
-              type="password"
-              value={confirmPassword}
-              onChangeText={setConfirmPassword}
-              placeholder="Confirm Password"
-              containerStyle={styles.inputContainer}
-            />
+          <InputField
+            label="Confirm Password"
+            type="password"
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            placeholder="Confirm Password"
+            containerStyle={styles.inputContainer}
+          />
 
-            {error && <Text style={styles.errorText}>{error}</Text>}
+          {error && <Text style={styles.errorText}>{error}</Text>}
 
-            <Button
-              title="Sign Up"
-              onPress={handleRegister}
-              loading={isLoading}
-              style={styles.registerButton}
-              variant="filled"
-            />
-          </View>
+          <Button
+            title="Sign Up"
+            onPress={handleRegister}
+            loading={isLoading}
+            style={styles.registerButton}
+            variant="filled"
+          />
         </View>
+      </View>
 
-        <View style={styles.loginContainer}>
-          <ThemedText style={styles.loginText}>
-            Already have an account?
+      <View style={styles.loginContainer}>
+        <ThemedText style={styles.loginText}>
+          Already have an account?
+        </ThemedText>
+        <TouchableOpacity onPress={navigateToLogin}>
+          <ThemedText style={styles.loginLink} type="link">
+            Sign in
           </ThemedText>
-          <TouchableOpacity onPress={navigateToLogin}>
-            <ThemedText style={styles.loginLink} type="link">
-              Sign in
-            </ThemedText>
-          </TouchableOpacity>
-        </View>
+        </TouchableOpacity>
+      </View>
       </ScrollContainer>
     </KeyboardAvoidingView>
   );

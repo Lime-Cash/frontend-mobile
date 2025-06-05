@@ -26,14 +26,12 @@ export const useTransactions = () => {
               id: transaction.id,
               message: getMessage(
                 transaction.type,
+                transaction.transaction_type,
                 transaction.to_account,
                 transaction.from_account,
               ),
               created_at: getDate(transaction.created_at),
-              amount:
-                transaction.type === "transfer_sent"
-                  ? -transaction.amount
-                  : transaction.amount,
+              amount: getTransactionAmount(transaction),
             }) as TransactionData,
         ),
       );
@@ -57,16 +55,46 @@ export const useTransactions = () => {
 
   const getMessage = (
     type: string,
+    transaction_type?: string,
     to_account?: string,
     from_account?: string,
   ) => {
+    // Handle new bank transaction types
+    if (type === "transaction" && transaction_type) {
+      if (transaction_type === "deposit") {
+        return "Bank Deposit";
+      } else if (transaction_type === "withdrawal") {
+        return "Bank Withdrawal";
+      }
+    }
+    
+    // Handle existing transfer types
     if (type === "transfer_sent" && to_account) {
       return `Transfer Sent to ${to_account}`;
     } else if (type === "transfer_received" && from_account) {
       return `Transfer Received from ${from_account}`;
-    } else {
-      return "Unknown transaction";
     }
+    
+    return "Unknown transaction";
+  };
+
+  const getTransactionAmount = (transaction: any) => {
+    // For withdrawals, ensure negative amount
+    if (transaction.type === "transaction" && transaction.transaction_type === "withdrawal") {
+      return -Math.abs(transaction.amount);
+    }
+    
+    // For deposits, ensure positive amount
+    if (transaction.type === "transaction" && transaction.transaction_type === "deposit") {
+      return Math.abs(transaction.amount);
+    }
+    
+    // For transfers, keep existing logic
+    if (transaction.type === "transfer_sent") {
+      return -transaction.amount;
+    }
+    
+    return transaction.amount;
   };
 
   const getDate = (created_at: string) => {
