@@ -7,7 +7,7 @@ describe("Login functionality", () => {
   it("should successfully login with valid credentials", () => {
     // Type valid email and password
     cy.get('input[placeholder="Email"]').type("tomi.serra@gmail.com");
-    cy.get('input[placeholder="Password"]').type("Tomi1234");
+    cy.get('input[placeholder="Password"]').type("Tomi1234$");
 
     // Click the login button
     cy.contains("Sign In").click();
