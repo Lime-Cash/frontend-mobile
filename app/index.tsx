@@ -90,14 +90,14 @@ export default function Index() {
 
         <Button
           title="Withdraw"
-          icon="arrow.down.to.line"
+          icon="arrow.up.to.line"
           onPress={() => router.push("/withdraw")}
           style={styles.button}
         />
 
         <Button
           title="Load"
-          icon="arrow.up.to.line"
+          icon="arrow.down.to.line"
           onPress={() => router.push("/load")}
           style={styles.button}
         />
@@ -157,12 +157,11 @@ const styles = StyleSheet.create({
   buttonsContainer: {
     flexDirection: "row",
     gap: 10,
+    justifyContent: "space-between",
     marginBottom: 20,
     width: "100%",
   },
-  button: {
-    flex: 1,
-  },
+  button: {},
   transactionsContainer: {
     marginBottom: 20,
     marginTop: 20,

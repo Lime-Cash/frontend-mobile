@@ -61,11 +61,11 @@ const Load = () => {
     setError(null);
 
     try {
-      const result = await bankService.depositFromBank({ 
-        cbu: cvu, 
-        amount: amount 
+      const result = await bankService.depositFromBank({
+        cbu: cvu,
+        amount: amount,
       });
-      
+
       if (result.success) {
         showSuccessToast({
           message: "Success",
@@ -83,13 +83,18 @@ const Load = () => {
     }
   };
 
+  const handleBack = () => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.push("/");
+    }
+  };
+
   return (
     <ViewContainer>
       <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
+        <TouchableOpacity style={styles.backButton} onPress={handleBack}>
           <Ionicons name="arrow-back" size={24} color={themeColor.text} />
         </TouchableOpacity>
         <ThemedText type="subtitle">Load Money</ThemedText>
@@ -139,7 +144,7 @@ const Load = () => {
 
         <Button
           title="Load Money"
-          icon="arrow.up.to.line"
+          icon="arrow.down.to.line"
           onPress={handleLoad}
           style={styles.sendButton}
           disabled={!amount || !cvu || isLoading}
