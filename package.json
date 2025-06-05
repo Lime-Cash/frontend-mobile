@@ -21,11 +21,11 @@
     "appium:driver:android": "appium driver install uiautomator2",
     "appium:doctor:ios": "appium-doctor --ios",
     "appium:doctor:android": "appium-doctor --android",
-    "e2e": "cd e2e && npm run test",
-    "e2e:ios": "cd e2e && npm run test:ios",
-    "e2e:android": "cd e2e && npm run test:android",
-    "e2e:setup": "npm run appium:driver:ios && npm run appium:driver:android",
-    "e2e:doctor": "npm run appium:doctor:ios && npm run appium:doctor:android"
+    "appium": "cd appium/e2e && npm run test",
+    "appium:ios": "cd appium/e2e && npm run test:ios",
+    "appium:android": "cd appium/e2e && npm run test:android",
+    "appium:setup": "npm run appium:driver:ios && npm run appium:driver:android",
+    "appium:doctor": "npm run appium:doctor:ios && npm run appium:doctor:android"
   },
   "jest": {
     "preset": "jest-expo"

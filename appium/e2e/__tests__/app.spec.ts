@@ -11,7 +11,6 @@ describe("App Launch Test", () => {
 
   afterEach(async () => {
     if (appiumHelper.driver) {
-      await appiumHelper.takeScreenshot(`test-${Date.now()}.png`);
       await appiumHelper.quitDriver();
       console.log("Driver quit successfully");
     }
@@ -20,9 +19,6 @@ describe("App Launch Test", () => {
   it("should launch the app successfully", async () => {
     // Wait for the app to load (adjust selector based on your app's structure)
     // This is a generic test that checks if the app launches
-
-    // Take a screenshot of the initial state
-    await appiumHelper.takeScreenshot("app-launch.png");
 
     // Add a basic assertion to ensure the driver is working
     expect(appiumHelper.driver).toBeDefined();
