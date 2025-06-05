@@ -8,7 +8,7 @@
     "test": "node --experimental-vm-modules ./node_modules/.bin/jest",
     "test:ios": "PLATFORM=ios node --experimental-vm-modules ./node_modules/.bin/jest",
     "test:android": "PLATFORM=android node --experimental-vm-modules ./node_modules/.bin/jest",
-    "test:register": "PLATFORM=ios node --experimental-vm-modules ./node_modules/.bin/jest __tests__/register.spec.ts",
+    "test:login": "PLATFORM=ios node --experimental-vm-modules ./node_modules/.bin/jest __tests__/login.spec.ts",
     "driver:ios": "appium driver install xcuitest",
     "driver:android": "appium driver install uiautomator2",
     "doctor:ios": "appium-doctor --ios",

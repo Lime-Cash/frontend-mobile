@@ -29,8 +29,8 @@ export const androidConfig: RemoteOptions = {
   capabilities: {
     "appium:automationName": "UiAutomator2",
     "appium:platformName": "Android",
-    "appium:platformVersion": "14.0", // Update to match your Android emulator version
-    "appium:deviceName": "Pixel_7_API_34", // Update to match your Android emulator name
+    "appium:platformVersion": "16.0", // Update to match your Android emulator version
+    "appium:deviceName": "Pixel 3 XL", // Update to match your Android emulator name
     "appium:appPackage": "host.exp.exponent", // Expo Go package for development
     "appium:appActivity": ".experience.HomeActivity",
     "appium:autoGrantPermissions": true,
