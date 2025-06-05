@@ -1,0 +1,35 @@
+# Node modules and dependencies
+node_modules
+.npm
+
+# Expo
+.expo
+.expo-shared
+web-build
+
+# Git
+.git
+.gitignore
+
+# Environment
+.env
+.env.*
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs
+
+# Cypress
+cypress/videos
+cypress/screenshots
+.cypress-cache
+.cypress-home
+
+# OS specific
+.DS_Store
+
+# Build directories
+dist
+build 
