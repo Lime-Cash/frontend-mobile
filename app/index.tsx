@@ -92,7 +92,7 @@ export default function Index() {
           title="Withdraw"
           icon="arrow.down.to.line"
           onPress={() => router.push("/withdraw")}
-          style={(styles.button, {})}
+          style={styles.button}
         />
 
         <Button
