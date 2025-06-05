@@ -8,8 +8,7 @@ yarn-error.log*
 .env
 
 # Screenshots and logs
-screenshots/*.png
-screenshots/*.jpg
+screenshots/
 logs/*.log
 
 # Test results

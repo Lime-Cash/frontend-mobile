@@ -14,6 +14,8 @@ export const iosConfig: RemoteOptions = {
     "appium:permissions": '{"host.exp.exponent": {"location": "yes"}}',
     "appium:newCommandTimeout": 240,
     "appium:connectHardwareKeyboard": false,
+    "appium:noReset": true, // Don't reset the app state
+    "appium:autoLaunch": true, // Auto-launch the app
     // For development builds, you might need to use:
     // "appium:app": "/path/to/your/app.app", // For standalone builds
   },

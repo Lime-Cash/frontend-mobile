@@ -25,7 +25,9 @@
     "appium:ios": "cd appium/e2e && npm run test:ios",
     "appium:android": "cd appium/e2e && npm run test:android",
     "appium:setup": "npm run appium:driver:ios && npm run appium:driver:android",
-    "appium:doctor": "npm run appium:doctor:ios && npm run appium:doctor:android"
+    "appium:doctor": "npm run appium:doctor:ios && npm run appium:doctor:android",
+    "appium:dev": "concurrently \"npm start\" \"sleep 10 && cd appium/e2e && npm run test:ios\"",
+    "appium:register": "cd appium/e2e && npm run test:register"
   },
   "jest": {
     "preset": "jest-expo"

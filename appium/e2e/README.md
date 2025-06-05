@@ -2,6 +2,68 @@
 
 This directory contains the Appium 2.0 setup for end-to-end testing of your React Native Expo app with TypeScript.
 
+## Quick Start Guide
+
+### 1. Prerequisites
+- macOS with Xcode and iOS Simulator
+- Node.js (v16 or higher)
+- Your React Native Expo app should be ready to run
+
+### 2. Setup (First Time Only)
+```bash
+# From the project root
+npm run appium:setup  # Install Appium drivers
+```
+
+### 3. Running Tests
+
+**Option A: Use the helper script (Recommended)**
+```bash
+# From the project root
+./appium/run-tests.sh
+```
+
+**Option B: Manual setup**
+```bash
+# Terminal 1: Start your Expo app
+npm start
+# Press 'i' to open in iOS Simulator
+
+# Terminal 2: Start Appium server  
+cd appium/e2e
+npm run start
+
+# Terminal 3: Run tests
+cd appium/e2e
+npm run test:register
+```
+
+### 4. What the Tests Do
+
+The registration test (`register.spec.ts`) will:
+1. Connect to your running Expo app in the iOS Simulator
+2. Take screenshots at each step
+3. Look for registration/sign-up navigation
+4. Attempt to fill out registration forms if found
+5. Save all screenshots to `screenshots/` directory
+
+### 5. Troubleshooting
+
+**App not loading properly?**
+- Make sure Expo development server is running (`npm start`)
+- Ensure the app is fully loaded in iOS Simulator before running tests
+- Check that no other apps are conflicting with port 4723
+
+**Tests can't find elements?**
+- Check the screenshots in `screenshots/` to see what the app looks like during tests
+- Elements might have different selectors than expected
+- The app might need different navigation to reach registration
+
+**Connection issues?**
+- Restart iOS Simulator
+- Kill and restart Appium server
+- Check that your device name matches in `.env` file
+
 ## Prerequisites
 
 ### For iOS Testing
