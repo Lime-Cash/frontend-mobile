@@ -55,6 +55,10 @@ export default function InputField({
           placeholderTextColor={themeColor.icon}
           {...inputProps}
           {...textInputProps}
+          autoComplete="off"
+          autoCapitalize="none"
+          autoCorrect={false}
+          autoFocus={false}
         />
         {type === "password" && (
           <TouchableOpacity
@@ -88,6 +92,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 1,
     borderRadius: 8,
+    overflow: "hidden",
   },
   input: {
     flex: 1,
@@ -96,7 +101,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   passwordInput: {
-    paddingRight: 40, // Space for the eye icon
+    paddingRight: 40,
   },
   eyeIcon: {
     position: "absolute",

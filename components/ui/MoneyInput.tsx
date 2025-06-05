@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   input: {
-    flex: 1,
+    maxWidth: "100%",
     height: 48,
     fontSize: 50,
     fontWeight: "500",

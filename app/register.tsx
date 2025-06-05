@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, TouchableOpacity, KeyboardAvoidingView, Platform } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -28,24 +37,24 @@ export default function RegisterScreen() {
     return [
       {
         text: "At least 8 characters",
-        met: password.length >= 8
+        met: password.length >= 8,
       },
       {
         text: "One lowercase letter (a-z)",
-        met: /[a-z]/.test(password)
+        met: /[a-z]/.test(password),
       },
       {
         text: "One uppercase letter (A-Z)",
-        met: /[A-Z]/.test(password)
+        met: /[A-Z]/.test(password),
       },
       {
         text: "One number (0-9)",
-        met: /\d/.test(password)
+        met: /\d/.test(password),
       },
       {
         text: "One special character (@$!%*?&)",
-        met: /[@$!%*?&]/.test(password)
-      }
+        met: /[@$!%*?&]/.test(password),
+      },
     ];
   };
 
@@ -109,7 +118,8 @@ export default function RegisterScreen() {
     if (!/[@$!%*?&]/.test(password)) {
       showErrorToast({
         message: "Invalid Password",
-        description: "Password must include at least one special character (@$!%*?&)",
+        description:
+          "Password must include at least one special character (@$!%*?&)",
       });
       return;
     }
@@ -133,113 +143,123 @@ export default function RegisterScreen() {
   const requirements = getPasswordRequirements();
 
   return (
-    <KeyboardAvoidingView 
-      style={{ flex: 1 }} 
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      <ScrollContainer>
-      <View style={styles.logoContainer}>
-        <LimeLogo size={40} />
-      </View>
-        
-      <View style={styles.contentContainer}>
-        <ThemedText style={styles.title}>Create Account</ThemedText>
-        <ThemedText style={styles.subtitle}>
-          Enter your details to get started
-        </ThemedText>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollContainer>
+          <View style={styles.logoContainer}>
+            <LimeLogo size={40} />
+          </View>
 
-        <View style={styles.formContainer}>
-          <InputField
-            label="Full Name"
-            type="text"
-            value={name}
-            onChangeText={setName}
-            placeholder="John Doe"
-            containerStyle={styles.inputContainer}
-          />
+          <View style={styles.contentContainer}>
+            <ThemedText style={styles.title}>Create Account</ThemedText>
+            <ThemedText style={styles.subtitle}>
+              Enter your details to get started
+            </ThemedText>
 
-          <InputField
-            label="Email"
-            type="email"
-            value={email}
-            onChangeText={setEmail}
-            placeholder="your@email.com"
-            autoCapitalize="none"
-            autoCorrect={false}
-            containerStyle={styles.inputContainer}
-          />
+            <View style={styles.formContainer}>
+              <InputField
+                label="Full Name"
+                type="text"
+                value={name}
+                onChangeText={setName}
+                placeholder="John Doe"
+                containerStyle={styles.inputContainer}
+              />
 
-          <InputField
-            label="Password"
-            type="password"
-            value={password}
-            onChangeText={setPassword}
-            placeholder="Create Password"
-            containerStyle={styles.inputContainer}
-          />
+              <InputField
+                label="Email"
+                type="email"
+                value={email}
+                onChangeText={setEmail}
+                placeholder="your@email.com"
+                autoCapitalize="none"
+                autoCorrect={false}
+                containerStyle={styles.inputContainer}
+              />
 
-            {/* Password Requirements */}
-            {password.length > 0 && (
-              <View style={styles.requirementsContainer}>
-                <ThemedText style={styles.requirementsTitle}>
-                  Password Requirements:
-                </ThemedText>
-                {requirements.map((requirement, index) => (
-                  <View key={index} style={styles.requirementRow}>
-                    <Ionicons
-                      name={requirement.met ? "checkmark-circle" : "ellipse-outline"}
-                      size={16}
-                      color={requirement.met ? "#4CAF50" : themeColor.icon}
-                      style={styles.requirementIcon}
-                    />
-                    <Text
-                      style={[
-                        styles.requirementText,
-                        {
-                          color: requirement.met ? "#4CAF50" : themeColor.text,
-                          textDecorationLine: requirement.met ? "line-through" : "none",
+              <InputField
+                label="Password"
+                type="password"
+                value={password}
+                onChangeText={setPassword}
+                placeholder="Create Password"
+                containerStyle={styles.inputContainer}
+              />
+
+              {/* Password Requirements */}
+              {password.length > 0 && (
+                <View style={styles.requirementsContainer}>
+                  <ThemedText style={styles.requirementsTitle}>
+                    Password Requirements:
+                  </ThemedText>
+                  {requirements.map((requirement, index) => (
+                    <View key={index} style={styles.requirementRow}>
+                      <Ionicons
+                        name={
+                          requirement.met
+                            ? "checkmark-circle"
+                            : "ellipse-outline"
                         }
-                      ]}
-                    >
-                      {requirement.text}
-                    </Text>
-                  </View>
-                ))}
-              </View>
-            )}
+                        size={16}
+                        color={requirement.met ? "#4CAF50" : themeColor.icon}
+                        style={styles.requirementIcon}
+                      />
+                      <Text
+                        style={[
+                          styles.requirementText,
+                          {
+                            color: requirement.met
+                              ? "#4CAF50"
+                              : themeColor.text,
+                            textDecorationLine: requirement.met
+                              ? "line-through"
+                              : "none",
+                          },
+                        ]}
+                      >
+                        {requirement.text}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              )}
 
-          <InputField
-            label="Confirm Password"
-            type="password"
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            placeholder="Confirm Password"
-            containerStyle={styles.inputContainer}
-          />
+              <InputField
+                label="Confirm Password"
+                type="password"
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+                placeholder="Confirm Password"
+                containerStyle={styles.inputContainer}
+              />
 
-          {error && <Text style={styles.errorText}>{error}</Text>}
+              {error && <Text style={styles.errorText}>{error}</Text>}
 
-          <Button
-            title="Sign Up"
-            onPress={handleRegister}
-            loading={isLoading}
-            style={styles.registerButton}
-            variant="filled"
-          />
-        </View>
-      </View>
+              <Button
+                title="Sign Up"
+                onPress={handleRegister}
+                loading={isLoading}
+                style={styles.registerButton}
+                variant="filled"
+              />
+            </View>
+          </View>
 
-      <View style={styles.loginContainer}>
-        <ThemedText style={styles.loginText}>
-          Already have an account?
-        </ThemedText>
-        <TouchableOpacity onPress={navigateToLogin}>
-          <ThemedText style={styles.loginLink} type="link">
-            Sign in
-          </ThemedText>
-        </TouchableOpacity>
-      </View>
-      </ScrollContainer>
+          <View style={styles.loginContainer}>
+            <ThemedText style={styles.loginText}>
+              Already have an account?
+            </ThemedText>
+            <TouchableOpacity onPress={navigateToLogin}>
+              <ThemedText style={styles.loginLink} type="link">
+                Sign in
+              </ThemedText>
+            </TouchableOpacity>
+          </View>
+        </ScrollContainer>
+      </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
 }

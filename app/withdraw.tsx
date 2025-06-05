@@ -51,11 +51,11 @@ const Withdraw = () => {
     setError(null);
 
     try {
-      const result = await bankService.withdrawToBank({ 
-        cbu: cvu, 
-        amount: amount 
+      const result = await bankService.withdrawToBank({
+        cbu: cvu,
+        amount: amount,
       });
-      
+
       if (result.success) {
         showSuccessToast({
           message: "Success",
@@ -67,19 +67,26 @@ const Withdraw = () => {
       }
     } catch (error) {
       console.error(error);
-      setError(error instanceof Error ? error.message : "Failed to withdraw money");
+      setError(
+        error instanceof Error ? error.message : "Failed to withdraw money"
+      );
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleBack = () => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.push("/");
     }
   };
 
   return (
     <ViewContainer>
       <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
+        <TouchableOpacity style={styles.backButton} onPress={handleBack}>
           <Ionicons name="arrow-back" size={24} color={themeColor.text} />
         </TouchableOpacity>
         <ThemedText type="subtitle">Withdraw Money</ThemedText>
@@ -115,7 +122,7 @@ const Withdraw = () => {
 
         <Button
           title="Withdraw Money"
-          icon="arrow.down.to.line"
+          icon="arrow.up.to.line"
           onPress={handleWithdraw}
           style={styles.withdrawButton}
           disabled={!amount || !cvu || isLoading}
