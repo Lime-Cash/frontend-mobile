@@ -2,7 +2,8 @@ import { get } from "../api/axios";
 
 export interface Transaction {
   id: string;
-  type: "transfer_sent" | "transfer_received";
+  type: "transfer_sent" | "transfer_received" | "transaction";
+  transaction_type?: "deposit" | "withdrawal";
   created_at: string;
   to_account?: string;
   from_account?: string;
