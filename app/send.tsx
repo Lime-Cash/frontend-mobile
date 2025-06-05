@@ -44,13 +44,18 @@ const SendMoney = () => {
     }
   };
 
+  const handleBack = () => {
+    if (router.canGoBack()) {
+      router.back();
+    } else {
+      router.push("/");
+    }
+  };
+
   return (
     <ViewContainer>
       <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
+        <TouchableOpacity style={styles.backButton} onPress={handleBack}>
           <Ionicons name="arrow-back" size={24} color={themeColor.text} />
         </TouchableOpacity>
         <ThemedText type="subtitle">Send Money</ThemedText>
@@ -89,6 +94,7 @@ const SendMoney = () => {
           style={styles.sendButton}
           disabled={!amount || !recipient || isLoading}
           loading={isLoading}
+          testID="send-money-btn"
         />
       </View>
     </ViewContainer>

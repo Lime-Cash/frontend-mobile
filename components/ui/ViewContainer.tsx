@@ -3,7 +3,7 @@ import React from "react";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Colors } from "@/constants/Colors";
 
-const viewContainer = ({ children }: { children: React.ReactNode }) => {
+const ViewContainer = ({ children }: { children: React.ReactNode }) => {
   const colorScheme = useColorScheme();
   const themeColor = Colors[colorScheme ?? "light"];
 
@@ -16,7 +16,7 @@ const viewContainer = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default viewContainer;
+export default ViewContainer;
 
 const styles = StyleSheet.create({
   container: {

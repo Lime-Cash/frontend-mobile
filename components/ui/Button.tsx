@@ -23,6 +23,7 @@ interface ButtonProps {
   width?: number | string;
   style?: any;
   textStyle?: any;
+  testID?: string;
 }
 
 export default function Button({
@@ -35,6 +36,7 @@ export default function Button({
   width,
   style,
   textStyle,
+  testID,
 }: ButtonProps) {
   const colorScheme = useColorScheme();
   const themeColor = Colors[colorScheme ?? "light"];
@@ -78,6 +80,7 @@ export default function Button({
       onPress={onPress}
       disabled={disabled || loading}
       activeOpacity={0.7}
+      testID={testID}
     >
       <View style={styles.contentContainer}>
         {loading ? (
@@ -108,7 +111,7 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: 8,
     paddingVertical: 12,
-    paddingHorizontal: 24,
+    paddingHorizontal: 15,
     justifyContent: "center",
     alignItems: "center",
   },
