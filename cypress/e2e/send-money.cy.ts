@@ -3,7 +3,7 @@ describe("Send Money functionality", () => {
     // Login before each test
     cy.visit("/login");
     cy.get('input[placeholder="Email"]').type("tomi.serra@gmail.com");
-    cy.get('input[placeholder="Password"]').type("Tomi1234");
+    cy.get('input[placeholder="Password"]').type("Tomi1234$");
     cy.contains("Sign In").click();
 
     // Wait for home page to load

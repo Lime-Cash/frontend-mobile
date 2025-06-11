@@ -1,0 +1,12 @@
+services:
+  expo-web:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - EXPO_PUBLIC_API_URL=http://localhost:80
+    stdin_open: true
+    tty: true

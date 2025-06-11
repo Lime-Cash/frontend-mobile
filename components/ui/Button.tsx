@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: 8,
     paddingVertical: 12,
-    paddingHorizontal: 24,
+    paddingHorizontal: 15,
     justifyContent: "center",
     alignItems: "center",
   },

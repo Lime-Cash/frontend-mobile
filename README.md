@@ -21,3 +21,17 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    ```bash
     npm run dev:test
    ```
+
+## How to run the dockerfile
+
+### Build image
+
+```bash
+ docker build -t expo-web-app --build-arg EXPO_PUBLIC_API_URL={API_URL_HERE} .
+```
+
+### Run dockerfile
+
+```bash
+ docker run -p 3000:80 expo-web-app
+```

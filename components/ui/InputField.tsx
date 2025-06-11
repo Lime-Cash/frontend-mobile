@@ -6,6 +6,7 @@ import {
   View,
   TouchableOpacity,
   TextInputProps,
+  Platform,
 } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
@@ -49,10 +50,15 @@ export default function InputField({
             styles.input,
             { color: themeColor.text },
             type === "password" && styles.passwordInput,
+            Platform.OS === "web" && ({ outlineStyle: "none" } as any),
           ]}
           placeholderTextColor={themeColor.icon}
           {...inputProps}
           {...textInputProps}
+          autoComplete="off"
+          autoCapitalize="none"
+          autoCorrect={false}
+          autoFocus={false}
         />
         {type === "password" && (
           <TouchableOpacity
@@ -86,15 +92,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderWidth: 1,
     borderRadius: 8,
-    paddingHorizontal: 12,
+    overflow: "hidden",
   },
   input: {
     flex: 1,
     height: 48,
     fontSize: 16,
+    paddingHorizontal: 12,
   },
   passwordInput: {
-    paddingRight: 40, // Space for the eye icon
+    paddingRight: 40,
   },
   eyeIcon: {
     position: "absolute",

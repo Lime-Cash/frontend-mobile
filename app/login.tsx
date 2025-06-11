@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Platform,
+  Keyboard,
+} from "react-native";
 import { router } from "expo-router";
 
 import { Colors } from "@/constants/Colors";
@@ -10,6 +19,7 @@ import Button from "@/components/ui/Button";
 import LimeLogo from "@/components/ui/LimeLogo";
 import { ThemedText } from "@/components/ThemedText";
 import { showErrorToast } from "@/services/toastService";
+import ScrollContainer from "@/components/ui/ScrollContainer";
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -45,68 +55,76 @@ export default function LoginScreen() {
   };
 
   return (
-    <View
-      style={[styles.container, { backgroundColor: themeColor.background }]}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
-      <View style={styles.logoContainer}>
-        <LimeLogo size={40} />
-      </View>
-      <View style={styles.contentContainer}>
-        <ThemedText style={styles.title}>Welcome back</ThemedText>
-        <Text style={styles.subtitle}>Enter your credentials to continue</Text>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollContainer contentContainerStyle={styles.container}>
+          <View style={styles.logoContainer}>
+            <LimeLogo size={40} />
+          </View>
 
-        <View style={styles.formContainer}>
-          <InputField
-            label="Email"
-            type="email"
-            value={email}
-            onChangeText={setEmail}
-            placeholder="Email"
-            autoCapitalize="none"
-            autoCorrect={false}
-            containerStyle={styles.inputContainer}
-          />
+          <View style={styles.contentContainer}>
+            <ThemedText style={styles.title}>Welcome back</ThemedText>
+            <Text style={styles.subtitle}>
+              Enter your credentials to continue
+            </Text>
 
-          <InputField
-            label="Password"
-            type="password"
-            value={password}
-            onChangeText={setPassword}
-            placeholder="Password"
-            containerStyle={styles.inputContainer}
-          />
+            <View style={styles.formContainer}>
+              <InputField
+                label="Email"
+                type="email"
+                value={email}
+                onChangeText={setEmail}
+                placeholder="Email"
+                autoCapitalize="none"
+                autoCorrect={false}
+                containerStyle={styles.inputContainer}
+              />
 
-          {error && <Text style={styles.errorText}>{error}</Text>}
+              <InputField
+                label="Password"
+                type="password"
+                value={password}
+                onChangeText={setPassword}
+                placeholder="Password"
+                containerStyle={styles.inputContainer}
+              />
 
-          <Button
-            title="Sign In"
-            onPress={handleLogin}
-            loading={isLoading}
-            style={styles.loginButton}
-            variant="filled"
-          />
-        </View>
-      </View>
+              {error && <Text style={styles.errorText}>{error}</Text>}
 
-      <View style={styles.signupContainer}>
-        <ThemedText style={styles.signupText}>
-          Don't have an account?
-        </ThemedText>
-        <TouchableOpacity onPress={navigateToSignup}>
-          <ThemedText style={styles.signupLink} type="link">
-            Sign up
-          </ThemedText>
-        </TouchableOpacity>
-      </View>
-    </View>
+              <Button
+                title="Sign In"
+                onPress={handleLogin}
+                loading={isLoading}
+                style={styles.loginButton}
+                variant="filled"
+              />
+            </View>
+          </View>
+
+          <View style={styles.signupContainer}>
+            <ThemedText style={styles.signupText}>
+              Don't have an account?
+            </ThemedText>
+            <TouchableOpacity onPress={navigateToSignup}>
+              <ThemedText style={styles.signupLink} type="link">
+                Sign up
+              </ThemedText>
+            </TouchableOpacity>
+          </View>
+        </ScrollContainer>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: "space-between",
     alignItems: "center",
-    justifyContent: "center",
     paddingHorizontal: 20,
   },
   contentContainer: {
@@ -115,8 +133,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   logoContainer: {
-    position: "absolute",
-    top: 80,
+    marginTop: 70,
   },
   title: {
     fontSize: 34,
@@ -146,8 +163,7 @@ const styles = StyleSheet.create({
   },
   signupContainer: {
     flexDirection: "row",
-    position: "absolute",
-    bottom: 50,
+    marginBottom: 50,
   },
   signupText: {
     fontSize: 14,

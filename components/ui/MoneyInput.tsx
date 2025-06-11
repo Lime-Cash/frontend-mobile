@@ -5,6 +5,7 @@ import {
   TextInput,
   View,
   TextInputProps,
+  Platform,
 } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
@@ -56,7 +57,11 @@ export default function MoneyInput({
           $
         </Text>
         <TextInput
-          style={[styles.input, { color: themeColor.text }]}
+          style={[
+            styles.input,
+            { color: themeColor.text },
+            Platform.OS === "web" && ({ outlineStyle: "none" } as any),
+          ]}
           value={displayValue}
           onChangeText={handleChangeText}
           keyboardType="numeric"
@@ -86,7 +91,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   input: {
-    flex: 1,
+    maxWidth: "100%",
     height: 48,
     fontSize: 50,
     fontWeight: "500",
