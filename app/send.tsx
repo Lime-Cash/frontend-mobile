@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ReactNode } from "react";
 import {
   StyleSheet,
   View,
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  Platform,
 } from "react-native";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
@@ -58,16 +59,15 @@ const SendMoney = () => {
     }
   };
 
-  return (
-    <ViewContainer>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={{ flex: 1 }}>
-          <View style={styles.header}>
-            <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-              <Ionicons name="arrow-back" size={24} color={themeColor.text} />
-            </TouchableOpacity>
-            <ThemedText type="subtitle">Send Money</ThemedText>
-          </View>
+  // Content to render inside the wrapper
+  const renderContent = () => (
+    <View style={{ flex: 1 }}>
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+          <Ionicons name="arrow-back" size={24} color={themeColor.text} />
+        </TouchableOpacity>
+        <ThemedText type="subtitle">Send Money</ThemedText>
+      </View>
 
       <View style={styles.contentContainer}>
         <MoneyInput
@@ -77,7 +77,6 @@ const SendMoney = () => {
             if (value) setErrors({ ...errors, amount: "" });
           }}
           containerStyle={styles.moneyInput}
-          autoFocus
           testID="amount-input"
         />
         {errors.amount ? (
@@ -99,20 +98,30 @@ const SendMoney = () => {
           testID="recipient-email-input"
         />
 
-            <Button
-              title="Send Money"
-              icon="paperplane.fill"
-              onPress={handleSend}
-              style={styles.sendButton}
-              disabled={!amount || !recipient || isLoading}
-              loading={isLoading}
-              testID="send-money-btn"
-            />
-          </View>
-        </View>
-      </TouchableWithoutFeedback>
-    </ViewContainer>
+        <Button
+          title="Send Money"
+          icon="paperplane.fill"
+          onPress={handleSend}
+          style={styles.sendButton}
+          disabled={!amount || !recipient || isLoading}
+          loading={isLoading}
+          testID="send-money-btn"
+        />
+      </View>
+    </View>
   );
+
+  if (Platform.OS === "web") {
+    return <ViewContainer>{renderContent()}</ViewContainer>;
+  } else {
+    return (
+      <ViewContainer>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          {renderContent()}
+        </TouchableWithoutFeedback>
+      </ViewContainer>
+    );
+  }
 };
 
 const styles = StyleSheet.create({

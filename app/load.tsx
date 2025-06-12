@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  Platform,
 } from "react-native";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
@@ -97,77 +98,87 @@ const Load = () => {
     }
   };
 
-  return (
-    <ViewContainer>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={{ flex: 1 }}>
-          <View style={styles.header}>
-            <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-              <Ionicons name="arrow-back" size={24} color={themeColor.text} />
-            </TouchableOpacity>
-            <ThemedText type="subtitle">Load Money</ThemedText>
-          </View>
+  // Content to render inside the wrapper
+  const renderContent = () => (
+    <View style={{ flex: 1 }}>
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+          <Ionicons name="arrow-back" size={24} color={themeColor.text} />
+        </TouchableOpacity>
+        <ThemedText type="subtitle">Load Money</ThemedText>
+      </View>
 
-          <View style={styles.contentContainer}>
-            <MoneyInput
-              value={amount}
-              onChangeText={(value) => {
-                setAmount(value);
-                if (value) setFormErrors({ ...formErrors, amount: "" });
-              }}
-              containerStyle={styles.moneyInput}
-              autoFocus
-              testID="amount-input"
-            />
-            {formErrors.amount && (
-              <ThemedText style={styles.errorText} testID="error-message">
-                {formErrors.amount}
-              </ThemedText>
-            )}
+      <View style={styles.contentContainer}>
+        <MoneyInput
+          value={amount}
+          onChangeText={(value) => {
+            setAmount(value);
+            if (value) setFormErrors({ ...formErrors, amount: "" });
+          }}
+          containerStyle={styles.moneyInput}
+          autoFocus
+          testID="amount-input"
+        />
+        {formErrors.amount && (
+          <ThemedText style={styles.errorText} testID="error-message">
+            {formErrors.amount}
+          </ThemedText>
+        )}
 
-            <InputField
-              label="CVU"
-              placeholder="Enter your CVU"
-              value={cvu}
-              onChangeText={(value) => {
-                setCvu(value);
-                if (value) setFormErrors({ ...formErrors, cvu: "" });
-              }}
-              containerStyle={styles.cvuInput}
-              error={formErrors.cvu}
-              keyboardType="numeric"
-              maxLength={22}
-              testID="cvu-input"
-            />
+        <InputField
+          label="CVU"
+          placeholder="Enter your CVU"
+          value={cvu}
+          onChangeText={(value) => {
+            setCvu(value);
+            if (value) setFormErrors({ ...formErrors, cvu: "" });
+          }}
+          containerStyle={styles.cvuInput}
+          error={formErrors.cvu}
+          keyboardType="numeric"
+          maxLength={22}
+          testID="cvu-input"
+        />
 
-            {/* Bank Dropdown - Commented Out */}
-            {/* <Select
-              label="From"
-              options={bankOptions}
-              value={selectedBank}
-              onChange={(value) => {
-                setSelectedBank(value);
-                if (value) setFormErrors({ ...formErrors, bank: "" });
-              }}
-              placeholder="Select a bank to load money"
-              error={formErrors.bank}
-              containerStyle={styles.bankSelect}
-            /> */}
+        {/* Bank Dropdown - Commented Out */}
+        {/* <Select
+          label="From"
+          options={bankOptions}
+          value={selectedBank}
+          onChange={(value) => {
+            setSelectedBank(value);
+            if (value) setFormErrors({ ...formErrors, bank: "" });
+          }}
+          placeholder="Select a bank to load money"
+          error={formErrors.bank}
+          containerStyle={styles.bankSelect}
+        /> */}
 
-            <Button
-              title="Load Money"
-              icon="arrow.down.to.line"
-              onPress={handleLoad}
-              style={styles.sendButton}
-              disabled={!amount || !cvu || isLoading}
-              loading={isLoading}
-              testID="load-money-btn"
-            />
-          </View>
-        </View>
-      </TouchableWithoutFeedback>
-    </ViewContainer>
+        <Button
+          title="Load Money"
+          icon="arrow.down.to.line"
+          onPress={handleLoad}
+          style={styles.sendButton}
+          disabled={!amount || !cvu || isLoading}
+          loading={isLoading}
+          testID="load-money-btn"
+        />
+      </View>
+    </View>
   );
+
+  // Render different wrappers based on platform
+  if (Platform.OS === "web") {
+    return <ViewContainer>{renderContent()}</ViewContainer>;
+  } else {
+    return (
+      <ViewContainer>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          {renderContent()}
+        </TouchableWithoutFeedback>
+      </ViewContainer>
+    );
+  }
 };
 
 const styles = StyleSheet.create({
