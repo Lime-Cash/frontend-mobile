@@ -76,7 +76,7 @@ export default function Index() {
         ) : balanceError ? (
           <ThemedText style={styles.errorText}>{balanceError}</ThemedText>
         ) : (
-          <BalanceDisplay amount={balance || 0} />
+          <BalanceDisplay amount={balance || 0} testID="balance-display" />
         )}
       </View>
 
@@ -86,6 +86,7 @@ export default function Index() {
           icon="paperplane.fill"
           onPress={() => router.push("/send")}
           style={styles.button}
+          testID="send-nav-button"
         />
 
         <Button
@@ -120,9 +121,9 @@ export default function Index() {
             No transactions found
           </ThemedText>
         ) : (
-          transactions.map((transaction) => (
+          transactions.map((transaction, index) => (
             <TransactionItem
-              key={transaction.id}
+              key={index}
               message={transaction.message}
               date={transaction.created_at}
               price={transaction.amount}

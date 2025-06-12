@@ -1,31 +1,24 @@
 describe("Send Money functionality", () => {
   beforeEach(() => {
-    // Login before each test
     cy.visit("/login");
-    cy.get('input[placeholder="Email"]').type("tomi.serra@gmail.com");
-    cy.get('input[placeholder="Password"]').type("Tomi1234$");
-    cy.contains("Sign In").click();
+    cy.get('[data-testid="email-input"]').type("tomi.serra@gmail.com");
+    cy.get('[data-testid="password-input"]').type("Tomi1234$");
+    cy.get('[data-testid="signin-button"]').click();
 
-    // Wait for home page to load
     cy.url().should("eq", Cypress.config().baseUrl + "/");
-
-    // Navigate to send money page
-    cy.contains("Send").click();
+    cy.get('[data-testid="send-nav-button"]').click();
     cy.url().should("include", "/send");
   });
 
   it("should disable send button when amount is not entered", () => {
-    // Check that the Send Money button is disabled initially
     cy.get('[data-testid="send-money-btn"]').should(
       "have.attr",
       "aria-disabled",
       "true"
     );
 
-    // Enter only recipient email
-    cy.get('input[placeholder="Recipient email"]').type("liz@gmail.com");
+    cy.get('[data-testid="recipient-email-input"]').type("liz@gmail.com");
 
-    // Button should still be disabled
     cy.get('[data-testid="send-money-btn"]').should(
       "have.attr",
       "aria-disabled",
@@ -34,10 +27,8 @@ describe("Send Money functionality", () => {
   });
 
   it("should disable send button when recipient is not entered", () => {
-    // Enter only amount
-    cy.get("input").first().type("1");
+    cy.get('[data-testid="amount-input"]').type("1");
 
-    // Button should still be disabled
     cy.get('[data-testid="send-money-btn"]').should(
       "have.attr",
       "aria-disabled",
@@ -46,56 +37,104 @@ describe("Send Money functionality", () => {
   });
 
   it("should successfully send money to a valid recipient", () => {
-    // Intercept the transfer API call
-    cy.intercept("POST", "**/transfer", {
-      statusCode: 200,
-      body: { message: "Transfer successful" },
-    }).as("transferRequest");
+    // Get initial balance from home page
+    cy.visit("/");
+    cy.get('[data-testid="balance-display"]')
+      .first()
+      .invoke("text")
+      .then((initialBalance) => {
+        const initialBalanceRaw =
+          parseFloat(initialBalance.replace(/\$|,/g, "")) || 0;
+        const initialBalanceNum = Number(initialBalanceRaw.toFixed(2));
 
-    // Enter amount
-    cy.get("input").first().type("1");
+        // Navigate to send page
+        cy.get('[data-testid="send-nav-button"]').click();
+        cy.url().should("include", "/send");
 
-    // Enter recipient email
-    cy.get('input[placeholder="Recipient email"]').type("liz@gmail.com");
+        cy.get('[data-testid="amount-input"]').type("1");
 
-    // Click send button
-    cy.get('[data-testid="send-money-btn"]').click();
+        cy.get('[data-testid="recipient-email-input"]').type("demo@demo.com");
 
-    // Wait for the API call to complete
-    cy.wait("@transferRequest");
+        cy.get('[data-testid="send-money-btn"]').click();
 
-    // Should redirect to home page
-    cy.url().should("eq", Cypress.config().baseUrl + "/");
+        cy.url().should("eq", Cypress.config().baseUrl + "/");
 
-    // Verify the transaction appears in the list
-    cy.contains("$1 was sent to liz@gmail.com").should("be.visible");
+        cy.contains("$1 was sent to demo@demo.com").should("be.visible");
+        cy.reload();
+
+        cy.get('[data-testid="balance-display"]')
+          .first()
+          .invoke("text")
+          .then((newBalance) => {
+            console.log(newBalance);
+            // Remove $ symbol, convert to number and round to 2 decimal places
+            const newBalanceRaw =
+              parseFloat(newBalance.replace(/\$|,/g, "")) || 0;
+            const newBalanceNum = Number(newBalanceRaw.toFixed(2));
+
+            expect(newBalanceNum).to.equal(initialBalanceNum - 1);
+          });
+      });
   });
 
   it("should show error when sending money to invalid recipient", () => {
-    // Intercept the transfer API call with an error
-    cy.intercept("POST", "**/transfer", {
-      statusCode: 404,
-      body: { message: "User not found" },
-    }).as("transferError");
+    cy.get('[data-testid="amount-input"]').type("1");
 
-    // Enter amount
-    cy.get("input").first().type("1");
-
-    // Enter invalid recipient email
-    cy.get('input[placeholder="Recipient email"]').type(
+    cy.get('[data-testid="recipient-email-input"]').type(
       "nonexistent@example.com"
     );
 
-    // Click send button
     cy.get('[data-testid="send-money-btn"]').click();
 
-    // Wait for the API call to complete
-    cy.wait("@transferError");
+    cy.get('[data-testid="error-message"]').should("be.visible");
+    cy.get('[data-testid="error-message"]').should("contain", "User not found");
 
-    // Should show error message
-    cy.contains("User not found").should("be.visible");
-
-    // Should stay on the send money page
     cy.url().should("include", "/send");
+  });
+
+  it("should show error when sending money to yourself", () => {
+    cy.get('[data-testid="amount-input"]').type("1");
+
+    cy.get('[data-testid="recipient-email-input"]').type(
+      "tomi.serra@gmail.com"
+    );
+
+    cy.get('[data-testid="send-money-btn"]').click();
+
+    cy.get('[data-testid="error-message"]').should("be.visible");
+    cy.get('[data-testid="error-message"]').should("contain", "Unknown error");
+
+    cy.url().should("include", "/send");
+  });
+
+  it("should show error when sending money with an amount greater than the balance", () => {
+    cy.visit("/");
+    cy.get('[data-testid="balance-display"]')
+      .first()
+      .invoke("text")
+      .then((initialBalance) => {
+        const initialBalanceRaw =
+          parseFloat(initialBalance.replace(/\$|,/g, "")) || 0;
+        const initialBalanceNum = Number(initialBalanceRaw.toFixed(2));
+
+        // Navigate to send page
+        cy.get('[data-testid="send-nav-button"]').click();
+        cy.url().should("include", "/send");
+
+        cy.get('[data-testid="amount-input"]').type(
+          (initialBalanceNum + 1).toString()
+        );
+
+        cy.get('[data-testid="recipient-email-input"]').type("demo@demo.com");
+
+        cy.get('[data-testid="send-money-btn"]').click();
+
+        cy.get('[data-testid="error-message"]').should("be.visible");
+        cy.get('[data-testid="error-message"]').should(
+          "contain",
+          "Unknown error"
+        );
+        cy.url().should("include", "/send");
+      });
   });
 });

@@ -70,9 +70,12 @@ const SendMoney = () => {
           }}
           containerStyle={styles.moneyInput}
           autoFocus
+          testID="amount-input"
         />
         {errors.amount ? (
-          <ThemedText style={styles.errorText}>{errors.amount}</ThemedText>
+          <ThemedText style={styles.errorText} testID="error-message">
+            {errors.amount}
+          </ThemedText>
         ) : null}
 
         <InputField
@@ -85,6 +88,7 @@ const SendMoney = () => {
           }}
           containerStyle={styles.recipientInput}
           error={errors.recipient}
+          testID="recipient-email-input"
         />
 
         <Button

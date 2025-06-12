@@ -81,6 +81,7 @@ export default function LoginScreen() {
                 autoCapitalize="none"
                 autoCorrect={false}
                 containerStyle={styles.inputContainer}
+                testID="email-input"
               />
 
               <InputField
@@ -90,9 +91,14 @@ export default function LoginScreen() {
                 onChangeText={setPassword}
                 placeholder="Password"
                 containerStyle={styles.inputContainer}
+                testID="password-input"
               />
 
-              {error && <Text style={styles.errorText}>{error}</Text>}
+              {error && (
+                <Text style={styles.errorText} testID="error-message">
+                  {error}
+                </Text>
+              )}
 
               <Button
                 title="Sign In"
@@ -100,6 +106,7 @@ export default function LoginScreen() {
                 loading={isLoading}
                 style={styles.loginButton}
                 variant="filled"
+                testID="signin-button"
               />
             </View>
           </View>

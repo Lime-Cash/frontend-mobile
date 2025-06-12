@@ -4,11 +4,13 @@ import { ThemedText } from "@/components/ThemedText";
 interface BalanceDisplayProps {
   amount: number | null | undefined;
   title?: string;
+  testID?: string;
 }
 
 const BalanceDisplay = ({
   amount,
   title = "Available Balance",
+  testID,
 }: BalanceDisplayProps) => {
   // Format amount to currency with 2 decimal places
   // Ensure amount is a number before using toFixed
@@ -18,7 +20,9 @@ const BalanceDisplay = ({
   return (
     <View style={[styles.container]}>
       <ThemedText style={styles.title}>{title}</ThemedText>
-      <ThemedText style={styles.amount}>{formattedAmount}</ThemedText>
+      <ThemedText style={styles.amount} testID={testID}>
+        {formattedAmount}
+      </ThemedText>
     </View>
   );
 };
