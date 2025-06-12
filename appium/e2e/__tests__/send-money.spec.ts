@@ -27,7 +27,7 @@ describe("Send Money functionality", () => {
     await appiumHelper.ensureOnLoginScreen();
 
     // Wait for login screen
-    await appiumHelper.waitForElementByText("Welcome back", 15000);
+    await appiumHelper.waitForElementByText("Welcome back", 1000);
     console.log("✓ Login screen loaded");
 
     // Login with johndoe credentials
@@ -38,18 +38,18 @@ describe("Send Money functionality", () => {
     // Click Sign In using testID
     const signInButton = await appiumHelper.findElementByTestId(
       "signin-button",
-      10000,
+      1000,
     );
     await signInButton.click();
     console.log("✓ Sign In button clicked");
 
     // Wait for home page to load
-    await new Promise((resolve) => setTimeout(resolve, 8000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // Verify we're on home screen
     const homeElement = await appiumHelper.isElementDisplayed(
       "Lime Cash",
-      5000,
+      1000,
     );
     if (!homeElement) {
       throw new Error("Failed to reach home screen after login");
@@ -59,19 +59,19 @@ describe("Send Money functionality", () => {
     // Navigate to send money page
     const sendButton = await appiumHelper.findElementByTestId(
       "send-nav-button",
-      10000,
+      1000,
     );
     await sendButton.click();
     console.log("✓ Send button clicked");
 
     // Wait for send money page to load and verify
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // Verify we're on send money screen
     const sendMoneyScreen = await appiumHelper.driver!.$(
       '//*[contains(@name, "Send Money")]',
     );
-    await sendMoneyScreen.waitForDisplayed({ timeout: 10000 });
+    await sendMoneyScreen.waitForDisplayed({ timeout: 1000 });
     console.log("✓ Send Money screen loaded");
 
     // Note: The money input field has autoFocus=true, so numeric keyboard opens automatically
@@ -88,7 +88,7 @@ describe("Send Money functionality", () => {
         try {
           const onSendScreen = await appiumHelper.isElementDisplayed(
             "Send Money",
-            3000,
+            1000,
           );
           if (onSendScreen) {
             console.log("Still on Send Money screen, navigating back to home");
@@ -135,7 +135,7 @@ describe("Send Money functionality", () => {
       // Check that the Send Money button is disabled initially
       const sendButton = await appiumHelper.findElementByTestId(
         "send-money-btn",
-        10000,
+        1000,
       );
       const initialDisabledState =
         await appiumHelper.isElementDisabled(sendButton);
@@ -145,7 +145,7 @@ describe("Send Money functionality", () => {
       // Enter only recipient email (using Mary's email)
       const recipientField = await appiumHelper.findElementByTestId(
         "recipient-email-input",
-        10000,
+        5000,
       );
       await recipientField.click();
       await recipientField.setValue("marydoe@mail.com");
@@ -172,7 +172,7 @@ describe("Send Money functionality", () => {
 
     try {
       // Enter only amount (numeric keyboard is already open due to autoFocus)
-      const moneyInput = await appiumHelper.findMoneyInputField(10000);
+      const moneyInput = await appiumHelper.findMoneyInputField(5000);
       await moneyInput.setValue("1");
       await appiumHelper.dismissKeyboard();
       console.log("✓ Amount entered (numeric keyboard was already open)");
@@ -203,14 +203,14 @@ describe("Send Money functionality", () => {
 
     try {
       // Enter amount (numeric keyboard is already open due to autoFocus)
-      const moneyInput = await appiumHelper.findMoneyInputField(10000);
+      const moneyInput = await appiumHelper.findMoneyInputField(5000);
       await moneyInput.setValue("1");
       console.log("✓ Amount ($1) entered (numeric keyboard was already open)");
 
       // Enter recipient email (using Mary's email)
       const recipientField = await appiumHelper.findElementByTestId(
         "recipient-email-input",
-        10000,
+        5000,
       );
       await recipientField.click();
       await recipientField.setValue("marydoe@mail.com");
@@ -220,18 +220,18 @@ describe("Send Money functionality", () => {
       // Click send button
       const sendButton = await appiumHelper.findElementByTestId(
         "send-money-btn",
-        10000,
+        1000,
       );
       await sendButton.click();
       console.log("✓ Send Money button clicked");
 
-      // Wait for the transfer to complete (mirroring Cypress wait)
-      await new Promise((resolve) => setTimeout(resolve, 5000));
+      // Wait for the transfer to complete
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Should redirect to home page (mirroring Cypress expectation)
+      // Should redirect to home page
       const isBackOnHome = await appiumHelper.isElementDisplayed(
         "Lime Cash",
-        10000,
+        1000,
       );
       expect(isBackOnHome).toBe(true);
       console.log("✅ Successfully returned to home screen after transfer");
@@ -239,7 +239,7 @@ describe("Send Money functionality", () => {
       // Verify the transaction appears in the list (mirroring Cypress verification)
       const successMessage = await appiumHelper.isElementDisplayed(
         "$1 was sent to marydoe@mail.com",
-        5000,
+        2000,
       );
       if (successMessage) {
         console.log("✅ Success message displayed");
@@ -260,14 +260,14 @@ describe("Send Money functionality", () => {
 
     try {
       // Enter amount (numeric keyboard is already open due to autoFocus)
-      const moneyInput = await appiumHelper.findMoneyInputField(10000);
+      const moneyInput = await appiumHelper.findMoneyInputField(5000);
       await moneyInput.setValue("1");
       console.log("✓ Amount entered (numeric keyboard was already open)");
 
       // Enter invalid recipient email (mirroring Cypress nonexistent@example.com)
       const recipientField = await appiumHelper.findElementByTestId(
         "recipient-email-input",
-        10000,
+        5000,
       );
       await recipientField.click();
       await recipientField.setValue("nonexistent@example.com");
@@ -277,15 +277,15 @@ describe("Send Money functionality", () => {
       // Click send button
       const sendButton = await appiumHelper.findElementByTestId(
         "send-money-btn",
-        10000,
+        5000,
       );
       await sendButton.click();
       console.log("✓ Send Money button clicked");
 
-      // Wait for the API call to complete (mirroring Cypress wait)
+      // Wait for the API call to complete
       await new Promise((resolve) => setTimeout(resolve, 5000));
 
-      // Should show error message (mirroring Cypress expectation)
+      // Should show error message
       const errorMessage = await appiumHelper.isElementDisplayed(
         "User not found",
         5000,
@@ -296,7 +296,7 @@ describe("Send Money functionality", () => {
         console.log("⚠️ Error message not found (may be different error text)");
       }
 
-      // Should stay on the send money page (mirroring Cypress expectation)
+      // Should stay on the send money page
       const stillOnSendScreen = await appiumHelper.isElementDisplayed(
         "Send Money",
         5000,
@@ -311,20 +311,20 @@ describe("Send Money functionality", () => {
     }
   }, 60000);
 
-  // Test 5: Mirroring Cypress - "should show error when sending money to yourself"
+  // Test 5: "should show error when sending money to yourself"
   it("should show error when sending money to yourself", async () => {
     console.log("=== TEST: Self Transfer Error ===");
 
     try {
       // Enter amount (numeric keyboard is already open due to autoFocus)
-      const moneyInput = await appiumHelper.findMoneyInputField(10000);
+      const moneyInput = await appiumHelper.findMoneyInputField(5000);
       await moneyInput.setValue("1");
       console.log("✓ Amount entered (numeric keyboard was already open)");
 
       // Enter same email as logged in user (johndoe@mail.com)
       const recipientField = await appiumHelper.findElementByTestId(
         "recipient-email-input",
-        10000,
+        5000,
       );
       await recipientField.click();
       await recipientField.setValue("johndoe@mail.com");
@@ -334,7 +334,7 @@ describe("Send Money functionality", () => {
       // Click send button
       const sendButton = await appiumHelper.findElementByTestId(
         "send-money-btn",
-        10000,
+        5000,
       );
       await sendButton.click();
       console.log("✓ Send Money button clicked");
@@ -392,16 +392,16 @@ describe("Send Money functionality", () => {
       console.log("✓ Navigated back to home to check balance");
 
       // Wait for home page
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Get current balance (this is complex in mobile, so we'll use a high amount like Cypress)
+      // Get current balance
       // For now, we'll use a very high amount that should exceed most balances
       const excessiveAmount = "999999";
 
       // Navigate back to send money page
       const sendButton = await appiumHelper.findElementByTestId(
         "send-nav-button",
-        10000,
+        5000,
       );
       await sendButton.click();
       console.log("✓ Navigated back to Send Money screen");
@@ -410,14 +410,14 @@ describe("Send Money functionality", () => {
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
       // Enter excessive amount (numeric keyboard is already open due to autoFocus)
-      const moneyInput = await appiumHelper.findMoneyInputField(10000);
+      const moneyInput = await appiumHelper.findMoneyInputField(5000);
       await moneyInput.setValue(excessiveAmount);
       console.log(`✓ Excessive amount (${excessiveAmount}) entered`);
 
       // Enter valid recipient email
       const recipientField = await appiumHelper.findElementByTestId(
         "recipient-email-input",
-        10000,
+        5000,
       );
       await recipientField.click();
       await recipientField.setValue("marydoe@mail.com");
@@ -427,13 +427,13 @@ describe("Send Money functionality", () => {
       // Click send button
       const sendMoneyButton = await appiumHelper.findElementByTestId(
         "send-money-btn",
-        10000,
+        5000,
       );
       await sendMoneyButton.click();
       console.log("✓ Send Money button clicked");
 
-      // Wait for the API call to complete (mirroring Cypress wait)
-      await new Promise((resolve) => setTimeout(resolve, 5000));
+      // Wait for the API call to complete
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Should show error message (mirroring Cypress expectation - "Unknown error" for balance exceeded)
       const errorMessage = await appiumHelper.isElementDisplayed(

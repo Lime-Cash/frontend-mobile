@@ -17,7 +17,7 @@ export class AuthActions extends FormHelpers {
       const signInLink = await this.driver.$(
         '//*[@name="Sign in" or @text="Sign in"]',
       );
-      await signInLink.waitForDisplayed({ timeout: 10000 });
+      await signInLink.waitForDisplayed({ timeout: 1000 });
       console.log("✓ Sign in link found, clicking...");
 
       // Click the sign in link
@@ -27,7 +27,7 @@ export class AuthActions extends FormHelpers {
       const welcomeText = await this.driver.$(
         '//*[@name="Welcome back" or @text="Welcome back"]',
       );
-      await welcomeText.waitForDisplayed({ timeout: 10000 });
+      await welcomeText.waitForDisplayed({ timeout: 1000 });
       console.log(
         "✓ Successfully navigated to login screen after registration",
       );
@@ -43,6 +43,19 @@ export class AuthActions extends FormHelpers {
     }
 
     try {
+      //check if we are in login screen
+      const welcomeText = await this.driver.$(
+        '//*[@name="Welcome back" or @text="Welcome back"]',
+      );
+
+      const isOnLoginScreen = await welcomeText.isDisplayed();
+      if (isOnLoginScreen) {
+        console.log("Already on login screen, no logout needed");
+        return;
+      }
+
+      console.log("Checking if user is logged in...");
+
       // Check if we're on the home screen (logged in)
       const limeCashElement = await this.driver.$(
         '//*[@name="Lime Cash" or @text="Lime Cash"]',
@@ -52,44 +65,16 @@ export class AuthActions extends FormHelpers {
       if (isLoggedIn) {
         console.log("User is logged in, performing logout...");
 
-        // Find and click logout button
-        const logoutSelectors = [
-          // First try with testID (most reliable)
-          '//XCUIElementTypeOther[@name="logout-button"]',
-          '//XCUIElementTypeButton[@name="logout-button"]',
-          `//*[@name="logout-button"]`,
-
-          // Fallback to text-based selectors
-          '//XCUIElementTypeOther[contains(@name,"Logout")]',
-          '//XCUIElementTypeOther[contains(@name,"rectangle.portrait.and.arrow.forward Logout")]',
-          '//*[contains(@name,"rectangle.portrait.and.arrow.forward Logout")]',
-          '//XCUIElementTypeButton[contains(@name,"Logout")]',
-          '//*[contains(@name,"Logout")]',
-        ];
-
+        // Find and click logout button using testID (most reliable)
         let logoutButton: WebdriverIO.Element | null = null;
 
-        for (const selector of logoutSelectors) {
-          try {
-            const button = await this.driver.$(selector);
-            await button.waitForDisplayed({ timeout: 2000 });
-
-            const isClickable = await button.isClickable();
-            const buttonName = await button.getAttribute("name");
-            console.log(
-              `Found logout button with selector: ${selector}, name: "${buttonName}", clickable: ${isClickable}`,
-            );
-
-            if (isClickable) {
-              logoutButton = button;
-              break;
-            }
-          } catch (selectorError) {
-            console.log(`Logout selector ${selector} failed, trying next...`);
-          }
-        }
-
-        if (!logoutButton) {
+        try {
+          logoutButton = await this.findElementByTestId("logout-button", 1000);
+          console.log("✓ Found logout button using testID");
+        } catch (testIdError) {
+          console.log(
+            "Could not find logout button by testID, trying fallback methods...",
+          );
           logoutButton = await this.findLogoutButtonFallback();
         }
 
@@ -104,7 +89,7 @@ export class AuthActions extends FormHelpers {
         );
 
         // Wait for the confirmation modal
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
 
         // Handle confirmation modal
         const confirmLogoutSuccess = await this.findAndClickModalLogoutButton();
@@ -184,58 +169,70 @@ export class AuthActions extends FormHelpers {
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     const approaches = [
-      // Approach 1: Direct logout button selector
+      // Approach 1: Use testID to find modal-button-2 (the logout confirmation button)
       async () => {
-        console.log("Approach 1: Looking for exact 'Logout' button...");
+        console.log("Approach 1: Looking for modal logout button by testID...");
         try {
-          const otherLogoutButton = await this.driver!.$(
-            '//XCUIElementTypeOther[@name="Logout"]',
+          const modalLogoutButton = await this.findElementByTestId(
+            "modal-button-2",
+            1000,
           );
-          const isDisplayed = await otherLogoutButton.isDisplayed();
-
-          if (isDisplayed) {
-            console.log("✓ Found XCUIElementTypeOther with name='Logout'");
-            await otherLogoutButton.click();
-            console.log(
-              "✓ Successfully clicked XCUIElementTypeOther logout button",
-            );
-            return true;
-          }
+          console.log("✓ Found modal logout button by testID");
+          await modalLogoutButton.click();
+          console.log("✓ Successfully clicked modal logout button");
+          return true;
         } catch (e: any) {
-          console.log(`XCUIElementTypeOther approach failed: ${e.message}`);
+          console.log(
+            `Modal logout button testID approach failed: ${e.message}`,
+          );
         }
         return false;
       },
 
-      // Approach 2: Coordinate-based tap
+      // Approach 2: Try to find by button text within the modal
       async () => {
-        console.log("Approach 2: Coordinate-based tap on modal right side...");
-        const windowSize = await this.driver!.getWindowSize();
+        console.log("Approach 2: Looking for modal logout button by text...");
+        try {
+          const modalLogoutButton = await this.driver!.$(
+            '//XCUIElementTypeOther[@name="Logout"]',
+          );
+          const isDisplayed = await modalLogoutButton.isDisplayed();
 
-        const modalCenterX = windowSize.width / 2;
-        const modalCenterY = windowSize.height / 2;
-        const logoutButtonX = modalCenterX + 80;
-        const logoutButtonY = modalCenterY + 60;
+          if (isDisplayed) {
+            console.log("✓ Found modal logout button by text");
+            await modalLogoutButton.click();
+            console.log("✓ Successfully clicked modal logout button");
+            return true;
+          }
+        } catch (e: any) {
+          console.log(`Modal logout button text approach failed: ${e.message}`);
+        }
+        return false;
+      },
 
+      // Approach 3: Try to find modal-button-1 first, then look for modal-button-2
+      async () => {
         console.log(
-          `Tapping at coordinates (${logoutButtonX}, ${logoutButtonY})`,
+          "Approach 3: Looking for modal-button-1 to find modal-button-2...",
         );
+        try {
+          // First find modal-button-1 to confirm modal is present
+          const modalCancelButton = await this.findElementByTestId(
+            "modal-button-1",
+            1000,
+          );
+          console.log("✓ Found modal-button-1, now looking for modal-button-2");
 
-        await this.driver!.touchAction({
-          action: "tap",
-          x: logoutButtonX,
-          y: logoutButtonY,
-        });
-
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        const isStillOnModal = await this.isElementDisplayed(
-          "Are you sure you want to logout?",
-          1000,
-        );
-        if (!isStillOnModal) {
-          console.log("✓ Modal dismissed after coordinate tap");
+          const modalLogoutButton = await this.findElementByTestId(
+            "modal-button-2",
+            1000,
+          );
+          console.log("✓ Found modal-button-2");
+          await modalLogoutButton.click();
+          console.log("✓ Successfully clicked modal logout button");
           return true;
+        } catch (e: any) {
+          console.log(`Modal button sequence approach failed: ${e.message}`);
         }
         return false;
       },
@@ -260,14 +257,14 @@ export class AuthActions extends FormHelpers {
   }
 
   private async waitForLoginScreen(): Promise<void> {
-    await new Promise((resolve) => setTimeout(resolve, 5000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     if (this.driver) {
       try {
         const welcomeText = await this.driver.$(
           '//*[@name="Welcome back" or @text="Welcome back"]',
         );
-        await welcomeText.waitForDisplayed({ timeout: 15000 });
+        await welcomeText.waitForDisplayed({ timeout: 2000 });
         console.log("✓ Logout completed and back on login screen");
       } catch (navigationError) {
         console.log(
@@ -313,14 +310,14 @@ export class AuthActions extends FormHelpers {
     console.log("✓ Successfully navigated to login screen");
 
     // Wait a bit more for the login screen to appear
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // Verify we're now on login screen
     try {
       const welcomeText = await this.driver!.$(
         '//*[@name="Welcome back" or @text="Welcome back"]',
       );
-      await welcomeText.waitForDisplayed({ timeout: 10000 });
+      await welcomeText.waitForDisplayed({ timeout: 1000 });
       console.log("✓ Successfully navigated to login screen");
     } catch (error) {
       console.log("Warning: Could not verify login screen after logout");

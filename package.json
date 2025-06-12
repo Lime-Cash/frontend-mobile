@@ -21,6 +21,7 @@
     "appium": "cd appium/e2e && npm run test",
     "appium:login": "cd appium/e2e && npm run test:login",
     "appium:send-money": "cd appium/e2e && npm run test:send-money",
+    "appium:load": "cd appium/e2e && npm run test:load",
     "appium:doctor": "cd appium/e2e && npm run doctor",
     "appium:dev": "concurrently \"npm start\" \"sleep 10 && npm run appium\""
   },
