@@ -19,7 +19,7 @@ describe("Send Money functionality", () => {
     cy.get('[data-testid="send-money-btn"]').should(
       "have.attr",
       "aria-disabled",
-      "true"
+      "true",
     );
 
     // Enter only recipient email
@@ -29,7 +29,7 @@ describe("Send Money functionality", () => {
     cy.get('[data-testid="send-money-btn"]').should(
       "have.attr",
       "aria-disabled",
-      "true"
+      "true",
     );
   });
 
@@ -41,7 +41,7 @@ describe("Send Money functionality", () => {
     cy.get('[data-testid="send-money-btn"]').should(
       "have.attr",
       "aria-disabled",
-      "true"
+      "true",
     );
   });
 
@@ -83,7 +83,7 @@ describe("Send Money functionality", () => {
 
     // Enter invalid recipient email
     cy.get('input[placeholder="Recipient email"]').type(
-      "nonexistent@example.com"
+      "nonexistent@example.com",
     );
 
     // Click send button

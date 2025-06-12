@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -93,64 +99,70 @@ const Load = () => {
 
   return (
     <ViewContainer>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-          <Ionicons name="arrow-back" size={24} color={themeColor.text} />
-        </TouchableOpacity>
-        <ThemedText type="subtitle">Load Money</ThemedText>
-      </View>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={{ flex: 1 }}>
+          <View style={styles.header}>
+            <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+              <Ionicons name="arrow-back" size={24} color={themeColor.text} />
+            </TouchableOpacity>
+            <ThemedText type="subtitle">Load Money</ThemedText>
+          </View>
 
-      <View style={styles.contentContainer}>
-        <MoneyInput
-          value={amount}
-          onChangeText={(value) => {
-            setAmount(value);
-            if (value) setFormErrors({ ...formErrors, amount: "" });
-          }}
-          containerStyle={styles.moneyInput}
-          autoFocus
-        />
-        {formErrors.amount && (
-          <ThemedText style={styles.errorText}>{formErrors.amount}</ThemedText>
-        )}
+          <View style={styles.contentContainer}>
+            <MoneyInput
+              value={amount}
+              onChangeText={(value) => {
+                setAmount(value);
+                if (value) setFormErrors({ ...formErrors, amount: "" });
+              }}
+              containerStyle={styles.moneyInput}
+              autoFocus
+            />
+            {formErrors.amount && (
+              <ThemedText style={styles.errorText}>
+                {formErrors.amount}
+              </ThemedText>
+            )}
 
-        <InputField
-          label="CVU"
-          placeholder="Enter your CVU"
-          value={cvu}
-          onChangeText={(value) => {
-            setCvu(value);
-            if (value) setFormErrors({ ...formErrors, cvu: "" });
-          }}
-          containerStyle={styles.cvuInput}
-          error={formErrors.cvu}
-          keyboardType="numeric"
-          maxLength={22}
-        />
+            <InputField
+              label="CVU"
+              placeholder="Enter your CVU"
+              value={cvu}
+              onChangeText={(value) => {
+                setCvu(value);
+                if (value) setFormErrors({ ...formErrors, cvu: "" });
+              }}
+              containerStyle={styles.cvuInput}
+              error={formErrors.cvu}
+              keyboardType="numeric"
+              maxLength={22}
+            />
 
-        {/* Bank Dropdown - Commented Out */}
-        {/* <Select
-          label="From"
-          options={bankOptions}
-          value={selectedBank}
-          onChange={(value) => {
-            setSelectedBank(value);
-            if (value) setFormErrors({ ...formErrors, bank: "" });
-          }}
-          placeholder="Select a bank to load money"
-          error={formErrors.bank}
-          containerStyle={styles.bankSelect}
-        /> */}
+            {/* Bank Dropdown - Commented Out */}
+            {/* <Select
+              label="From"
+              options={bankOptions}
+              value={selectedBank}
+              onChange={(value) => {
+                setSelectedBank(value);
+                if (value) setFormErrors({ ...formErrors, bank: "" });
+              }}
+              placeholder="Select a bank to load money"
+              error={formErrors.bank}
+              containerStyle={styles.bankSelect}
+            /> */}
 
-        <Button
-          title="Load Money"
-          icon="arrow.down.to.line"
-          onPress={handleLoad}
-          style={styles.sendButton}
-          disabled={!amount || !cvu || isLoading}
-          loading={isLoading}
-        />
-      </View>
+            <Button
+              title="Load Money"
+              icon="arrow.down.to.line"
+              onPress={handleLoad}
+              style={styles.sendButton}
+              disabled={!amount || !cvu || isLoading}
+              loading={isLoading}
+            />
+          </View>
+        </View>
+      </TouchableWithoutFeedback>
     </ViewContainer>
   );
 };

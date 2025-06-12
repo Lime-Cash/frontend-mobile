@@ -23,4 +23,4 @@ export interface BankTransactionResult {
   message: string;
   transaction?: any;
   bank_response?: any;
-} 
+}
