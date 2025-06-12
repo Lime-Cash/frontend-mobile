@@ -17,7 +17,7 @@ export class AuthActions extends FormHelpers {
       const signInLink = await this.driver.$(
         '//*[@name="Sign in" or @text="Sign in"]',
       );
-      await signInLink.waitForDisplayed({ timeout: 1000 });
+      await signInLink.waitForDisplayed({ timeout: 800 });
       console.log("✓ Sign in link found, clicking...");
 
       // Click the sign in link
@@ -27,7 +27,7 @@ export class AuthActions extends FormHelpers {
       const welcomeText = await this.driver.$(
         '//*[@name="Welcome back" or @text="Welcome back"]',
       );
-      await welcomeText.waitForDisplayed({ timeout: 1000 });
+      await welcomeText.waitForDisplayed({ timeout: 800 });
       console.log(
         "✓ Successfully navigated to login screen after registration",
       );
@@ -69,7 +69,7 @@ export class AuthActions extends FormHelpers {
         let logoutButton: WebdriverIO.Element | null = null;
 
         try {
-          logoutButton = await this.findElementByTestId("logout-button", 1000);
+          logoutButton = await this.findElementByTestId("logout-button", 800);
           console.log("✓ Found logout button using testID");
         } catch (testIdError) {
           console.log(
@@ -89,7 +89,7 @@ export class AuthActions extends FormHelpers {
         );
 
         // Wait for the confirmation modal
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 800));
 
         // Handle confirmation modal
         const confirmLogoutSuccess = await this.findAndClickModalLogoutButton();
@@ -166,7 +166,7 @@ export class AuthActions extends FormHelpers {
     console.log("=== MODAL LOGOUT BUTTON DETECTION ===");
 
     // Wait for modal to fully render
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 800));
 
     const approaches = [
       // Approach 1: Use testID to find modal-button-2 (the logout confirmation button)
@@ -219,13 +219,13 @@ export class AuthActions extends FormHelpers {
           // First find modal-button-1 to confirm modal is present
           const modalCancelButton = await this.findElementByTestId(
             "modal-button-1",
-            1000,
+            800,
           );
           console.log("✓ Found modal-button-1, now looking for modal-button-2");
 
           const modalLogoutButton = await this.findElementByTestId(
             "modal-button-2",
-            1000,
+            800,
           );
           console.log("✓ Found modal-button-2");
           await modalLogoutButton.click();
@@ -257,14 +257,14 @@ export class AuthActions extends FormHelpers {
   }
 
   private async waitForLoginScreen(): Promise<void> {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 800));
 
     if (this.driver) {
       try {
         const welcomeText = await this.driver.$(
           '//*[@name="Welcome back" or @text="Welcome back"]',
         );
-        await welcomeText.waitForDisplayed({ timeout: 2000 });
+        await welcomeText.waitForDisplayed({ timeout: 800 });
         console.log("✓ Logout completed and back on login screen");
       } catch (navigationError) {
         console.log(
@@ -273,7 +273,7 @@ export class AuthActions extends FormHelpers {
 
         const modalStillVisible = await this.isElementDisplayed(
           "Are you sure you want to logout?",
-          2000,
+          800,
         );
         if (!modalStillVisible) {
           console.log("✓ Logout modal dismissed successfully");
@@ -310,14 +310,14 @@ export class AuthActions extends FormHelpers {
     console.log("✓ Successfully navigated to login screen");
 
     // Wait a bit more for the login screen to appear
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 800));
 
     // Verify we're now on login screen
     try {
       const welcomeText = await this.driver!.$(
         '//*[@name="Welcome back" or @text="Welcome back"]',
       );
-      await welcomeText.waitForDisplayed({ timeout: 1000 });
+      await welcomeText.waitForDisplayed({ timeout: 800 });
       console.log("✓ Successfully navigated to login screen");
     } catch (error) {
       console.log("Warning: Could not verify login screen after logout");

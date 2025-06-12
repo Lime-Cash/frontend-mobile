@@ -24,8 +24,7 @@
     "appium:send-money": "cd appium/e2e && npm run test:send-money",
     "appium:load": "cd appium/e2e && npm run test:load",
     "appium:withdraw": "cd appium/e2e && npm run test:withdraw",
-    "appium:doctor": "cd appium/e2e && npm run doctor",
-    "appium:dev": "concurrently \"npm start\" \"sleep 10 && npm run appium\""
+    "appium:doctor": "cd appium/e2e && npm run doctor"
   },
   "jest": {
     "preset": "jest-expo"

@@ -38,14 +38,14 @@ export class DebugHelpers extends BaseDriver {
     }
   }
 
-  async waitForLoadingToDisappear(timeout: number = 10000): Promise<void> {
+  async waitForLoadingToDisappear(timeout: number = 800): Promise<void> {
     if (!this.driver) {
       throw new Error("Driver not initialized");
     }
 
     try {
       const loadingElement = await this.driver.$("~loading");
-      await loadingElement.waitForDisplayed({ timeout: 2000 });
+      await loadingElement.waitForDisplayed({ timeout: 800 });
       await loadingElement.waitForDisplayed({ timeout, reverse: true });
     } catch (error) {
       console.log("Loading element not found or already gone");
@@ -67,7 +67,7 @@ export class DebugHelpers extends BaseDriver {
 
   async findElementByName(
     name: string,
-    timeout: number = 10000,
+    timeout: number = 800,
   ): Promise<WebdriverIO.Element> {
     if (!this.driver) {
       throw new Error("Driver not initialized");

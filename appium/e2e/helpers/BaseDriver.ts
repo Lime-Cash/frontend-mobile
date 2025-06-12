@@ -12,12 +12,12 @@ export class BaseDriver {
     this.driver = await remote(config);
 
     // Give the app time to connect to existing session
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 800));
 
     // Connect to existing Expo Go session (don't launch new one)
     try {
       await this.driver.activateApp("host.exp.Exponent");
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 800));
       console.log("✓ Connected to existing Expo Go session");
     } catch (error) {
       console.log("Connection warning:", error);
@@ -37,7 +37,7 @@ export class BaseDriver {
   // Basic element operations
   async waitForElement(
     selector: string,
-    timeout: number = 30000,
+    timeout: number = 800,
   ): Promise<WebdriverIO.Element> {
     if (!this.driver) {
       throw new Error("Driver not initialized");
@@ -50,7 +50,7 @@ export class BaseDriver {
 
   async isElementDisplayed(
     selector: string,
-    timeout: number = 5000,
+    timeout: number = 800,
   ): Promise<boolean> {
     if (!this.driver) {
       throw new Error("Driver not initialized");
