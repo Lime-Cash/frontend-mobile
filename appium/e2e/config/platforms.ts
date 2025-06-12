@@ -1,5 +1,9 @@
 import { RemoteOptions } from "webdriverio";
 
+/**
+ * iOS-only Appium configuration for Expo development
+ * Optimized for iPhone simulators and Expo Go testing
+ */
 export const iosConfig: RemoteOptions = {
   path: "/",
   hostname: "localhost",
@@ -7,43 +11,25 @@ export const iosConfig: RemoteOptions = {
   capabilities: {
     "appium:platformName": "iOS",
     "appium:automationName": "XCUITest",
-    "appium:deviceName": "iPhone 16 Pro", // Updated to match your simulator
-    "appium:platformVersion": "18.4", // Updated to match your iOS simulator version
-    "appium:bundleId": "host.exp.Exponent", // Expo Go bundle ID for development (capital E)
-    "appium:autoAcceptAlerts": true,
+    "appium:deviceName": "iPhone 16 Pro", // Current simulator
+    "appium:platformVersion": "18.4", // iOS version
+    "appium:bundleId": "host.exp.Exponent", // Expo Go bundle ID
+    "appium:autoAcceptAlerts": true, // Auto-accept permission alerts
     "appium:permissions": '{"host.exp.exponent": {"location": "yes"}}',
-    "appium:newCommandTimeout": 240,
-    "appium:connectHardwareKeyboard": false,
-    "appium:noReset": true, // Don't reset the app state
-    "appium:autoLaunch": true, // Auto-launch the app
-    // For development builds, you might need to use:
-    // "appium:app": "/path/to/your/app.app", // For standalone builds
+    "appium:newCommandTimeout": 300, // 5 minutes timeout
+    "appium:connectHardwareKeyboard": false, // Use software keyboard
+    "appium:noReset": true, // Keep app state between sessions
+    "appium:autoLaunch": true, // Auto-launch app on connection
+    "appium:wdaLaunchTimeout": 60000, // WebDriverAgent launch timeout
+    "appium:wdaConnectionTimeout": 60000, // WebDriverAgent connection timeout
+    // Production build options (uncomment when needed):
+    // "appium:app": "/path/to/your/app.app", // For .app builds
+    // "appium:bundleId": "com.yourcompany.yourapp", // Your actual bundle ID
   },
-  logLevel: "silent",
+  logLevel: "silent", // Change to "info" for debugging
 };
 
-export const androidConfig: RemoteOptions = {
-  path: "/",
-  hostname: "localhost",
-  port: 4723,
-  capabilities: {
-    "appium:automationName": "UiAutomator2",
-    "appium:platformName": "Android",
-    "appium:platformVersion": "16.0", // Update to match your Android emulator version
-    "appium:deviceName": "Pixel 3 XL", // Update to match your Android emulator name
-    "appium:appPackage": "host.exp.exponent", // Expo Go package for development
-    "appium:appActivity": ".experience.HomeActivity",
-    "appium:autoGrantPermissions": true,
-    "appium:newCommandTimeout": 240,
-    // For development builds, you might need to use:
-    // "appium:app": "/path/to/your/app.apk", // For standalone builds
-    // "appium:appPackage": "com.yourdomain.yourapp", // Your app's package name
-  },
-  logLevel: "silent",
-};
-
-// Get configuration based on environment variable
+// For iOS-only setup, we just export the iOS config
 export const getConfig = (): RemoteOptions => {
-  const platform = process.env.PLATFORM?.toLowerCase() || "ios";
-  return platform === "android" ? androidConfig : iosConfig;
+  return iosConfig;
 };

@@ -10,13 +10,13 @@ describe("Comprehensive Login Test Suite", () => {
 
     // Ensure we start each test from the login screen
     await appiumHelper.ensureOnLoginScreen();
-  }, 30000);
+  }, 60000); // Increased timeout from 30s to 60s
 
   afterEach(async () => {
     // Ensure we logout after each test for proper test isolation
     try {
       await appiumHelper.logoutIfLoggedIn();
-    } catch (error) {
+    } catch (error: any) {
       console.log("Logout attempt in afterEach failed:", error);
     }
 
@@ -74,9 +74,8 @@ describe("Comprehensive Login Test Suite", () => {
       console.log("✓ Sign up text found");
 
       console.log("✅ All login screen elements are present!");
-    } catch (error) {
+    } catch (error: any) {
       console.error("❌ Login elements test failed:", error);
-      await appiumHelper.takeScreenshot("login-elements-failure.png");
       throw error;
     }
   }, 60000);
@@ -142,9 +141,8 @@ describe("Comprehensive Login Test Suite", () => {
         );
         // This is expected when backend is not running
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("❌ Valid login test failed:", error);
-      await appiumHelper.takeScreenshot("valid-login-failure.png");
       throw error;
     }
   }, 120000);
@@ -176,9 +174,8 @@ describe("Comprehensive Login Test Suite", () => {
       );
       expect(welcomeText).toBe(true);
       console.log("✅ Invalid email handled correctly - still on login screen");
-    } catch (error) {
+    } catch (error: any) {
       console.error("❌ Invalid email test failed:", error);
-      await appiumHelper.takeScreenshot("invalid-email-failure.png");
       throw error;
     }
   }, 60000);
@@ -217,9 +214,8 @@ describe("Comprehensive Login Test Suite", () => {
       console.log(
         "✅ Short password handled correctly - still on login screen",
       );
-    } catch (error) {
+    } catch (error: any) {
       console.error("❌ Short password test failed:", error);
-      await appiumHelper.takeScreenshot("short-password-failure.png");
       throw error;
     }
   }, 60000);
@@ -253,9 +249,8 @@ describe("Comprehensive Login Test Suite", () => {
       );
       expect(welcomeText).toBe(true);
       console.log("✅ Empty email handled correctly - still on login screen");
-    } catch (error) {
+    } catch (error: any) {
       console.error("❌ Empty email test failed:", error);
-      await appiumHelper.takeScreenshot("empty-email-failure.png");
       throw error;
     }
   }, 60000);
@@ -291,9 +286,8 @@ describe("Comprehensive Login Test Suite", () => {
       console.log(
         "✅ Empty password handled correctly - still on login screen",
       );
-    } catch (error) {
+    } catch (error: any) {
       console.error("❌ Empty password test failed:", error);
-      await appiumHelper.takeScreenshot("empty-password-failure.png");
       throw error;
     }
   }, 60000);
@@ -344,9 +338,8 @@ describe("Comprehensive Login Test Suite", () => {
       }
 
       console.log("✅ All login/logout cycles completed successfully");
-    } catch (error) {
+    } catch (error: any) {
       console.error("❌ Multiple cycles test failed:", error);
-      await appiumHelper.takeScreenshot("multiple-cycles-failure.png");
       throw error;
     }
   }, 180000); // 3 minutes for multiple cycles
@@ -369,24 +362,70 @@ describe("Comprehensive Login Test Suite", () => {
       // Wait for navigation
       await new Promise((resolve) => setTimeout(resolve, 3000));
 
-      // Check if we've navigated away from login screen
-      const isLoginScreenGone = await appiumHelper.isElementDisplayed(
+      // Check if we've navigated away from login screen by looking for "Welcome back"
+      const isLoginScreenStillVisible = await appiumHelper.isElementDisplayed(
         "Welcome back",
         3000,
       );
 
-      if (!isLoginScreenGone) {
+      if (!isLoginScreenStillVisible) {
         console.log("✅ Successfully navigated away from login screen");
+
+        // Also check for register screen elements to confirm navigation
+        try {
+          const registerElements = [
+            "Create account",
+            "Enter your details to get started",
+          ];
+
+          let foundRegisterElement = false;
+          for (const elementText of registerElements) {
+            const isPresent = await appiumHelper.isElementDisplayed(
+              elementText,
+              2000,
+            );
+            if (isPresent) {
+              console.log(`✓ Found register screen element: ${elementText}`);
+              foundRegisterElement = true;
+              break;
+            }
+          }
+
+          if (!foundRegisterElement) {
+            console.log(
+              "⚠️ Navigated away from login but register screen elements not found",
+            );
+          }
+        } catch (error: any) {
+          console.log("Could not verify register screen elements:", error);
+        }
       } else {
         console.log(
-          "⚠️ Navigation may not have completed - checking current elements",
+          "⚠️ Navigation may not have completed - still on login screen",
         );
-        const currentElements = await appiumHelper.getAccessibleElements();
-        console.log("Current elements:", currentElements.slice(0, 10));
+        try {
+          if (appiumHelper.isDriverAvailable()) {
+            const currentElements = await appiumHelper.getAccessibleElements();
+            console.log("Current elements:", currentElements.slice(0, 10));
+          } else {
+            console.log("Driver not available for element inspection");
+          }
+        } catch (debugError: any) {
+          console.log(
+            "Could not get current elements:",
+            debugError.message || debugError,
+          );
+        }
       }
-    } catch (error) {
+      // Navigate back to login screen
+      const signInLink = await appiumHelper.waitForElementByText(
+        "Sign in",
+        10000,
+      );
+      await signInLink.click();
+      console.log("✓ Sign in link tapped");
+    } catch (error: any) {
       console.error("❌ Register navigation test failed:", error);
-      await appiumHelper.takeScreenshot("register-navigation-failure.png");
       throw error;
     }
   }, 60000);

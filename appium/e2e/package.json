@@ -6,13 +6,11 @@
   "scripts": {
     "start": "appium server --port 4723",
     "test": "node --experimental-vm-modules ./node_modules/.bin/jest",
-    "test:ios": "PLATFORM=ios node --experimental-vm-modules ./node_modules/.bin/jest",
-    "test:android": "PLATFORM=android node --experimental-vm-modules ./node_modules/.bin/jest",
-    "test:login": "PLATFORM=ios node --experimental-vm-modules ./node_modules/.bin/jest __tests__/login.spec.ts",
-    "driver:ios": "appium driver install xcuitest",
-    "driver:android": "appium driver install uiautomator2",
-    "doctor:ios": "appium-doctor --ios",
-    "doctor:android": "appium-doctor --android"
+    "test:ios": "node --experimental-vm-modules ./node_modules/.bin/jest",
+    "test:login": "node --experimental-vm-modules ./node_modules/.bin/jest __tests__/login.spec.ts",
+    "driver:install": "appium driver install xcuitest",
+    "doctor": "appium-doctor --ios",
+    "setup": "npm run driver:install && npm run doctor"
   },
   "dependencies": {
     "@babel/core": "^7.24.0",
@@ -32,7 +30,6 @@
     "webdriverio": "^8.38.0"
   },
   "devDependencies": {
-    "appium-uiautomator2-driver": "^4.2.3",
     "appium-xcuitest-driver": "^9.4.0"
   }
 }

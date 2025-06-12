@@ -17,17 +17,11 @@
     "cypress:all-local": "mkdir -p .cypress-cache && CYPRESS_CACHE_FOLDER=./.cypress-cache HOME=$PWD/.cypress-home TS_NODE_PROJECT=.cypress-tsconfig.json cypress open",
     "dev:test": "concurrently \"npm run web\" \"npm run cypress\"",
     "appium:server": "appium server --port 4723",
-    "appium:driver:ios": "appium driver install xcuitest",
-    "appium:driver:android": "appium driver install uiautomator2",
-    "appium:doctor:ios": "appium-doctor --ios",
-    "appium:doctor:android": "appium-doctor --android",
+    "appium:setup": "cd appium/e2e && npm run setup",
     "appium": "cd appium/e2e && npm run test",
-    "appium:ios": "cd appium/e2e && npm run test:ios",
-    "appium:android": "cd appium/e2e && npm run test:android",
-    "appium:setup": "npm run appium:driver:ios && npm run appium:driver:android",
-    "appium:doctor": "npm run appium:doctor:ios && npm run appium:doctor:android",
-    "appium:dev": "concurrently \"npm start\" \"sleep 10 && cd appium/e2e && npm run test:ios\"",
-    "appium:register": "cd appium/e2e && npm run test:register"
+    "appium:login": "cd appium/e2e && npm run test:login",
+    "appium:doctor": "cd appium/e2e && npm run doctor",
+    "appium:dev": "concurrently \"npm start\" \"sleep 10 && npm run appium\""
   },
   "jest": {
     "preset": "jest-expo"
