@@ -7,7 +7,7 @@ export class FormHelpers extends MobileGestures {
   // Enhanced button finding with multiple strategies
   async waitForButton(
     text: string,
-    timeout: number = 30000,
+    timeout: number = 800,
   ): Promise<WebdriverIO.Element> {
     if (!this.driver) {
       throw new Error("Driver not initialized");
@@ -31,7 +31,7 @@ export class FormHelpers extends MobileGestures {
     for (const selector of selectors) {
       try {
         const element = await this.driver.$(selector);
-        await element.waitForDisplayed({ timeout: 5000 });
+        await element.waitForDisplayed({ timeout: 800 });
         console.log(`Found button using selector: ${selector}`);
         return element;
       } catch (error) {
@@ -90,7 +90,7 @@ export class FormHelpers extends MobileGestures {
   // Specific method for finding home screen action buttons (Send, Withdraw, Load)
   async findHomeScreenButton(
     buttonText: string,
-    timeout: number = 30000,
+    timeout: number = 800,
   ): Promise<WebdriverIO.Element> {
     if (!this.driver) {
       throw new Error("Driver not initialized");
@@ -129,7 +129,7 @@ export class FormHelpers extends MobileGestures {
     for (const selector of selectors) {
       try {
         const element = await this.driver.$(selector);
-        await element.waitForDisplayed({ timeout: 3000 });
+        await element.waitForDisplayed({ timeout: 800 });
 
         // Verify the element is actually clickable
         const isClickable = await element.isClickable();
@@ -190,7 +190,7 @@ export class FormHelpers extends MobileGestures {
   // Enhanced text input finding
   async waitForTextInput(
     identifier: string,
-    timeout: number = 30000,
+    timeout: number = 900,
   ): Promise<WebdriverIO.Element> {
     if (!this.driver) {
       throw new Error("Driver not initialized");
@@ -199,13 +199,13 @@ export class FormHelpers extends MobileGestures {
     try {
       const textFieldSelector = `//XCUIElementTypeTextField[@name="${identifier}"]`;
       const textField = await this.driver.$(textFieldSelector);
-      await textField.waitForDisplayed({ timeout: 5000 });
+      await textField.waitForDisplayed({ timeout: 900 });
       return textField;
     } catch (error) {
       try {
         const secureFieldSelector = `//XCUIElementTypeSecureTextField[@name="${identifier}"]`;
         const secureField = await this.driver.$(secureFieldSelector);
-        await secureField.waitForDisplayed({ timeout: 5000 });
+        await secureField.waitForDisplayed({ timeout: 900 });
         return secureField;
       } catch (secureError) {
         const selectors = [
@@ -220,7 +220,7 @@ export class FormHelpers extends MobileGestures {
         for (const selector of selectors) {
           try {
             const element = await this.driver.$(selector);
-            await element.waitForDisplayed({ timeout: 2000 });
+            await element.waitForDisplayed({ timeout: 800 });
             return element;
           } catch (fallbackError) {
             continue;
@@ -235,7 +235,7 @@ export class FormHelpers extends MobileGestures {
   }
 
   // Specific field finders
-  async findEmailField(timeout: number = 30000): Promise<WebdriverIO.Element> {
+  async findEmailField(timeout: number = 800): Promise<WebdriverIO.Element> {
     if (!this.driver) {
       throw new Error("Driver not initialized");
     }
@@ -273,9 +273,7 @@ export class FormHelpers extends MobileGestures {
     }
   }
 
-  async findPasswordField(
-    timeout: number = 30000,
-  ): Promise<WebdriverIO.Element> {
+  async findPasswordField(timeout: number = 800): Promise<WebdriverIO.Element> {
     if (!this.driver) {
       throw new Error("Driver not initialized");
     }
@@ -321,7 +319,7 @@ export class FormHelpers extends MobileGestures {
   async fillTextAndDismissKeyboard(
     selector: string,
     text: string,
-    timeout: number = 30000,
+    timeout: number = 900,
   ): Promise<void> {
     const element = await this.waitForElement(selector, timeout);
     await element.click();
@@ -339,7 +337,7 @@ export class FormHelpers extends MobileGestures {
     await emailField.clearValue();
     await emailField.setValue(email);
 
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 200));
     await this.dismissKeyboard();
     console.log("✓ Email field filled and keyboard dismissed");
   }
@@ -351,14 +349,14 @@ export class FormHelpers extends MobileGestures {
     await passwordField.clearValue();
     await passwordField.setValue(password);
 
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 200));
     await this.dismissKeyboard();
     console.log("✓ Password field filled and keyboard dismissed");
   }
 
   async waitForElementByText(
     text: string,
-    timeout: number = 30000,
+    timeout: number = 900,
   ): Promise<WebdriverIO.Element> {
     if (!this.driver) {
       throw new Error("Driver not initialized");
@@ -373,7 +371,7 @@ export class FormHelpers extends MobileGestures {
 
   // Send Money specific helper methods
   async findMoneyInputField(
-    timeout: number = 30000,
+    timeout: number = 900,
   ): Promise<WebdriverIO.Element> {
     if (!this.driver) {
       throw new Error("Driver not initialized");
@@ -391,7 +389,7 @@ export class FormHelpers extends MobileGestures {
       for (const selector of selectors) {
         try {
           const element = await this.driver.$(selector);
-          await element.waitForDisplayed({ timeout: 3000 });
+          await element.waitForDisplayed({ timeout: 800 });
           console.log(`Found money input using selector: ${selector}`);
           return element;
         } catch (error) {
@@ -420,7 +418,7 @@ export class FormHelpers extends MobileGestures {
 
   async findInputByPlaceholder(
     placeholder: string,
-    timeout: number = 30000,
+    timeout: number = 900,
   ): Promise<WebdriverIO.Element> {
     if (!this.driver) {
       throw new Error("Driver not initialized");
@@ -449,28 +447,18 @@ export class FormHelpers extends MobileGestures {
 
   async findElementByTestId(
     testId: string,
-    timeout: number = 30000,
+    timeout: number = 800,
   ): Promise<WebdriverIO.Element> {
     if (!this.driver) {
       throw new Error("Driver not initialized");
     }
 
-    const selectors = [
-      `//XCUIElementTypeOther[@name="${testId}"]`,
-      `//XCUIElementTypeButton[@name="${testId}"]`,
-      `//*[@name="${testId}"]`,
-      `//XCUIElementTypeOther[@testID="${testId}"]`,
-      `//XCUIElementTypeButton[@testID="${testId}"]`,
-      `//*[@testID="${testId}"]`,
-      `//XCUIElementTypeOther[@accessibilityLabel="${testId}"]`,
-      `//XCUIElementTypeButton[@accessibilityLabel="${testId}"]`,
-      `//*[@accessibilityLabel="${testId}"]`,
-    ];
+    const selectors = [`//*[@name="${testId}"]`];
 
     for (const selector of selectors) {
       try {
         const element = await this.driver.$(selector);
-        await element.waitForDisplayed({ timeout: 3000 });
+        await element.waitForDisplayed({ timeout: 800 });
         console.log(`Found element by testId using selector: ${selector}`);
         return element;
       } catch (error) {
@@ -482,7 +470,7 @@ export class FormHelpers extends MobileGestures {
   }
 
   // Helper method for finding back button specifically
-  async findBackButton(timeout: number = 30000): Promise<WebdriverIO.Element> {
+  async findBackButton(timeout: number = 800): Promise<WebdriverIO.Element> {
     if (!this.driver) {
       throw new Error("Driver not initialized");
     }
@@ -505,7 +493,7 @@ export class FormHelpers extends MobileGestures {
 
   async findElementByAccessibilityId(
     accessibilityId: string,
-    timeout: number = 30000,
+    timeout: number = 800,
   ): Promise<WebdriverIO.Element> {
     if (!this.driver) {
       throw new Error("Driver not initialized");
@@ -521,7 +509,7 @@ export class FormHelpers extends MobileGestures {
     for (const selector of selectors) {
       try {
         const element = await this.driver.$(selector);
-        await element.waitForDisplayed({ timeout: 3000 });
+        await element.waitForDisplayed({ timeout: 800 });
         console.log(
           `Found element by accessibility ID using selector: ${selector}`,
         );
@@ -561,7 +549,7 @@ export class FormHelpers extends MobileGestures {
 
   async isElementDisplayed(
     elementOrText: string | WebdriverIO.Element,
-    timeout: number = 5000,
+    timeout: number = 800,
   ): Promise<boolean> {
     try {
       if (!this.driver) {

@@ -11,7 +11,7 @@ export class MobileGestures extends BaseDriver {
     startY: number,
     endX: number,
     endY: number,
-    duration: number = 1000,
+    duration: number = 800,
   ): Promise<void> {
     if (!this.driver) {
       throw new Error("Driver not initialized");
@@ -98,7 +98,7 @@ export class MobileGestures extends BaseDriver {
       });
 
       console.log("✓ Tapped outside to dismiss keyboard");
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 800));
     } catch (error) {
       console.log("Could not tap outside to dismiss keyboard:", error);
     }

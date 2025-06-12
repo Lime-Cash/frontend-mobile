@@ -59,7 +59,7 @@ describe("Login Test Suite", () => {
       console.log("✓ Sign In button clicked");
 
       // Wait for navigation
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       // Check if we successfully navigated (look for home screen elements)
       const homeElements = ["Lime Cash", "Send", "Withdraw", "Load"];
@@ -68,7 +68,7 @@ describe("Login Test Suite", () => {
       for (const elementText of homeElements) {
         const isPresent = await appiumHelper.isElementDisplayed(
           elementText,
-          1000,
+          500,
         );
         if (isPresent) {
           homeElementsFound++;
@@ -102,22 +102,22 @@ describe("Login Test Suite", () => {
       // Click Sign In button
       const signInButton = await appiumHelper.findElementByTestId(
         "signin-button",
-        1000,
+        500,
       );
       await signInButton.click();
       console.log("✓ Sign In button clicked with invalid email");
 
       // Wait for validation
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       // Check if error message appears or we're still on login screen
       const stillOnLogin = await appiumHelper.isElementDisplayed(
         "Welcome back",
-        1000,
+        500,
       );
       const errorVisible = await appiumHelper.isElementDisplayed(
         "Invalid Email",
-        1000,
+        500,
       );
 
       if (stillOnLogin || errorVisible) {
@@ -144,22 +144,22 @@ describe("Login Test Suite", () => {
       // Click Sign In button
       const signInButton = await appiumHelper.findElementByTestId(
         "signin-button",
-        1000,
+        500,
       );
       await signInButton.click();
       console.log("✓ Sign In button clicked with invalid password");
 
       // Wait for validation
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       // Check if error message appears or we're still on login screen
       const stillOnLogin = await appiumHelper.isElementDisplayed(
         "Welcome back",
-        1000,
+        500,
       );
       const errorVisible = await appiumHelper.isElementDisplayed(
         "Invalid Password",
-        1000,
+        500,
       );
 
       if (stillOnLogin || errorVisible) {
