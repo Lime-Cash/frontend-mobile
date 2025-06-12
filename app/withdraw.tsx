@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Platform,
+} from "react-native";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -68,7 +75,7 @@ const Withdraw = () => {
     } catch (error) {
       console.error(error);
       setError(
-        error instanceof Error ? error.message : "Failed to withdraw money"
+        error instanceof Error ? error.message : "Failed to withdraw money",
       );
     } finally {
       setIsLoading(false);
@@ -83,10 +90,16 @@ const Withdraw = () => {
     }
   };
 
-  return (
-    <ViewContainer>
+  // Content to render inside the wrapper
+  const renderContent = () => (
+    <View style={{ flex: 1 }}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={handleBack}
+          testID="back-button"
+          accessibilityLabel="back-button"
+        >
           <Ionicons name="arrow-back" size={24} color={themeColor.text} />
         </TouchableOpacity>
         <ThemedText type="subtitle">Withdraw Money</ThemedText>
@@ -101,9 +114,12 @@ const Withdraw = () => {
           }}
           containerStyle={styles.moneyInput}
           autoFocus
+          testID="amount-input"
         />
         {formErrors.amount && (
-          <ThemedText style={styles.errorText}>{formErrors.amount}</ThemedText>
+          <ThemedText style={styles.errorText} testID="error-message">
+            {formErrors.amount}
+          </ThemedText>
         )}
 
         <InputField
@@ -118,6 +134,7 @@ const Withdraw = () => {
           error={formErrors.cvu}
           keyboardType="numeric"
           maxLength={22}
+          testID="cvu-input"
         />
 
         <Button
@@ -127,10 +144,24 @@ const Withdraw = () => {
           style={styles.withdrawButton}
           disabled={!amount || !cvu || isLoading}
           loading={isLoading}
+          testID="withdraw-money-btn"
         />
       </View>
-    </ViewContainer>
+    </View>
   );
+
+  // Render different wrappers based on platform
+  if (Platform.OS === "web") {
+    return <ViewContainer>{renderContent()}</ViewContainer>;
+  } else {
+    return (
+      <ViewContainer>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          {renderContent()}
+        </TouchableWithoutFeedback>
+      </ViewContainer>
+    );
+  }
 };
 
 const styles = StyleSheet.create({

@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Platform,
+} from "react-native";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -76,7 +83,6 @@ const Load = () => {
         setError(result.message || "Failed to load money");
       }
     } catch (error) {
-      console.error(error);
       setError(error instanceof Error ? error.message : "Failed to load money");
     } finally {
       setIsLoading(false);
@@ -91,10 +97,16 @@ const Load = () => {
     }
   };
 
-  return (
-    <ViewContainer>
+  // Content to render inside the wrapper
+  const renderContent = () => (
+    <View style={{ flex: 1 }}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={handleBack}
+          testID="back-button"
+          accessibilityLabel="back-button"
+        >
           <Ionicons name="arrow-back" size={24} color={themeColor.text} />
         </TouchableOpacity>
         <ThemedText type="subtitle">Load Money</ThemedText>
@@ -109,9 +121,19 @@ const Load = () => {
           }}
           containerStyle={styles.moneyInput}
           autoFocus
+          testID="amount-input"
         />
         {formErrors.amount && (
-          <ThemedText style={styles.errorText}>{formErrors.amount}</ThemedText>
+          <ThemedText style={styles.errorText} testID="error-message">
+            {formErrors.amount}
+          </ThemedText>
+        )}
+
+        {/* Display main error message */}
+        {error && (
+          <ThemedText style={styles.errorText} testID="error-message">
+            {error}
+          </ThemedText>
         )}
 
         <InputField
@@ -126,6 +148,7 @@ const Load = () => {
           error={formErrors.cvu}
           keyboardType="numeric"
           maxLength={22}
+          testID="cvu-input"
         />
 
         {/* Bank Dropdown - Commented Out */}
@@ -149,10 +172,24 @@ const Load = () => {
           style={styles.sendButton}
           disabled={!amount || !cvu || isLoading}
           loading={isLoading}
+          testID="load-money-btn"
         />
       </View>
-    </ViewContainer>
+    </View>
   );
+
+  // Render different wrappers based on platform
+  if (Platform.OS === "web") {
+    return <ViewContainer>{renderContent()}</ViewContainer>;
+  } else {
+    return (
+      <ViewContainer>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          {renderContent()}
+        </TouchableWithoutFeedback>
+      </ViewContainer>
+    );
+  }
 };
 
 const styles = StyleSheet.create({

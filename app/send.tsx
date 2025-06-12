@@ -1,5 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { StyleSheet, View, TouchableOpacity } from "react-native";
+import React, { useState, useEffect, ReactNode } from "react";
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Platform,
+} from "react-native";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -52,10 +59,16 @@ const SendMoney = () => {
     }
   };
 
-  return (
-    <ViewContainer>
+  // Content to render inside the wrapper
+  const renderContent = () => (
+    <View style={{ flex: 1 }}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={handleBack}
+          testID="back-button"
+          accessibilityLabel="back-button"
+        >
           <Ionicons name="arrow-back" size={24} color={themeColor.text} />
         </TouchableOpacity>
         <ThemedText type="subtitle">Send Money</ThemedText>
@@ -69,10 +82,12 @@ const SendMoney = () => {
             if (value) setErrors({ ...errors, amount: "" });
           }}
           containerStyle={styles.moneyInput}
-          autoFocus
+          testID="amount-input"
         />
         {errors.amount ? (
-          <ThemedText style={styles.errorText}>{errors.amount}</ThemedText>
+          <ThemedText style={styles.errorText} testID="error-message">
+            {errors.amount}
+          </ThemedText>
         ) : null}
 
         <InputField
@@ -85,6 +100,7 @@ const SendMoney = () => {
           }}
           containerStyle={styles.recipientInput}
           error={errors.recipient}
+          testID="recipient-email-input"
         />
 
         <Button
@@ -97,8 +113,20 @@ const SendMoney = () => {
           testID="send-money-btn"
         />
       </View>
-    </ViewContainer>
+    </View>
   );
+
+  if (Platform.OS === "web") {
+    return <ViewContainer>{renderContent()}</ViewContainer>;
+  } else {
+    return (
+      <ViewContainer>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          {renderContent()}
+        </TouchableWithoutFeedback>
+      </ViewContainer>
+    );
+  }
 };
 
 const styles = StyleSheet.create({

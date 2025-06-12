@@ -11,8 +11,6 @@ import {
 } from "react-native";
 import { router } from "expo-router";
 
-import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import { useAuth } from "@/hooks/useAuth";
 import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
@@ -26,8 +24,6 @@ export default function LoginScreen() {
   const [password, setPassword] = useState("");
 
   const { login, isLoading, error } = useAuth();
-  const colorScheme = useColorScheme();
-  const themeColor = Colors[colorScheme ?? "light"];
 
   const handleLogin = async () => {
     if (!email || !email.includes("@")) {
@@ -81,6 +77,7 @@ export default function LoginScreen() {
                 autoCapitalize="none"
                 autoCorrect={false}
                 containerStyle={styles.inputContainer}
+                testID="email-input"
               />
 
               <InputField
@@ -90,9 +87,14 @@ export default function LoginScreen() {
                 onChangeText={setPassword}
                 placeholder="Password"
                 containerStyle={styles.inputContainer}
+                testID="password-input"
               />
 
-              {error && <Text style={styles.errorText}>{error}</Text>}
+              {error && (
+                <Text style={styles.errorText} testID="error-message">
+                  {error}
+                </Text>
+              )}
 
               <Button
                 title="Sign In"
@@ -100,6 +102,7 @@ export default function LoginScreen() {
                 loading={isLoading}
                 style={styles.loginButton}
                 variant="filled"
+                testID="signin-button"
               />
             </View>
           </View>
@@ -108,7 +111,7 @@ export default function LoginScreen() {
             <ThemedText style={styles.signupText}>
               Don't have an account?
             </ThemedText>
-            <TouchableOpacity onPress={navigateToSignup}>
+            <TouchableOpacity onPress={navigateToSignup} testID="signup-link">
               <ThemedText style={styles.signupLink} type="link">
                 Sign up
               </ThemedText>

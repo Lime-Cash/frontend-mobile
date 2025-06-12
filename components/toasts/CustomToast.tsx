@@ -26,20 +26,23 @@ export const toastConfig: ToastConfig = {
 
   error: (props) => {
     const themeColors = Colors.light;
+    const errorMessage = props.text2 || props.text1 || "Error occurred";
 
     return (
-      <ErrorToast
-        {...props}
-        style={[styles.toast, { backgroundColor: themeColors.background }]}
-        contentContainerStyle={styles.contentContainer}
-        text1Style={[styles.title, { color: themeColors.text }]}
-        text2Style={[styles.message, { color: themeColors.icon }]}
-        renderLeadingIcon={() => (
-          <View style={styles.iconContainer}>
-            <Ionicons name="close-circle" size={24} color="red" />
-          </View>
-        )}
-      />
+      <View testID="error-message" accessibilityLabel={errorMessage}>
+        <ErrorToast
+          {...props}
+          style={[styles.toast, { backgroundColor: themeColors.background }]}
+          contentContainerStyle={styles.contentContainer}
+          text1Style={[styles.title, { color: themeColors.text }]}
+          text2Style={[styles.message, { color: themeColors.icon }]}
+          renderLeadingIcon={() => (
+            <View style={styles.iconContainer}>
+              <Ionicons name="close-circle" size={24} color="red" />
+            </View>
+          )}
+        />
+      </View>
     );
   },
 

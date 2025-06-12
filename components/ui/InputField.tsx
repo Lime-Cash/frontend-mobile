@@ -13,12 +13,14 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import { Ionicons } from "@expo/vector-icons";
 import { usePasswordField, InputType } from "@/hooks/usePasswordField";
 
-interface InputFieldProps extends Omit<TextInputProps, "secureTextEntry"> {
-  label: string;
+export interface InputFieldProps
+  extends Omit<TextInputProps, "placeholderTextColor"> {
+  label?: string;
   type?: InputType;
   error?: string;
   width?: number | string;
   containerStyle?: any;
+  testID?: string;
 }
 
 export default function InputField({
@@ -27,6 +29,7 @@ export default function InputField({
   error,
   width,
   containerStyle,
+  testID,
   ...textInputProps
 }: InputFieldProps) {
   const colorScheme = useColorScheme();
@@ -59,11 +62,13 @@ export default function InputField({
           autoCapitalize="none"
           autoCorrect={false}
           autoFocus={false}
+          testID={testID}
         />
         {type === "password" && (
           <TouchableOpacity
             onPress={togglePasswordVisibility}
             style={styles.eyeIcon}
+            testID="password-visibility-toggle"
           >
             <Ionicons
               name={isPasswordVisible ? "eye-off" : "eye"}
@@ -73,7 +78,11 @@ export default function InputField({
           </TouchableOpacity>
         )}
       </View>
-      {error && <Text style={styles.errorText}>{error}</Text>}
+      {error && (
+        <Text style={styles.errorText} testID="error-message">
+          {error}
+        </Text>
+      )}
     </View>
   );
 }
