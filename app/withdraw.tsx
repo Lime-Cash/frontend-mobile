@@ -101,9 +101,12 @@ const Withdraw = () => {
           }}
           containerStyle={styles.moneyInput}
           autoFocus
+          testID="amount-input"
         />
         {formErrors.amount && (
-          <ThemedText style={styles.errorText}>{formErrors.amount}</ThemedText>
+          <ThemedText style={styles.errorText} testID="error-message">
+            {formErrors.amount}
+          </ThemedText>
         )}
 
         <InputField
@@ -118,6 +121,7 @@ const Withdraw = () => {
           error={formErrors.cvu}
           keyboardType="numeric"
           maxLength={22}
+          testID="cvu-input"
         />
 
         <Button
@@ -127,6 +131,7 @@ const Withdraw = () => {
           style={styles.withdrawButton}
           disabled={!amount || !cvu || isLoading}
           loading={isLoading}
+          testID="withdraw-money-btn"
         />
       </View>
     </ViewContainer>

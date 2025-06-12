@@ -109,9 +109,12 @@ const Load = () => {
           }}
           containerStyle={styles.moneyInput}
           autoFocus
+          testID="amount-input"
         />
         {formErrors.amount && (
-          <ThemedText style={styles.errorText}>{formErrors.amount}</ThemedText>
+          <ThemedText style={styles.errorText} testID="error-message">
+            {formErrors.amount}
+          </ThemedText>
         )}
 
         <InputField
@@ -126,6 +129,7 @@ const Load = () => {
           error={formErrors.cvu}
           keyboardType="numeric"
           maxLength={22}
+          testID="cvu-input"
         />
 
         {/* Bank Dropdown - Commented Out */}
@@ -149,6 +153,7 @@ const Load = () => {
           style={styles.sendButton}
           disabled={!amount || !cvu || isLoading}
           loading={isLoading}
+          testID="load-money-btn"
         />
       </View>
     </ViewContainer>

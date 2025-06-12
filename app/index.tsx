@@ -94,6 +94,7 @@ export default function Index() {
           icon="arrow.up.to.line"
           onPress={() => router.push("/withdraw")}
           style={styles.button}
+          testID="withdraw-nav-button"
         />
 
         <Button
@@ -101,6 +102,7 @@ export default function Index() {
           icon="arrow.down.to.line"
           onPress={() => router.push("/load")}
           style={styles.button}
+          testID="load-nav-button"
         />
       </View>
 

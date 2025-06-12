@@ -11,8 +11,6 @@ import {
 } from "react-native";
 import { router } from "expo-router";
 
-import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import { useAuth } from "@/hooks/useAuth";
 import InputField from "@/components/ui/InputField";
 import Button from "@/components/ui/Button";
@@ -26,8 +24,6 @@ export default function LoginScreen() {
   const [password, setPassword] = useState("");
 
   const { login, isLoading, error } = useAuth();
-  const colorScheme = useColorScheme();
-  const themeColor = Colors[colorScheme ?? "light"];
 
   const handleLogin = async () => {
     if (!email || !email.includes("@")) {
