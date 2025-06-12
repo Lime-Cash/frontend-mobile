@@ -69,7 +69,6 @@ export const moneyService = {
       console.log("Balance response:", response);
       return parseFloat(response.data.balance);
     } catch (error) {
-      console.error("Error fetching balance:", error);
       throw new Error("Failed to fetch account balance");
     }
   },

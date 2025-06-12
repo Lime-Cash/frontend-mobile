@@ -27,7 +27,7 @@ describe("Login Test Suite", () => {
     await appiumHelper.ensureOnLoginScreen();
 
     // Wait for login screen
-    await appiumHelper.waitForElementByText("Welcome back", 1500);
+    await appiumHelper.waitForElementByText("Welcome back", 500);
     console.log("✓ Login screen loaded");
   }, 60000);
 
@@ -53,13 +53,13 @@ describe("Login Test Suite", () => {
       // Click Sign In button using testID
       const signInButton = await appiumHelper.findElementByTestId(
         "signin-button",
-        2000,
+        500,
       );
       await signInButton.click();
       console.log("✓ Sign In button clicked");
 
       // Wait for navigation
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Check if we successfully navigated (look for home screen elements)
       const homeElements = ["Lime Cash", "Send", "Withdraw", "Load"];
