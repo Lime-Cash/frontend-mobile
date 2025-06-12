@@ -83,7 +83,6 @@ const Load = () => {
         setError(result.message || "Failed to load money");
       }
     } catch (error) {
-      console.error(error);
       setError(error instanceof Error ? error.message : "Failed to load money");
     } finally {
       setIsLoading(false);
@@ -127,6 +126,13 @@ const Load = () => {
         {formErrors.amount && (
           <ThemedText style={styles.errorText} testID="error-message">
             {formErrors.amount}
+          </ThemedText>
+        )}
+
+        {/* Display main error message */}
+        {error && (
+          <ThemedText style={styles.errorText} testID="error-message">
+            {error}
           </ThemedText>
         )}
 

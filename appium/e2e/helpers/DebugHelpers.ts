@@ -38,7 +38,7 @@ export class DebugHelpers extends BaseDriver {
     }
   }
 
-  async waitForLoadingToDisappear(timeout: number = 30000): Promise<void> {
+  async waitForLoadingToDisappear(timeout: number = 10000): Promise<void> {
     if (!this.driver) {
       throw new Error("Driver not initialized");
     }
@@ -67,7 +67,7 @@ export class DebugHelpers extends BaseDriver {
 
   async findElementByName(
     name: string,
-    timeout: number = 30000,
+    timeout: number = 10000,
   ): Promise<WebdriverIO.Element> {
     if (!this.driver) {
       throw new Error("Driver not initialized");

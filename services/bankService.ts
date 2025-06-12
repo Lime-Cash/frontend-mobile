@@ -13,8 +13,6 @@ export const bankService = {
     params: DepositBankParams,
   ): Promise<BankTransactionResult> => {
     try {
-      console.log("BankService: Depositing money with params:", params);
-
       const response = await post<BankResponse, DepositBankParams>(
         "/deposit_bank",
         {
@@ -38,8 +36,6 @@ export const bankService = {
         };
       }
     } catch (error) {
-      console.error("Error depositing from bank:", error);
-
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<BankResponse>;
 
@@ -120,8 +116,6 @@ export const bankService = {
         };
       }
     } catch (error) {
-      console.error("Error withdrawing to bank:", error);
-
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<BankResponse>;
 

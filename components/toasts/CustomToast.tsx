@@ -26,9 +26,10 @@ export const toastConfig: ToastConfig = {
 
   error: (props) => {
     const themeColors = Colors.light;
+    const errorMessage = props.text2 || props.text1 || "Error occurred";
 
     return (
-      <View testID="error-message">
+      <View testID="error-message" accessibilityLabel={errorMessage}>
         <ErrorToast
           {...props}
           style={[styles.toast, { backgroundColor: themeColors.background }]}
