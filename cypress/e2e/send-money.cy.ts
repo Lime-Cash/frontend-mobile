@@ -14,7 +14,7 @@ describe("Send Money functionality", () => {
     cy.get('[data-testid="send-money-btn"]').should(
       "have.attr",
       "aria-disabled",
-      "true"
+      "true",
     );
 
     cy.get('[data-testid="recipient-email-input"]').type("liz@gmail.com");
@@ -22,7 +22,7 @@ describe("Send Money functionality", () => {
     cy.get('[data-testid="send-money-btn"]').should(
       "have.attr",
       "aria-disabled",
-      "true"
+      "true",
     );
   });
 
@@ -32,7 +32,7 @@ describe("Send Money functionality", () => {
     cy.get('[data-testid="send-money-btn"]').should(
       "have.attr",
       "aria-disabled",
-      "true"
+      "true",
     );
   });
 

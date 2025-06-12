@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -54,12 +60,14 @@ const SendMoney = () => {
 
   return (
     <ViewContainer>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-          <Ionicons name="arrow-back" size={24} color={themeColor.text} />
-        </TouchableOpacity>
-        <ThemedText type="subtitle">Send Money</ThemedText>
-      </View>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={{ flex: 1 }}>
+          <View style={styles.header}>
+            <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+              <Ionicons name="arrow-back" size={24} color={themeColor.text} />
+            </TouchableOpacity>
+            <ThemedText type="subtitle">Send Money</ThemedText>
+          </View>
 
       <View style={styles.contentContainer}>
         <MoneyInput
@@ -91,16 +99,18 @@ const SendMoney = () => {
           testID="recipient-email-input"
         />
 
-        <Button
-          title="Send Money"
-          icon="paperplane.fill"
-          onPress={handleSend}
-          style={styles.sendButton}
-          disabled={!amount || !recipient || isLoading}
-          loading={isLoading}
-          testID="send-money-btn"
-        />
-      </View>
+            <Button
+              title="Send Money"
+              icon="paperplane.fill"
+              onPress={handleSend}
+              style={styles.sendButton}
+              disabled={!amount || !recipient || isLoading}
+              loading={isLoading}
+              testID="send-money-btn"
+            />
+          </View>
+        </View>
+      </TouchableWithoutFeedback>
     </ViewContainer>
   );
 };

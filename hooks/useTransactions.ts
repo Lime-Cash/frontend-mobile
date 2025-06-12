@@ -67,33 +67,39 @@ export const useTransactions = () => {
         return "Bank Withdrawal";
       }
     }
-    
+
     // Handle existing transfer types
     if (type === "transfer_sent" && to_account) {
       return `Transfer Sent to ${to_account}`;
     } else if (type === "transfer_received" && from_account) {
       return `Transfer Received from ${from_account}`;
     }
-    
+
     return "Unknown transaction";
   };
 
   const getTransactionAmount = (transaction: any) => {
     // For withdrawals, ensure negative amount
-    if (transaction.type === "transaction" && transaction.transaction_type === "withdrawal") {
+    if (
+      transaction.type === "transaction" &&
+      transaction.transaction_type === "withdrawal"
+    ) {
       return -Math.abs(transaction.amount);
     }
-    
+
     // For deposits, ensure positive amount
-    if (transaction.type === "transaction" && transaction.transaction_type === "deposit") {
+    if (
+      transaction.type === "transaction" &&
+      transaction.transaction_type === "deposit"
+    ) {
       return Math.abs(transaction.amount);
     }
-    
+
     // For transfers, keep existing logic
     if (transaction.type === "transfer_sent") {
       return -transaction.amount;
     }
-    
+
     return transaction.amount;
   };
 

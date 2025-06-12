@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -68,7 +74,7 @@ const Withdraw = () => {
     } catch (error) {
       console.error(error);
       setError(
-        error instanceof Error ? error.message : "Failed to withdraw money"
+        error instanceof Error ? error.message : "Failed to withdraw money",
       );
     } finally {
       setIsLoading(false);
@@ -85,7 +91,9 @@ const Withdraw = () => {
 
   return (
     <ViewContainer>
-      <View style={styles.header}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={{ flex: 1 }}>
+                <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={handleBack}>
           <Ionicons name="arrow-back" size={24} color={themeColor.text} />
         </TouchableOpacity>
@@ -134,6 +142,8 @@ const Withdraw = () => {
           testID="withdraw-money-btn"
         />
       </View>
+        </View>
+      </TouchableWithoutFeedback>
     </ViewContainer>
   );
 };

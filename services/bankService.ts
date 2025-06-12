@@ -1,10 +1,10 @@
 import { post } from "../api/axios";
 import axios, { AxiosError } from "axios";
-import { 
-  DepositBankParams, 
-  WithdrawBankParams, 
-  BankResponse, 
-  BankTransactionResult 
+import {
+  DepositBankParams,
+  WithdrawBankParams,
+  BankResponse,
+  BankTransactionResult,
 } from "@/types/bank";
 
 export const bankService = {
@@ -20,7 +20,7 @@ export const bankService = {
         {
           cbu: params.cbu,
           amount: params.amount,
-        }
+        },
       );
 
       if (response.data.success) {
@@ -39,10 +39,10 @@ export const bankService = {
       }
     } catch (error) {
       console.error("Error depositing from bank:", error);
-      
+
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<BankResponse>;
-        
+
         // Check if we have error data in the response (like 422 with error message)
         if (axiosError.response?.data?.error) {
           return {
@@ -50,23 +50,28 @@ export const bankService = {
             message: axiosError.response.data.error,
           };
         }
-        
+
         // Check if we have success: false in the response data
-        if (axiosError.response?.data && 'success' in axiosError.response.data && !axiosError.response.data.success) {
+        if (
+          axiosError.response?.data &&
+          "success" in axiosError.response.data &&
+          !axiosError.response.data.success
+        ) {
           return {
             success: false,
             message: axiosError.response.data.error || "Deposit failed",
           };
         }
-        
+
         // Handle specific HTTP status codes
         if (axiosError.response?.status === 422) {
           return {
             success: false,
-            message: "Transaction failed - please check your details and try again",
+            message:
+              "Transaction failed - please check your details and try again",
           };
         }
-        
+
         if (axiosError.response?.status === 400) {
           return {
             success: false,
@@ -77,7 +82,10 @@ export const bankService = {
 
       return {
         success: false,
-        message: error instanceof Error ? error.message : "Unknown error occurred during deposit",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Unknown error occurred during deposit",
       };
     }
   },
@@ -94,7 +102,7 @@ export const bankService = {
         {
           cbu: params.cbu,
           amount: params.amount,
-        }
+        },
       );
 
       if (response.data.success) {
@@ -113,10 +121,10 @@ export const bankService = {
       }
     } catch (error) {
       console.error("Error withdrawing to bank:", error);
-      
+
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError<BankResponse>;
-        
+
         // Check if we have error data in the response (like 422 with error message)
         if (axiosError.response?.data?.error) {
           return {
@@ -124,23 +132,28 @@ export const bankService = {
             message: axiosError.response.data.error,
           };
         }
-        
+
         // Check if we have success: false in the response data
-        if (axiosError.response?.data && 'success' in axiosError.response.data && !axiosError.response.data.success) {
+        if (
+          axiosError.response?.data &&
+          "success" in axiosError.response.data &&
+          !axiosError.response.data.success
+        ) {
           return {
             success: false,
             message: axiosError.response.data.error || "Withdrawal failed",
           };
         }
-        
+
         // Handle specific HTTP status codes
         if (axiosError.response?.status === 422) {
           return {
             success: false,
-            message: "Transaction failed - please check your details and try again",
+            message:
+              "Transaction failed - please check your details and try again",
           };
         }
-        
+
         if (axiosError.response?.status === 400) {
           return {
             success: false,
@@ -151,7 +164,10 @@ export const bankService = {
 
       return {
         success: false,
-        message: error instanceof Error ? error.message : "Unknown error occurred during withdrawal",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Unknown error occurred during withdrawal",
       };
     }
   },
