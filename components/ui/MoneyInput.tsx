@@ -18,6 +18,7 @@ interface MoneyInputProps
   width?: number | string;
   containerStyle?: any;
   disabled?: boolean;
+  testID?: string;
 }
 
 export default function MoneyInput({
@@ -26,6 +27,7 @@ export default function MoneyInput({
   width,
   containerStyle,
   disabled = false,
+  testID,
   ...textInputProps
 }: MoneyInputProps) {
   const colorScheme = useColorScheme();
@@ -68,6 +70,7 @@ export default function MoneyInput({
           placeholder="0"
           placeholderTextColor={themeColor.icon}
           editable={!disabled}
+          testID={testID}
           {...textInputProps}
         />
       </View>

@@ -69,31 +69,35 @@ const SendMoney = () => {
             <ThemedText type="subtitle">Send Money</ThemedText>
           </View>
 
-          <View style={styles.contentContainer}>
-            <MoneyInput
-              value={amount}
-              onChangeText={(value) => {
-                setAmount(value);
-                if (value) setErrors({ ...errors, amount: "" });
-              }}
-              containerStyle={styles.moneyInput}
-              autoFocus
-            />
-            {errors.amount ? (
-              <ThemedText style={styles.errorText}>{errors.amount}</ThemedText>
-            ) : null}
+      <View style={styles.contentContainer}>
+        <MoneyInput
+          value={amount}
+          onChangeText={(value) => {
+            setAmount(value);
+            if (value) setErrors({ ...errors, amount: "" });
+          }}
+          containerStyle={styles.moneyInput}
+          autoFocus
+          testID="amount-input"
+        />
+        {errors.amount ? (
+          <ThemedText style={styles.errorText} testID="error-message">
+            {errors.amount}
+          </ThemedText>
+        ) : null}
 
-            <InputField
-              label=""
-              placeholder="Recipient email"
-              value={recipient}
-              onChangeText={(value) => {
-                setRecipient(value);
-                if (value) setErrors({ ...errors, recipient: "" });
-              }}
-              containerStyle={styles.recipientInput}
-              error={errors.recipient}
-            />
+        <InputField
+          label=""
+          placeholder="Recipient email"
+          value={recipient}
+          onChangeText={(value) => {
+            setRecipient(value);
+            if (value) setErrors({ ...errors, recipient: "" });
+          }}
+          containerStyle={styles.recipientInput}
+          error={errors.recipient}
+          testID="recipient-email-input"
+        />
 
             <Button
               title="Send Money"

@@ -167,6 +167,7 @@ export default function RegisterScreen() {
                 onChangeText={setName}
                 placeholder="John Doe"
                 containerStyle={styles.inputContainer}
+                testID="name-input"
               />
 
               <InputField
@@ -178,6 +179,7 @@ export default function RegisterScreen() {
                 autoCapitalize="none"
                 autoCorrect={false}
                 containerStyle={styles.inputContainer}
+                testID="email-input"
               />
 
               <InputField
@@ -187,6 +189,7 @@ export default function RegisterScreen() {
                 onChangeText={setPassword}
                 placeholder="Create Password"
                 containerStyle={styles.inputContainer}
+                testID="password-input"
               />
 
               {/* Password Requirements */}
@@ -234,9 +237,14 @@ export default function RegisterScreen() {
                 onChangeText={setConfirmPassword}
                 placeholder="Confirm Password"
                 containerStyle={styles.inputContainer}
+                testID="confirm-password-input"
               />
 
-              {error && <Text style={styles.errorText}>{error}</Text>}
+              {error && (
+                <Text style={styles.errorText} testID="error-message">
+                  {error}
+                </Text>
+              )}
 
               <Button
                 title="Sign Up"
@@ -244,6 +252,7 @@ export default function RegisterScreen() {
                 loading={isLoading}
                 style={styles.registerButton}
                 variant="filled"
+                testID="signup-button"
               />
             </View>
           </View>

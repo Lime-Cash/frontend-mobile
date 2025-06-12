@@ -93,52 +93,55 @@ const Withdraw = () => {
     <ViewContainer>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={{ flex: 1 }}>
-          <View style={styles.header}>
-            <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-              <Ionicons name="arrow-back" size={24} color={themeColor.text} />
-            </TouchableOpacity>
-            <ThemedText type="subtitle">Withdraw Money</ThemedText>
-          </View>
+                <View style={styles.header}>
+        <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+          <Ionicons name="arrow-back" size={24} color={themeColor.text} />
+        </TouchableOpacity>
+        <ThemedText type="subtitle">Withdraw Money</ThemedText>
+      </View>
 
-          <View style={styles.contentContainer}>
-            <MoneyInput
-              value={amount}
-              onChangeText={(value) => {
-                setAmount(value);
-                if (value) setFormErrors({ ...formErrors, amount: "" });
-              }}
-              containerStyle={styles.moneyInput}
-              autoFocus
-            />
-            {formErrors.amount && (
-              <ThemedText style={styles.errorText}>
-                {formErrors.amount}
-              </ThemedText>
-            )}
+      <View style={styles.contentContainer}>
+        <MoneyInput
+          value={amount}
+          onChangeText={(value) => {
+            setAmount(value);
+            if (value) setFormErrors({ ...formErrors, amount: "" });
+          }}
+          containerStyle={styles.moneyInput}
+          autoFocus
+          testID="amount-input"
+        />
+        {formErrors.amount && (
+          <ThemedText style={styles.errorText} testID="error-message">
+            {formErrors.amount}
+          </ThemedText>
+        )}
 
-            <InputField
-              label="CVU"
-              placeholder="Enter your CVU"
-              value={cvu}
-              onChangeText={(value) => {
-                setCvu(value);
-                if (value) setFormErrors({ ...formErrors, cvu: "" });
-              }}
-              containerStyle={styles.cvuInput}
-              error={formErrors.cvu}
-              keyboardType="numeric"
-              maxLength={22}
-            />
+        <InputField
+          label="CVU"
+          placeholder="Enter your CVU"
+          value={cvu}
+          onChangeText={(value) => {
+            setCvu(value);
+            if (value) setFormErrors({ ...formErrors, cvu: "" });
+          }}
+          containerStyle={styles.cvuInput}
+          error={formErrors.cvu}
+          keyboardType="numeric"
+          maxLength={22}
+          testID="cvu-input"
+        />
 
-            <Button
-              title="Withdraw Money"
-              icon="arrow.up.to.line"
-              onPress={handleWithdraw}
-              style={styles.withdrawButton}
-              disabled={!amount || !cvu || isLoading}
-              loading={isLoading}
-            />
-          </View>
+        <Button
+          title="Withdraw Money"
+          icon="arrow.up.to.line"
+          onPress={handleWithdraw}
+          style={styles.withdrawButton}
+          disabled={!amount || !cvu || isLoading}
+          loading={isLoading}
+          testID="withdraw-money-btn"
+        />
+      </View>
         </View>
       </TouchableWithoutFeedback>
     </ViewContainer>
