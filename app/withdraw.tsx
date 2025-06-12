@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
+  Platform,
 } from "react-native";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
@@ -74,7 +75,7 @@ const Withdraw = () => {
     } catch (error) {
       console.error(error);
       setError(
-        error instanceof Error ? error.message : "Failed to withdraw money",
+        error instanceof Error ? error.message : "Failed to withdraw money"
       );
     } finally {
       setIsLoading(false);
@@ -89,11 +90,10 @@ const Withdraw = () => {
     }
   };
 
-  return (
-    <ViewContainer>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={{ flex: 1 }}>
-                <View style={styles.header}>
+  // Content to render inside the wrapper
+  const renderContent = () => (
+    <View style={{ flex: 1 }}>
+      <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={handleBack}>
           <Ionicons name="arrow-back" size={24} color={themeColor.text} />
         </TouchableOpacity>
@@ -142,10 +142,21 @@ const Withdraw = () => {
           testID="withdraw-money-btn"
         />
       </View>
-        </View>
-      </TouchableWithoutFeedback>
-    </ViewContainer>
+    </View>
   );
+
+  // Render different wrappers based on platform
+  if (Platform.OS === "web") {
+    return <ViewContainer>{renderContent()}</ViewContainer>;
+  } else {
+    return (
+      <ViewContainer>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          {renderContent()}
+        </TouchableWithoutFeedback>
+      </ViewContainer>
+    );
+  }
 };
 
 const styles = StyleSheet.create({
