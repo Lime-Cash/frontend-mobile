@@ -261,7 +261,7 @@ export default function RegisterScreen() {
             <ThemedText style={styles.loginText}>
               Already have an account?
             </ThemedText>
-            <TouchableOpacity onPress={navigateToLogin}>
+            <TouchableOpacity onPress={navigateToLogin} testID="signin-link">
               <ThemedText style={styles.loginLink} type="link">
                 Sign in
               </ThemedText>

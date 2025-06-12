@@ -14,7 +14,7 @@ describe("Load functionality", () => {
     cy.get('[data-testid="load-money-btn"]').should(
       "have.attr",
       "aria-disabled",
-      "true"
+      "true",
     );
 
     cy.get('[data-testid="cvu-input"]').type("4567890123456789012345");
@@ -22,7 +22,7 @@ describe("Load functionality", () => {
     cy.get('[data-testid="load-money-btn"]').should(
       "have.attr",
       "aria-disabled",
-      "true"
+      "true",
     );
   });
 
@@ -32,7 +32,7 @@ describe("Load functionality", () => {
     cy.get('[data-testid="load-money-btn"]').should(
       "have.attr",
       "aria-disabled",
-      "true"
+      "true",
     );
   });
 
@@ -83,7 +83,7 @@ describe("Load functionality", () => {
     cy.get('[data-testid="error-message"]').should("be.visible");
     cy.get('[data-testid="error-message"]').should(
       "contain",
-      "Invalid CBU. CBU must be a 22-digit string."
+      "Invalid CBU. CBU must be a 22-digit string.",
     );
     cy.url().should("include", "/load");
   });
@@ -95,7 +95,7 @@ describe("Load functionality", () => {
     cy.get('[data-testid="error-message"]').should("be.visible");
     cy.get('[data-testid="error-message"]').should(
       "contain",
-      "Account not found for the provided CBU."
+      "Account not found for the provided CBU.",
     );
   });
 
@@ -106,7 +106,7 @@ describe("Load functionality", () => {
     cy.get('[data-testid="error-message"]').should("be.visible");
     cy.get('[data-testid="error-message"]').should(
       "contain",
-      "Insufficient funds"
+      "Insufficient funds",
     );
     cy.url().should("include", "/load");
   });

@@ -102,7 +102,12 @@ const Load = () => {
   const renderContent = () => (
     <View style={{ flex: 1 }}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={handleBack}
+          testID="back-button"
+          accessibilityLabel="back-button"
+        >
           <Ionicons name="arrow-back" size={24} color={themeColor.text} />
         </TouchableOpacity>
         <ThemedText type="subtitle">Load Money</ThemedText>

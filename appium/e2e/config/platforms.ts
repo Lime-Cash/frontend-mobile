@@ -18,8 +18,9 @@ export const iosConfig: RemoteOptions = {
     "appium:permissions": '{"host.exp.exponent": {"location": "yes"}}',
     "appium:newCommandTimeout": 300, // 5 minutes timeout
     "appium:connectHardwareKeyboard": false, // Use software keyboard
-    "appium:noReset": true, // Keep app state between sessions
-    "appium:autoLaunch": true, // Auto-launch app on connection
+    "appium:noReset": true, // Keep app state between sessions for faster tests
+    "appium:fullReset": false, // Don't uninstall app, just reset state
+    "appium:autoLaunch": false, // Don't auto-launch - connect to existing app
     "appium:wdaLaunchTimeout": 60000, // WebDriverAgent launch timeout
     "appium:wdaConnectionTimeout": 60000, // WebDriverAgent connection timeout
     // Production build options (uncomment when needed):

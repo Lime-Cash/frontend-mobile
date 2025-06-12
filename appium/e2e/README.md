@@ -36,6 +36,18 @@ npm run setup
 npm run appium:dev
 ```
 
+**Individual Test Suites:**
+```bash
+# Run login tests only
+npm run test:login
+
+# Run send money tests only
+npm run test:send-money
+
+# Run all tests
+npm test
+```
+
 **Manual control:**
 ```bash
 # Terminal 1: Start Expo
@@ -49,14 +61,46 @@ cd appium/e2e && npm run start
 cd appium/e2e && npm test
 ```
 
-## Available Scripts
+## Test Suites
 
-```bash
-npm run test          # Run all tests
-npm run test:login    # Run login tests only
-npm run doctor        # Check iOS setup
-npm run setup         # Install driver + run doctor
-```
+### Login Tests (`login.spec.ts`)
+- ✅ Display all login screen elements correctly
+- ✅ Login successfully with valid credentials and logout
+- ✅ Reject invalid email format
+- ✅ Reject short password
+- ✅ Reject empty email field
+- ✅ Reject empty password field
+- ✅ Handle multiple login/logout cycles
+- ✅ Navigate to register screen when sign up link is tapped
+
+### Send Money Tests (`send-money.spec.ts`)
+- ✅ Display all send money screen elements correctly
+- ✅ Disable send button when amount is not entered
+- ✅ Disable send button when recipient is not entered
+- ✅ Enable send button when both amount and recipient are entered
+- ✅ Successfully send money with valid inputs
+- ✅ Handle invalid recipient email format
+- ✅ Handle empty amount field
+- ✅ Navigate back to home screen when back button is pressed
+- ✅ Clear error states when input is corrected
+
+## Test Structure
+
+Each test suite follows the same pattern:
+1. **Setup**: Login (if required) and navigate to the screen being tested
+2. **Test Cases**: Validate functionality and edge cases
+3. **Cleanup**: Logout and quit driver
+
+## Available Test Commands
+
+| Command | Description |
+|---------|-------------|
+| `npm test` | Run all test suites |
+| `npm run test:login` | Run only login tests |
+| `npm run test:send-money` | Run only send money tests |
+| `npm run start` | Start Appium server |
+| `npm run setup` | Install drivers and check setup |
+| `npm run doctor` | Check iOS setup |
 
 ## Troubleshooting
 

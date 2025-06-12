@@ -21,7 +21,7 @@ describe("Login functionality", () => {
     cy.get('[data-testid="error-message"]').should("be.visible");
     cy.get('[data-testid="error-message"]').should(
       "contain",
-      "Invalid email or password"
+      "Invalid email or password",
     );
 
     cy.url().should("include", "/login");
@@ -36,7 +36,7 @@ describe("Login functionality", () => {
     cy.get('[data-testid="error-message"]').should("be.visible");
     cy.get('[data-testid="error-message"]').should(
       "contain",
-      "Invalid email or password"
+      "Invalid email or password",
     );
 
     cy.url().should("include", "/login");

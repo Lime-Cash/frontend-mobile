@@ -75,7 +75,7 @@ const Withdraw = () => {
     } catch (error) {
       console.error(error);
       setError(
-        error instanceof Error ? error.message : "Failed to withdraw money"
+        error instanceof Error ? error.message : "Failed to withdraw money",
       );
     } finally {
       setIsLoading(false);
@@ -94,7 +94,12 @@ const Withdraw = () => {
   const renderContent = () => (
     <View style={{ flex: 1 }}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={handleBack}
+          testID="back-button"
+          accessibilityLabel="back-button"
+        >
           <Ionicons name="arrow-back" size={24} color={themeColor.text} />
         </TouchableOpacity>
         <ThemedText type="subtitle">Withdraw Money</ThemedText>
