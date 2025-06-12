@@ -29,6 +29,7 @@ interface SelectProps {
   width?: DimensionValue;
   containerStyle?: ViewStyle;
   disabled?: boolean;
+  testID?: string;
 }
 
 export default function Select({
@@ -41,6 +42,7 @@ export default function Select({
   width,
   containerStyle,
   disabled = false,
+  testID,
 }: SelectProps) {
   const [modalVisible, setModalVisible] = useState(false);
   const colorScheme = useColorScheme();
@@ -74,6 +76,7 @@ export default function Select({
         ]}
         onPress={toggleModal}
         disabled={disabled}
+        testID={testID}
       >
         <Text
           style={[
@@ -110,7 +113,10 @@ export default function Select({
           >
             <View style={styles.modalHeader}>
               <ThemedText type="subtitle">Select Option</ThemedText>
-              <TouchableOpacity onPress={() => setModalVisible(false)}>
+              <TouchableOpacity
+                onPress={() => setModalVisible(false)}
+                testID="select-close-button"
+              >
                 <Ionicons name="close" size={24} color={themeColor.text} />
               </TouchableOpacity>
             </View>

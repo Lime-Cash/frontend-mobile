@@ -111,7 +111,7 @@ export default function LoginScreen() {
             <ThemedText style={styles.signupText}>
               Don't have an account?
             </ThemedText>
-            <TouchableOpacity onPress={navigateToSignup}>
+            <TouchableOpacity onPress={navigateToSignup} testID="signup-link">
               <ThemedText style={styles.signupLink} type="link">
                 Sign up
               </ThemedText>

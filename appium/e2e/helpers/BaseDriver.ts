@@ -11,15 +11,17 @@ export class BaseDriver {
     const config = getConfig();
     this.driver = await remote(config);
 
-    // Give the app time to fully load after connection
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    // Give the app time to connect to existing session
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    // Ensure the app is in foreground
+    // Connect to existing Expo Go session (don't launch new one)
     try {
       await this.driver.activateApp("host.exp.Exponent");
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      console.log("✓ Connected to existing Expo Go session");
     } catch (error) {
-      console.log("App activation warning:", error);
+      console.log("Connection warning:", error);
+      console.log("💡 Make sure your app is already running in Expo Go");
     }
 
     return this.driver;
@@ -44,26 +46,6 @@ export class BaseDriver {
     const element = await this.driver.$(selector);
     await element.waitForDisplayed({ timeout });
     return element;
-  }
-
-  async clickElement(selector: string, timeout: number = 30000): Promise<void> {
-    const element = await this.waitForElement(selector, timeout);
-    await element.click();
-  }
-
-  async setText(
-    selector: string,
-    text: string,
-    timeout: number = 30000,
-  ): Promise<void> {
-    const element = await this.waitForElement(selector, timeout);
-    await element.clearValue();
-    await element.setValue(text);
-  }
-
-  async getText(selector: string, timeout: number = 30000): Promise<string> {
-    const element = await this.waitForElement(selector, timeout);
-    return await element.getText();
   }
 
   async isElementDisplayed(

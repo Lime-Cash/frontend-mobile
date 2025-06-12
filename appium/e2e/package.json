@@ -8,6 +8,8 @@
     "test": "node --experimental-vm-modules ./node_modules/.bin/jest",
     "test:ios": "node --experimental-vm-modules ./node_modules/.bin/jest",
     "test:login": "node --experimental-vm-modules ./node_modules/.bin/jest __tests__/login.spec.ts",
+    "test:send-money": "node --experimental-vm-modules ./node_modules/.bin/jest __tests__/send-money.spec.ts",
+    "test:debug-send-button": "node --experimental-vm-modules ./node_modules/.bin/jest __tests__/debug-send-button.spec.ts",
     "driver:install": "appium driver install xcuitest",
     "doctor": "appium-doctor --ios",
     "setup": "npm run driver:install && npm run doctor"

@@ -68,7 +68,7 @@ describe("Register functionality", () => {
     cy.get('[data-testid="password-input"]').type("Password1$");
 
     cy.get('[data-testid="confirm-password-input"]').type(
-      "DifferentPassword1$"
+      "DifferentPassword1$",
     );
 
     cy.get('[data-testid="signup-button"]').click();
@@ -76,7 +76,7 @@ describe("Register functionality", () => {
     cy.get('[data-testid="error-message"]').should("be.visible");
     cy.get('[data-testid="error-message"]').should(
       "contain",
-      "Passwords do not match"
+      "Passwords do not match",
     );
 
     cy.url().should("include", "/register");

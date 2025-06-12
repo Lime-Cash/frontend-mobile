@@ -7,7 +7,7 @@ import { DebugHelpers } from "./DebugHelpers";
 export class AuthActions extends FormHelpers {
   protected debugHelpers = new DebugHelpers(); // Changed to protected for inheritance
 
-  async registerToLogin(): Promise<void> {
+  private async registerToLogin(): Promise<void> {
     if (!this.driver) {
       throw new Error("Driver not initialized");
     }
@@ -54,6 +54,12 @@ export class AuthActions extends FormHelpers {
 
         // Find and click logout button
         const logoutSelectors = [
+          // First try with testID (most reliable)
+          '//XCUIElementTypeOther[@name="logout-button"]',
+          '//XCUIElementTypeButton[@name="logout-button"]',
+          `//*[@name="logout-button"]`,
+
+          // Fallback to text-based selectors
           '//XCUIElementTypeOther[contains(@name,"Logout")]',
           '//XCUIElementTypeOther[contains(@name,"rectangle.portrait.and.arrow.forward Logout")]',
           '//*[contains(@name,"rectangle.portrait.and.arrow.forward Logout")]',

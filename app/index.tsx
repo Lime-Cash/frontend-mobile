@@ -68,6 +68,7 @@ export default function Index() {
           title="Logout"
           icon="rectangle.portrait.and.arrow.forward"
           onPress={logout}
+          testID="logout-button"
         />
       </View>
       <View style={styles.balanceContainer}>

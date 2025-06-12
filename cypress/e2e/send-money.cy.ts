@@ -81,7 +81,7 @@ describe("Send Money functionality", () => {
     cy.get('[data-testid="amount-input"]').type("1");
 
     cy.get('[data-testid="recipient-email-input"]').type(
-      "nonexistent@example.com"
+      "nonexistent@example.com",
     );
 
     cy.get('[data-testid="send-money-btn"]').click();
@@ -96,7 +96,7 @@ describe("Send Money functionality", () => {
     cy.get('[data-testid="amount-input"]').type("1");
 
     cy.get('[data-testid="recipient-email-input"]').type(
-      "tomi.serra@gmail.com"
+      "tomi.serra@gmail.com",
     );
 
     cy.get('[data-testid="send-money-btn"]').click();
@@ -122,7 +122,7 @@ describe("Send Money functionality", () => {
         cy.url().should("include", "/send");
 
         cy.get('[data-testid="amount-input"]').type(
-          (initialBalanceNum + 1).toString()
+          (initialBalanceNum + 1).toString(),
         );
 
         cy.get('[data-testid="recipient-email-input"]').type("demo@demo.com");
@@ -132,7 +132,7 @@ describe("Send Money functionality", () => {
         cy.get('[data-testid="error-message"]').should("be.visible");
         cy.get('[data-testid="error-message"]').should(
           "contain",
-          "Unknown error"
+          "Unknown error",
         );
         cy.url().should("include", "/send");
       });

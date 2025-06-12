@@ -140,4 +140,36 @@ export class MobileGestures extends BaseDriver {
 
     await this.swipe(centerX, startY, centerX, endY, 800);
   }
+
+  // Tap on specific coordinates
+  async tapOnCoordinates(x: number, y: number): Promise<void> {
+    if (!this.driver) {
+      throw new Error("Driver not initialized");
+    }
+
+    try {
+      // Use W3C actions API for coordinate tapping
+      await this.driver.performActions([
+        {
+          type: "pointer",
+          id: "finger1",
+          parameters: { pointerType: "touch" },
+          actions: [
+            { type: "pointerMove", duration: 0, x, y },
+            { type: "pointerDown", button: 0 },
+            { type: "pause", duration: 100 },
+            { type: "pointerUp", button: 0 },
+          ],
+        },
+      ]);
+
+      // Clean up actions
+      await this.driver.releaseActions();
+
+      console.log(`✓ Tapped on coordinates (${x}, ${y})`);
+    } catch (error) {
+      console.log(`Could not tap on coordinates (${x}, ${y}):`, error);
+      throw error;
+    }
+  }
 }

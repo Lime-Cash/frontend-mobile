@@ -97,6 +97,7 @@ export default function ConfirmationModal({
               onPress={onButton1Press}
               variant={getButtonVariant(button1Style)}
               style={[styles.button, styles.leftButton]}
+              testID="modal-button-1"
             />
             <Button
               title={button2Content}
@@ -108,6 +109,7 @@ export default function ConfirmationModal({
                 getButtonStyle(button2Style),
               ]}
               textStyle={getButtonTextStyle(button2Style)}
+              testID="modal-button-2"
             />
           </View>
         </View>

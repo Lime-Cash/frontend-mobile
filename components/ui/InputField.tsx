@@ -68,6 +68,7 @@ export default function InputField({
           <TouchableOpacity
             onPress={togglePasswordVisibility}
             style={styles.eyeIcon}
+            testID="password-visibility-toggle"
           >
             <Ionicons
               name={isPasswordVisible ? "eye-off" : "eye"}

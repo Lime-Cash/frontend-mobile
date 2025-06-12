@@ -14,7 +14,7 @@ describe("Withdraw functionality", () => {
     cy.get('[data-testid="withdraw-money-btn"]').should(
       "have.attr",
       "aria-disabled",
-      "true"
+      "true",
     );
 
     cy.get('[data-testid="cvu-input"]').type("4567890123456789012345");
@@ -22,7 +22,7 @@ describe("Withdraw functionality", () => {
     cy.get('[data-testid="withdraw-money-btn"]').should(
       "have.attr",
       "aria-disabled",
-      "true"
+      "true",
     );
   });
 
@@ -32,7 +32,7 @@ describe("Withdraw functionality", () => {
     cy.get('[data-testid="withdraw-money-btn"]').should(
       "have.attr",
       "aria-disabled",
-      "true"
+      "true",
     );
   });
 
@@ -86,7 +86,7 @@ describe("Withdraw functionality", () => {
     cy.get('[data-testid="error-message"]').should("be.visible");
     cy.get('[data-testid="error-message"]').should(
       "contain",
-      "Invalid CBU. CBU must be a 22-digit string."
+      "Invalid CBU. CBU must be a 22-digit string.",
     );
     cy.url().should("include", "/withdraw");
   });
@@ -98,7 +98,7 @@ describe("Withdraw functionality", () => {
     cy.get('[data-testid="error-message"]').should("be.visible");
     cy.get('[data-testid="error-message"]').should(
       "contain",
-      "Account not found for the provided CBU."
+      "Account not found for the provided CBU.",
     );
   });
 
@@ -117,7 +117,7 @@ describe("Withdraw functionality", () => {
         cy.url().should("include", "/withdraw");
 
         cy.get('[data-testid="amount-input"]').type(
-          (initialBalanceNum + 1).toString()
+          (initialBalanceNum + 1).toString(),
         );
 
         cy.get('[data-testid="cvu-input"]').type("4567890123456789012345");
@@ -127,7 +127,7 @@ describe("Withdraw functionality", () => {
         cy.get('[data-testid="error-message"]').should("be.visible");
         cy.get('[data-testid="error-message"]').should(
           "contain",
-          "Insufficient funds"
+          "Insufficient funds",
         );
         cy.url().should("include", "/withdraw");
       });
