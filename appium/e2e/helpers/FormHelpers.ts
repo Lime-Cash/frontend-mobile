@@ -31,7 +31,7 @@ export class FormHelpers extends MobileGestures {
     for (const selector of selectors) {
       try {
         const element = await this.driver.$(selector);
-        await element.waitForDisplayed({ timeout: 800 });
+        await element.waitForDisplayed({ timeout });
         console.log(`Found button using selector: ${selector}`);
         return element;
       } catch (error) {
@@ -129,7 +129,7 @@ export class FormHelpers extends MobileGestures {
     for (const selector of selectors) {
       try {
         const element = await this.driver.$(selector);
-        await element.waitForDisplayed({ timeout: 800 });
+        await element.waitForDisplayed({ timeout });
 
         // Verify the element is actually clickable
         const isClickable = await element.isClickable();
@@ -199,13 +199,13 @@ export class FormHelpers extends MobileGestures {
     try {
       const textFieldSelector = `//XCUIElementTypeTextField[@name="${identifier}"]`;
       const textField = await this.driver.$(textFieldSelector);
-      await textField.waitForDisplayed({ timeout: 900 });
+      await textField.waitForDisplayed({ timeout });
       return textField;
     } catch (error) {
       try {
         const secureFieldSelector = `//XCUIElementTypeSecureTextField[@name="${identifier}"]`;
         const secureField = await this.driver.$(secureFieldSelector);
-        await secureField.waitForDisplayed({ timeout: 900 });
+        await secureField.waitForDisplayed({ timeout });
         return secureField;
       } catch (secureError) {
         const selectors = [
@@ -220,7 +220,7 @@ export class FormHelpers extends MobileGestures {
         for (const selector of selectors) {
           try {
             const element = await this.driver.$(selector);
-            await element.waitForDisplayed({ timeout: 800 });
+            await element.waitForDisplayed({ timeout });
             return element;
           } catch (fallbackError) {
             continue;
@@ -389,7 +389,7 @@ export class FormHelpers extends MobileGestures {
       for (const selector of selectors) {
         try {
           const element = await this.driver.$(selector);
-          await element.waitForDisplayed({ timeout: 800 });
+          await element.waitForDisplayed({ timeout });
           console.log(`Found money input using selector: ${selector}`);
           return element;
         } catch (error) {
@@ -458,7 +458,7 @@ export class FormHelpers extends MobileGestures {
     for (const selector of selectors) {
       try {
         const element = await this.driver.$(selector);
-        await element.waitForDisplayed({ timeout: 800 });
+        await element.waitForDisplayed({ timeout: 1000 });
         console.log(`Found element by testId using selector: ${selector}`);
         return element;
       } catch (error) {
@@ -509,7 +509,7 @@ export class FormHelpers extends MobileGestures {
     for (const selector of selectors) {
       try {
         const element = await this.driver.$(selector);
-        await element.waitForDisplayed({ timeout: 800 });
+        await element.waitForDisplayed({ timeout: 1000 });
         console.log(
           `Found element by accessibility ID using selector: ${selector}`,
         );
@@ -528,7 +528,7 @@ export class FormHelpers extends MobileGestures {
 
   async isElementDisabled(element: WebdriverIO.Element): Promise<boolean> {
     try {
-      // For iOS, check the 'enabled' attribute (opposite of disabled)
+      // For iOS, check the 'enabled' attribute
       const isEnabled = await element.getAttribute("enabled");
       if (isEnabled === "false") {
         return true; // Element is disabled

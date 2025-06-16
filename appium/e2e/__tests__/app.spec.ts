@@ -24,11 +24,6 @@ describe("App Launch Test", () => {
     expect(appiumHelper.driver).toBeDefined();
     expect(appiumHelper.driver !== null).toBe(true);
 
-    // You can add more specific tests here based on your app's UI
-    // For example:
-    // const welcomeText = await appiumHelper.isElementDisplayed("~welcome-message");
-    // expect(welcomeText).toBe(true);
-
     console.log("App launched successfully!");
   });
 });

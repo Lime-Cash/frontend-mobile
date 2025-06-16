@@ -23,11 +23,8 @@ export const iosConfig: RemoteOptions = {
     "appium:autoLaunch": false, // Don't auto-launch - connect to existing app
     "appium:wdaLaunchTimeout": 60000, // WebDriverAgent launch timeout
     "appium:wdaConnectionTimeout": 60000, // WebDriverAgent connection timeout
-    "appium:isHeadless": true, // Enable headless mode
+    "appium:isHeadless": false, // Enable headless mode
     "appium:simpleIsVisibleCheck": true, // Faster element visibility checks
-    // Production build options (uncomment when needed):
-    // "appium:app": "/path/to/your/app.app", // For .app builds
-    // "appium:bundleId": "com.yourcompany.yourapp", // Your actual bundle ID
   },
   logLevel: "silent", // Change to "info" for debugging
 };
