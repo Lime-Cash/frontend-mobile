@@ -143,7 +143,6 @@ describe("Load functionality", () => {
       const cvuField = await appiumHelper.findElementByTestId("cvu-input", 500);
       await cvuField.click();
       await cvuField.setValue("4567890123456789012345");
-      await appiumHelper.dismissKeyboard();
       console.log("✓ CVU entered");
 
       // Hide keyboard again to check button state
@@ -171,7 +170,6 @@ describe("Load functionality", () => {
         500,
       );
       await amountInput.setValue("1");
-      await appiumHelper.dismissKeyboard();
       console.log("✓ Amount entered (numeric keyboard was already open)");
 
       // Hide keyboard to check button state

@@ -145,7 +145,6 @@ describe("Send Money functionality", () => {
       );
       await recipientField.click();
       await recipientField.setValue("marydoe@mail.com");
-      await appiumHelper.dismissKeyboard();
       console.log("✓ Recipient email entered");
 
       // Hide keyboard again to check button state
@@ -169,7 +168,6 @@ describe("Send Money functionality", () => {
       // Enter only amount (numeric keyboard is already open due to autoFocus)
       const moneyInput = await appiumHelper.findMoneyInputField(500);
       await moneyInput.setValue("1");
-      await appiumHelper.dismissKeyboard();
       console.log("✓ Amount entered (numeric keyboard was already open)");
 
       // Hide keyboard to check button state
@@ -208,8 +206,11 @@ describe("Send Money functionality", () => {
       );
       await recipientField.click();
       await recipientField.setValue("marydoe@mail.com");
-      await appiumHelper.dismissKeyboard();
       console.log("✓ Recipient email entered");
+
+      // Hide keyboard to check button state
+      await appiumHelper.tapOnCoordinates(200, 250);
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       // Click send button
       const sendButton = await appiumHelper.findElementByTestId(
@@ -264,8 +265,11 @@ describe("Send Money functionality", () => {
       );
       await recipientField.click();
       await recipientField.setValue("nonexistent@example.com");
-      await appiumHelper.dismissKeyboard();
       console.log("✓ Invalid recipient email entered");
+
+      // Hide keyboard to check button state
+      await appiumHelper.tapOnCoordinates(200, 250);
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       // Click send button
       const sendButton = await appiumHelper.findElementByTestId(
@@ -320,8 +324,11 @@ describe("Send Money functionality", () => {
       );
       await recipientField.click();
       await recipientField.setValue("johndoe@mail.com");
-      await appiumHelper.dismissKeyboard();
       console.log("✓ Own email entered as recipient");
+
+      // Hide keyboard to check button state
+      await appiumHelper.tapOnCoordinates(200, 250);
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       // Click send button
       const sendButton = await appiumHelper.findElementByTestId(
@@ -412,8 +419,11 @@ describe("Send Money functionality", () => {
       );
       await recipientField.click();
       await recipientField.setValue("marydoe@mail.com");
-      await appiumHelper.dismissKeyboard();
       console.log("✓ Recipient email entered");
+
+      // Hide keyboard to check button state
+      await appiumHelper.tapOnCoordinates(200, 250);
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       // Click send button
       const sendMoneyButton = await appiumHelper.findElementByTestId(

@@ -303,16 +303,19 @@ export class AuthActions extends FormHelpers {
     }
 
     // If not on login screen, try to logout
+    await this.tapOnCoordinates(50, 100); // Top-left area where back button is located
+    console.log(
+      "Tapped on top-left area in case we are inside send, load or withdraw flow",
+    );
+
     await this.logoutIfLoggedIn();
     console.log("✓ Logged out successfully, now on login screen");
 
     await this.registerToLogin();
     console.log("✓ Successfully navigated to login screen");
 
-    // Wait a bit more for the login screen to appear
     await new Promise((resolve) => setTimeout(resolve, 800));
 
-    // Verify we're now on login screen
     try {
       const welcomeText = await this.driver!.$(
         '//*[@name="Welcome back" or @text="Welcome back"]',
