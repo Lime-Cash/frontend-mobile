@@ -8,7 +8,7 @@ export class AppiumHelper extends AuthActions {
     return this.debugUtils.getAccessibleElements();
   }
 
-  async waitForLoadingToDisappear(timeout: number = 30000): Promise<void> {
+  async waitForLoadingToDisappear(timeout: number = 800): Promise<void> {
     return this.debugUtils.waitForLoadingToDisappear(timeout);
   }
 

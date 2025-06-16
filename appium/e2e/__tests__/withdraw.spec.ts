@@ -27,7 +27,7 @@ describe("Withdraw functionality", () => {
     await appiumHelper.ensureOnLoginScreen();
 
     // Wait for login screen
-    await appiumHelper.waitForElementByText("Welcome back", 1000);
+    await appiumHelper.waitForElementByText("Welcome back", 500);
     console.log("✓ Login screen loaded");
 
     // Login with johndoe@mail.com credentials
@@ -38,19 +38,16 @@ describe("Withdraw functionality", () => {
     // Click Sign In using testID
     const signInButton = await appiumHelper.findElementByTestId(
       "signin-button",
-      1000,
+      500,
     );
     await signInButton.click();
     console.log("✓ Sign In button clicked");
 
     // Wait for home page to load
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 500));
 
     // Verify we're on home screen
-    const homeElement = await appiumHelper.isElementDisplayed(
-      "Lime Cash",
-      1000,
-    );
+    const homeElement = await appiumHelper.isElementDisplayed("Lime Cash", 500);
     if (!homeElement) {
       throw new Error("Failed to reach home screen after login");
     }
@@ -59,19 +56,19 @@ describe("Withdraw functionality", () => {
     // Navigate to withdraw money page
     const withdrawButton = await appiumHelper.findElementByTestId(
       "withdraw-nav-button",
-      1000,
+      500,
     );
     await withdrawButton.click();
     console.log("✓ Withdraw button clicked");
 
     // Wait for withdraw money page to load and verify
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 500));
 
     // Verify we're on withdraw money screen
     const withdrawMoneyScreen = await appiumHelper.driver!.$(
       '//*[contains(@name, "Withdraw Money")]',
     );
-    await withdrawMoneyScreen.waitForDisplayed({ timeout: 1000 });
+    await withdrawMoneyScreen.waitForDisplayed({ timeout: 500 });
     console.log("✓ Withdraw Money screen loaded");
 
     // Note: The money input field has autoFocus=true, so numeric keyboard opens automatically
@@ -88,7 +85,7 @@ describe("Withdraw functionality", () => {
         try {
           const onWithdrawScreen = await appiumHelper.isElementDisplayed(
             "Withdraw Money",
-            1000,
+            500,
           );
           if (onWithdrawScreen) {
             console.log(
@@ -96,10 +93,10 @@ describe("Withdraw functionality", () => {
             );
 
             // Navigate back using coordinate tap
-            await appiumHelper.navigateBack(1000);
+            await appiumHelper.navigateBack(100);
 
             // Wait for navigation
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+            await new Promise((resolve) => setTimeout(resolve, 100));
           }
         } catch (navigationError) {
           console.log("Navigation check failed, continuing with logout");
@@ -131,13 +128,13 @@ describe("Withdraw functionality", () => {
     try {
       // First, hide the keyboard to check button state
       await appiumHelper.tapOnCoordinates(200, 250);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 100));
       console.log("✓ Keyboard hidden");
 
       // Check that the Withdraw Money button is disabled initially
       const withdrawButton = await appiumHelper.findElementByTestId(
         "withdraw-money-btn",
-        1000,
+        100,
       );
       const initialDisabledState =
         await appiumHelper.isElementDisabled(withdrawButton);
@@ -145,18 +142,14 @@ describe("Withdraw functionality", () => {
       console.log("✓ Withdraw button is disabled initially");
 
       // Enter only CVU
-      const cvuField = await appiumHelper.findElementByTestId(
-        "cvu-input",
-        1000,
-      );
+      const cvuField = await appiumHelper.findElementByTestId("cvu-input", 100);
       await cvuField.click();
       await cvuField.setValue("4567890123456789012345");
-      await appiumHelper.dismissKeyboard();
       console.log("✓ CVU entered");
 
       // Hide keyboard again to check button state
       await appiumHelper.tapOnCoordinates(200, 250);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Button should still be disabled
       const stillDisabled =
@@ -179,20 +172,19 @@ describe("Withdraw functionality", () => {
       // Enter only amount (numeric keyboard is already open due to autoFocus)
       const amountInput = await appiumHelper.findElementByTestId(
         "amount-input",
-        1000,
+        100,
       );
       await amountInput.setValue("1");
-      await appiumHelper.dismissKeyboard();
       console.log("✓ Amount entered (numeric keyboard was already open)");
 
       // Hide keyboard to check button state
       await appiumHelper.tapOnCoordinates(200, 250);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Button should still be disabled
       const withdrawButton = await appiumHelper.findElementByTestId(
         "withdraw-money-btn",
-        1000,
+        100,
       );
       const isDisabled = await appiumHelper.isElementDisabled(withdrawButton);
       expect(isDisabled).toBe(true);
@@ -209,18 +201,18 @@ describe("Withdraw functionality", () => {
 
     try {
       // Get initial balance first by navigating back to home
-      await appiumHelper.navigateBack(1000);
+      await appiumHelper.navigateBack(100);
       console.log("✓ Navigated back to home to check balance");
 
       // Wait for home page
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Get current balance (we'll verify it decreases by $1 after withdrawal)
       let initialBalance: number;
       try {
         const balanceElement = await appiumHelper.findElementByTestId(
           "balance-display",
-          1000,
+          100,
         );
 
         // Try different methods to get the balance text
@@ -250,56 +242,53 @@ describe("Withdraw functionality", () => {
       // Navigate back to withdraw money page
       const withdrawNavButton = await appiumHelper.findElementByTestId(
         "withdraw-nav-button",
-        1000,
+        100,
       );
       await withdrawNavButton.click();
       console.log("✓ Navigated back to Withdraw Money screen");
 
       // Wait for withdraw money page to load
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Enter amount (numeric keyboard is already open due to autoFocus)
       const amountInput = await appiumHelper.findElementByTestId(
         "amount-input",
-        1000,
+        100,
       );
       await amountInput.setValue("1");
       // Try to dismiss keyboard by tapping outside
       await appiumHelper.tapOnCoordinates(200, 250);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 100));
       console.log("✓ Amount ($1) entered and keyboard dismissed");
 
       // Enter valid CVU
-      const cvuField = await appiumHelper.findElementByTestId(
-        "cvu-input",
-        1000,
-      );
+      const cvuField = await appiumHelper.findElementByTestId("cvu-input", 100);
       await cvuField.click();
       await cvuField.setValue("4567890123456789012345");
       // Try to dismiss keyboard by tapping outside
       await appiumHelper.tapOnCoordinates(200, 250);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 100));
       console.log("✓ Valid CVU entered and keyboard dismissed");
 
       // Ensure keyboard is fully dismissed
       await appiumHelper.tapOnCoordinates(200, 250);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Click withdraw button
       const withdrawButton = await appiumHelper.findElementByTestId(
         "withdraw-money-btn",
-        1000,
+        100,
       );
       await withdrawButton.click();
       console.log("✓ Withdraw Money button clicked");
 
       // Wait for the transaction to complete
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Check if we're back on home screen or still on withdraw screen
       const isBackOnHome = await appiumHelper.isElementDisplayed(
         "Lime Cash",
-        1000,
+        100,
       );
 
       if (isBackOnHome) {
@@ -311,15 +300,15 @@ describe("Withdraw functionality", () => {
         );
 
         // Wait a bit more for any success feedback
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 100));
 
         // Navigate back to home manually
-        await appiumHelper.navigateBack(1000);
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await appiumHelper.navigateBack(100);
+        await new Promise((resolve) => setTimeout(resolve, 100));
 
         const finalHomeCheck = await appiumHelper.isElementDisplayed(
           "Lime Cash",
-          1000,
+          100,
         );
         expect(finalHomeCheck).toBe(true);
         console.log("✅ Successfully navigated back to home screen");
@@ -328,7 +317,7 @@ describe("Withdraw functionality", () => {
       // Verify the transaction appears in the list
       const successMessage = await appiumHelper.isElementDisplayed(
         "$1 was withdrawn to bank account",
-        1000,
+        100,
       );
       if (successMessage) {
         console.log("✅ Success message displayed");
@@ -392,40 +381,37 @@ describe("Withdraw functionality", () => {
       // Enter amount (numeric keyboard is already open due to autoFocus)
       const amountInput = await appiumHelper.findElementByTestId(
         "amount-input",
-        1000,
+        100,
       );
       await amountInput.setValue("1");
       // Try to dismiss keyboard by tapping outside
       await appiumHelper.tapOnCoordinates(200, 250);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 100));
       console.log("✓ Amount entered and keyboard dismissed");
 
       // Enter short CVU
-      const cvuField = await appiumHelper.findElementByTestId(
-        "cvu-input",
-        1000,
-      );
+      const cvuField = await appiumHelper.findElementByTestId("cvu-input", 100);
       await cvuField.click();
       await cvuField.setValue("1234");
       // Try to dismiss keyboard by tapping outside
       await appiumHelper.tapOnCoordinates(200, 250);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 100));
       console.log("✓ Short CVU entered and keyboard dismissed");
 
       // Ensure keyboard is fully dismissed
       await appiumHelper.tapOnCoordinates(200, 250);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Click withdraw button
       const withdrawButton = await appiumHelper.findElementByTestId(
         "withdraw-money-btn",
-        1000,
+        100,
       );
       await withdrawButton.click();
       console.log("✓ Withdraw Money button clicked");
 
       // Wait for validation and error toast to appear
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Should show error message
       const errorMessage = await appiumHelper.findElementByTestId(
@@ -439,7 +425,7 @@ describe("Withdraw functionality", () => {
       // Should stay on the withdraw money page
       const stillOnWithdrawScreen = await appiumHelper.isElementDisplayed(
         "Withdraw Money",
-        1000,
+        100,
       );
       expect(stillOnWithdrawScreen).toBe(true);
       console.log(
@@ -459,40 +445,37 @@ describe("Withdraw functionality", () => {
       // Enter amount (numeric keyboard is already open due to autoFocus)
       const amountInput = await appiumHelper.findElementByTestId(
         "amount-input",
-        1000,
+        100,
       );
       await amountInput.setValue("1");
       // Try to dismiss keyboard by tapping outside
       await appiumHelper.tapOnCoordinates(200, 250);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 100));
       console.log("✓ Amount entered and keyboard dismissed");
 
       // Enter invalid CVU
-      const cvuField = await appiumHelper.findElementByTestId(
-        "cvu-input",
-        1000,
-      );
+      const cvuField = await appiumHelper.findElementByTestId("cvu-input", 100);
       await cvuField.click();
       await cvuField.setValue("1111111111111111111111");
       // Try to dismiss keyboard by tapping outside
       await appiumHelper.tapOnCoordinates(200, 250);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 100));
       console.log("✓ Invalid CVU entered and keyboard dismissed");
 
       // Ensure keyboard is fully dismissed
       await appiumHelper.tapOnCoordinates(200, 250);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Click withdraw button
       const withdrawButton = await appiumHelper.findElementByTestId(
         "withdraw-money-btn",
-        1000,
+        100,
       );
       await withdrawButton.click();
       console.log("✓ Withdraw Money button clicked");
 
       // Wait for the API call to complete and error toast to appear
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Should show error message
       const errorMessage = await appiumHelper.findElementByTestId(
@@ -506,7 +489,7 @@ describe("Withdraw functionality", () => {
       // Should stay on the withdraw money page
       const stillOnWithdrawScreen = await appiumHelper.isElementDisplayed(
         "Withdraw Money",
-        1000,
+        100,
       );
       expect(stillOnWithdrawScreen).toBe(true);
       console.log(
@@ -524,18 +507,18 @@ describe("Withdraw functionality", () => {
 
     try {
       // First, we need to get the current balance - navigate back to home briefly
-      await appiumHelper.navigateBack(1000);
+      await appiumHelper.navigateBack(100);
       console.log("✓ Navigated back to home to check balance");
 
       // Wait for home page
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Get current balance
       let currentBalance: number;
       try {
         const balanceElement = await appiumHelper.findElementByTestId(
           "balance-display",
-          1000,
+          100,
         );
 
         // Try different methods to get the balance text
@@ -558,7 +541,7 @@ describe("Withdraw functionality", () => {
         console.log(`✓ Current balance: $${currentBalance}`);
       } catch (balanceError) {
         console.log("Could not get current balance, using 1000 as default");
-        currentBalance = 1000;
+        currentBalance = 100;
       }
 
       // Calculate excessive amount (current balance + 1)
@@ -567,27 +550,24 @@ describe("Withdraw functionality", () => {
       // Navigate back to withdraw money page
       const withdrawButton = await appiumHelper.findElementByTestId(
         "withdraw-nav-button",
-        1000,
+        100,
       );
       await withdrawButton.click();
       console.log("✓ Navigated back to Withdraw Money screen");
 
       // Wait for withdraw money page to load
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Enter excessive amount (numeric keyboard is already open due to autoFocus)
       const amountInput = await appiumHelper.findElementByTestId(
         "amount-input",
-        1000,
+        100,
       );
       await amountInput.setValue(excessiveAmount);
       console.log(`✓ Excessive amount (${excessiveAmount}) entered`);
 
       // Enter valid CVU
-      const cvuField = await appiumHelper.findElementByTestId(
-        "cvu-input",
-        1000,
-      );
+      const cvuField = await appiumHelper.findElementByTestId("cvu-input", 100);
       await cvuField.click();
       await cvuField.setValue("4567890123456789012345");
       await appiumHelper.tapOnCoordinates(200, 250);
@@ -597,7 +577,7 @@ describe("Withdraw functionality", () => {
       // Click withdraw button
       const withdrawMoneyButton = await appiumHelper.findElementByTestId(
         "withdraw-money-btn",
-        1000,
+        100,
       );
       await withdrawMoneyButton.click();
       console.log("✓ Withdraw Money button clicked");
@@ -615,7 +595,7 @@ describe("Withdraw functionality", () => {
       // Should stay on the withdraw money page
       const stillOnWithdrawScreen = await appiumHelper.isElementDisplayed(
         "Withdraw Money",
-        1000,
+        100,
       );
       expect(stillOnWithdrawScreen).toBe(true);
       console.log(

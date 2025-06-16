@@ -44,6 +44,11 @@ npm run test:login
 # Run send money tests only
 npm run test:send-money
 
+npm run test:load
+
+npm run test:withdraw
+
+
 # Run all tests
 npm test
 ```

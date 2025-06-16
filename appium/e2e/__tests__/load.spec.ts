@@ -27,7 +27,7 @@ describe("Load functionality", () => {
     await appiumHelper.ensureOnLoginScreen();
 
     // Wait for login screen
-    await appiumHelper.waitForElementByText("Welcome back", 1000);
+    await appiumHelper.waitForElementByText("Welcome back", 500);
     console.log("✓ Login screen loaded");
 
     // Login with tomi.serra@gmail.com credentials
@@ -38,19 +38,16 @@ describe("Load functionality", () => {
     // Click Sign In using testID
     const signInButton = await appiumHelper.findElementByTestId(
       "signin-button",
-      1000,
+      500,
     );
     await signInButton.click();
     console.log("✓ Sign In button clicked");
 
     // Wait for home page to load
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 500));
 
     // Verify we're on home screen
-    const homeElement = await appiumHelper.isElementDisplayed(
-      "Lime Cash",
-      1000,
-    );
+    const homeElement = await appiumHelper.isElementDisplayed("Lime Cash", 500);
     if (!homeElement) {
       throw new Error("Failed to reach home screen after login");
     }
@@ -59,19 +56,19 @@ describe("Load functionality", () => {
     // Navigate to load money page
     const loadButton = await appiumHelper.findElementByTestId(
       "load-nav-button",
-      1000,
+      500,
     );
     await loadButton.click();
     console.log("✓ Load button clicked");
 
     // Wait for load money page to load and verify
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 500));
 
     // Verify we're on load money screen
     const loadMoneyScreen = await appiumHelper.driver!.$(
       '//*[contains(@name, "Load Money")]',
     );
-    await loadMoneyScreen.waitForDisplayed({ timeout: 1000 });
+    await loadMoneyScreen.waitForDisplayed({ timeout: 800 });
     console.log("✓ Load Money screen loaded");
 
     // Note: The money input field has autoFocus=true, so numeric keyboard opens automatically
@@ -88,16 +85,16 @@ describe("Load functionality", () => {
         try {
           const onLoadScreen = await appiumHelper.isElementDisplayed(
             "Load Money",
-            1000,
+            500,
           );
           if (onLoadScreen) {
             console.log("Still on Load Money screen, navigating back to home");
 
             // Navigate back using coordinate tap
-            await appiumHelper.navigateBack(1000);
+            await appiumHelper.navigateBack(500);
 
             // Wait for navigation
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+            await new Promise((resolve) => setTimeout(resolve, 800));
           }
         } catch (navigationError) {
           console.log("Navigation check failed, continuing with logout");
@@ -129,13 +126,13 @@ describe("Load functionality", () => {
     try {
       // First, hide the keyboard to check button state
       await appiumHelper.tapOnCoordinates(200, 250);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 800));
       console.log("✓ Keyboard hidden");
 
       // Check that the Load Money button is disabled initially
       const loadButton = await appiumHelper.findElementByTestId(
         "load-money-btn",
-        1000,
+        500,
       );
       const initialDisabledState =
         await appiumHelper.isElementDisabled(loadButton);
@@ -143,18 +140,14 @@ describe("Load functionality", () => {
       console.log("✓ Load button is disabled initially");
 
       // Enter only CVU
-      const cvuField = await appiumHelper.findElementByTestId(
-        "cvu-input",
-        1000,
-      );
+      const cvuField = await appiumHelper.findElementByTestId("cvu-input", 500);
       await cvuField.click();
       await cvuField.setValue("4567890123456789012345");
-      await appiumHelper.dismissKeyboard();
       console.log("✓ CVU entered");
 
       // Hide keyboard again to check button state
       await appiumHelper.tapOnCoordinates(200, 250);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 800));
 
       // Button should still be disabled
       const stillDisabled = await appiumHelper.isElementDisabled(loadButton);
@@ -174,20 +167,19 @@ describe("Load functionality", () => {
       // Enter only amount (numeric keyboard is already open due to autoFocus)
       const amountInput = await appiumHelper.findElementByTestId(
         "amount-input",
-        1000,
+        500,
       );
       await amountInput.setValue("1");
-      await appiumHelper.dismissKeyboard();
       console.log("✓ Amount entered (numeric keyboard was already open)");
 
       // Hide keyboard to check button state
       await appiumHelper.tapOnCoordinates(200, 250);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       // Button should still be disabled
       const loadButton = await appiumHelper.findElementByTestId(
         "load-money-btn",
-        1000,
+        800,
       );
       const isDisabled = await appiumHelper.isElementDisabled(loadButton);
       expect(isDisabled).toBe(true);
@@ -204,18 +196,18 @@ describe("Load functionality", () => {
 
     try {
       // Get initial balance first by navigating back to home
-      await appiumHelper.navigateBack(1000);
+      await appiumHelper.navigateBack(500);
       console.log("✓ Navigated back to home to check balance");
 
       // Wait for home page
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 800));
 
       // Get current balance (we'll verify it increases by $1 after load)
       let initialBalance: number;
       try {
         const balanceElement = await appiumHelper.findElementByTestId(
           "balance-display",
-          1000,
+          500,
         );
 
         // Try different methods to get the balance text
@@ -245,56 +237,53 @@ describe("Load functionality", () => {
       // Navigate back to load money page
       const loadNavButton = await appiumHelper.findElementByTestId(
         "load-nav-button",
-        1000,
+        500,
       );
       await loadNavButton.click();
       console.log("✓ Navigated back to Load Money screen");
 
       // Wait for load money page to load
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 800));
 
       // Enter amount (numeric keyboard is already open due to autoFocus)
       const amountInput = await appiumHelper.findElementByTestId(
         "amount-input",
-        1000,
+        500,
       );
       await amountInput.setValue("1");
       // Try to dismiss keyboard by tapping outside
       await appiumHelper.tapOnCoordinates(200, 250);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 800));
       console.log("✓ Amount ($1) entered and keyboard dismissed");
 
       // Enter valid CVU
-      const cvuField = await appiumHelper.findElementByTestId(
-        "cvu-input",
-        1000,
-      );
+      const cvuField = await appiumHelper.findElementByTestId("cvu-input", 500);
       await cvuField.click();
       await cvuField.setValue("4567890123456789012345");
       // Try to dismiss keyboard by tapping outside
       await appiumHelper.tapOnCoordinates(200, 250);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 500));
       console.log("✓ Valid CVU entered and keyboard dismissed");
 
       // Ensure keyboard is fully dismissed
       await appiumHelper.tapOnCoordinates(200, 250);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 800));
 
       // Click load button
       const loadButton = await appiumHelper.findElementByTestId(
         "load-money-btn",
-        1000,
+        500,
       );
       await loadButton.click();
       console.log("✓ Load Money button clicked");
 
       // Wait for the transaction to complete
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       // Check if we're back on home screen or still on load screen
       const isBackOnHome = await appiumHelper.isElementDisplayed(
         "Lime Cash",
-        1000,
+        500,
       );
 
       if (isBackOnHome) {
@@ -306,15 +295,15 @@ describe("Load functionality", () => {
         );
 
         // Wait a bit more for any success feedback
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 500));
 
         // Navigate back to home manually
-        await appiumHelper.navigateBack(1000);
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await appiumHelper.navigateBack(500);
+        await new Promise((resolve) => setTimeout(resolve, 500));
 
         const finalHomeCheck = await appiumHelper.isElementDisplayed(
           "Lime Cash",
-          1000,
+          500,
         );
         expect(finalHomeCheck).toBe(true);
         console.log("✅ Successfully navigated back to home screen");
@@ -323,7 +312,7 @@ describe("Load functionality", () => {
       // Verify the transaction appears in the list
       const successMessage = await appiumHelper.isElementDisplayed(
         "$1 was loaded from bank account",
-        1000,
+        500,
       );
       if (successMessage) {
         console.log("✅ Success message displayed");
@@ -337,7 +326,7 @@ describe("Load functionality", () => {
       try {
         const newBalanceElement = await appiumHelper.findElementByTestId(
           "balance-display",
-          1000,
+          500,
         );
 
         // Try different methods to get the balance text
@@ -387,40 +376,37 @@ describe("Load functionality", () => {
       // Enter amount (numeric keyboard is already open due to autoFocus)
       const amountInput = await appiumHelper.findElementByTestId(
         "amount-input",
-        1000,
+        500,
       );
       await amountInput.setValue("1");
       // Try to dismiss keyboard by tapping outside
       await appiumHelper.tapOnCoordinates(200, 250);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 500));
       console.log("✓ Amount entered and keyboard dismissed");
 
       // Enter short CVU
-      const cvuField = await appiumHelper.findElementByTestId(
-        "cvu-input",
-        1000,
-      );
+      const cvuField = await appiumHelper.findElementByTestId("cvu-input", 500);
       await cvuField.click();
       await cvuField.setValue("1234");
       // Try to dismiss keyboard by tapping outside
       await appiumHelper.tapOnCoordinates(200, 250);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 500));
       console.log("✓ Short CVU entered and keyboard dismissed");
 
       // Ensure keyboard is fully dismissed
       await appiumHelper.tapOnCoordinates(200, 250);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       // Click load button
       const loadButton = await appiumHelper.findElementByTestId(
         "load-money-btn",
-        1000,
+        500,
       );
       await loadButton.click();
       console.log("✓ Load Money button clicked");
 
       // Wait for validation and error toast to appear
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       // Should show error message
       const errorMessage = await appiumHelper.findElementByTestId(
@@ -434,7 +420,7 @@ describe("Load functionality", () => {
       // Should stay on the load money page
       const stillOnLoadScreen = await appiumHelper.isElementDisplayed(
         "Load Money",
-        1000,
+        500,
       );
       expect(stillOnLoadScreen).toBe(true);
       console.log("✅ Correctly stayed on load money screen with short CVU");
@@ -452,40 +438,37 @@ describe("Load functionality", () => {
       // Enter amount (numeric keyboard is already open due to autoFocus)
       const amountInput = await appiumHelper.findElementByTestId(
         "amount-input",
-        5000,
+        500,
       );
       await amountInput.setValue("1");
       // Try to dismiss keyboard by tapping outside
       await appiumHelper.tapOnCoordinates(200, 250);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 500));
       console.log("✓ Amount entered and keyboard dismissed");
 
       // Enter invalid CVU
-      const cvuField = await appiumHelper.findElementByTestId(
-        "cvu-input",
-        1000,
-      );
+      const cvuField = await appiumHelper.findElementByTestId("cvu-input", 500);
       await cvuField.click();
       await cvuField.setValue("1111111111111111111111");
       // Try to dismiss keyboard by tapping outside
       await appiumHelper.tapOnCoordinates(200, 250);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 500));
       console.log("✓ Invalid CVU entered and keyboard dismissed");
 
       // Ensure keyboard is fully dismissed
       await appiumHelper.tapOnCoordinates(200, 250);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       // Click load button
       const loadButton = await appiumHelper.findElementByTestId(
         "load-money-btn",
-        1000,
+        500,
       );
       await loadButton.click();
       console.log("✓ Load Money button clicked");
 
       // Wait for the API call to complete and error toast to appear
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       // Should show error message
       const errorMessage = await appiumHelper.findElementByTestId(
@@ -498,7 +481,7 @@ describe("Load functionality", () => {
       // Should stay on the load money page
       const stillOnLoadScreen = await appiumHelper.isElementDisplayed(
         "Load Money",
-        1000,
+        500,
       );
       expect(stillOnLoadScreen).toBe(true);
       console.log("✅ Correctly stayed on load money screen with invalid CVU");
@@ -521,7 +504,7 @@ describe("Load functionality", () => {
       await amountInput.setValue("100000");
       // Try to dismiss keyboard by tapping outside
       await appiumHelper.tapOnCoordinates(200, 250);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 500));
       console.log("✓ Excessive amount (100000) entered and keyboard dismissed");
 
       // Enter valid CVU
@@ -530,17 +513,17 @@ describe("Load functionality", () => {
       await cvuField.setValue("4567890123456789012345");
       // Try to dismiss keyboard by tapping outside
       await appiumHelper.tapOnCoordinates(200, 250);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 500));
       console.log("✓ Valid CVU entered and keyboard dismissed");
 
       // Ensure keyboard is fully dismissed
       await appiumHelper.tapOnCoordinates(200, 250);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       // Click load button
       const loadButton = await appiumHelper.findElementByTestId(
         "load-money-btn",
-        1000,
+        500,
       );
       await loadButton.click();
       console.log("✓ Load Money button clicked");
@@ -558,7 +541,7 @@ describe("Load functionality", () => {
       // Should stay on the load money page
       const stillOnLoadScreen = await appiumHelper.isElementDisplayed(
         "Load Money",
-        1000,
+        500,
       );
       expect(stillOnLoadScreen).toBe(true);
       console.log(
